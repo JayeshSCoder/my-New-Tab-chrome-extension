@@ -1,0 +1,152 @@
+/* Basic reset for margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Reset margin and padding for the body */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+/* Header for the search bar */
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0; /* Remove any extra padding */
+    background: none; /* Ensure no background color */
+    position: absolute;
+    top: 15%; /* Adjust this value to position the search bar */
+    transform: translateY(-50%);
+    border: none; /* Remove any default border */
+}
+
+
+/* Center the search container and style */
+.search-container {
+    width: 60%;
+    max-width: 500px;
+    display: flex;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fff; /* Keeps background of search box white */
+}
+
+/* Style search input */
+.search-container input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+/* Style search button */
+.search-container button {
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #555;
+}
+
+
+
+
+
+
+
+
+
+
+/* Full-page background just below the search box */
+.background {
+    position: absolute; /* Allows it to cover the entire page */
+    top:0; /* Adjust this value based on the height of your search box */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* background-image: url('./images/bg.jpg'); Default image */
+    background-color: #333333e6;
+    
+    background-size: cover; /* Ensures the image covers the entire area */
+    background-position: center; /* Centers the image */
+    z-index: -1; /* Keeps it behind other content */
+    transition: background-image 0.5s ease-in-out; /* Smooth transition for background change */
+}
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+/*
+    Change Background
+*/
+#changeBackgroundBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%; /* Makes the button circular */
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 1000;
+    background-image: url('./icons/pen.png'); /* Replace with your pen icon URL or path */
+    background-size: 100%; /* Size of the icon inside the button */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#changeBackgroundBtn:hover {
+    background-image: url('./icons/pen.png'); /* Replace with your pen icon URL or path */
+    transform: scale(1.1);
+}
+
+
+
+
+/* Default tooltip styling */
+#changeBackgroundBtn::after {
+    content: "Customise";
+    position: absolute;
+    bottom: 70px;
+    right: 50%;
+    transform: translateX(50%);
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 12px;
+    border-radius: 5px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    white-space: nowrap;
+}
+
+/* Tooltip visibility on hover */
+#changeBackgroundBtn:hover::after {
+    opacity: 1;
+}
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./Components/Contests Sidebar/contests.css">
+    <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
+
+
+</head>
+
+<body>
+
+
+    <header>
+        <div class="search-container">
+            <input type="text" placeholder="Search...">
+            <button type="submit">🔍</button>
+        </div>
+    </header>
+
+
+
+    <div class="background"></div>
+
+
+
+
+    <div class="sidebar">
+        <div class="sidebar-toggle" id="sidebarToggle">
+            <p id="arrow">▼ </p>
+            <p>Upcoming Contests</p>
+        </div>
+        <div class="contest-list" id="contestList">
+            <ul id="contests"></ul>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="bookmark-sidebar">
+        <ul class="bookmark-list"></ul>
+    </div>
+
+
+
+
+    <!-- Hidden file input to select background image -->
+    <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" /> 
+    <!-- Change Background button -->
+    <button id="changeBackgroundBtn"></button>
+
+
+
+
+
+
+
+
+
+
+
+    <script src="script.js"></script>
+    <script src="./Components/Contests Sidebar/contests.js"></script>
+    <script src="./Components/Bookmarks/bookmarks.js"></script>
+</body>
+
+</html>

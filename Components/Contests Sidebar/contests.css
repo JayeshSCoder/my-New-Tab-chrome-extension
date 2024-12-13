@@ -1,0 +1,77 @@
+
+/*
+    SIDEBAR Contests
+*/
+
+/* Sidebar styling */
+.sidebar {
+    position: fixed; /* Fixed position on the right */
+    top: 80px; /* Below the header */
+    right: 20px;
+    width: 200px; /* Increased width for better aesthetics */
+    background-color: #ffffff; /* White background */
+    border-left: 2px solid #ccc;
+    box-shadow: -2px 0 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
+    z-index: 1000;
+    border-radius: 5px; /* Rounded corners */
+    overflow: hidden; /* Prevent overflow */
+    transition: all 0.3s ease; /* Smooth transition */
+
+}
+
+/* Sidebar toggle button */
+.sidebar-toggle {
+    padding: 15px; /* Increased padding for comfort */
+    height: 45px;
+    cursor: pointer;
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: #fff; /* White text */
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-weight: bold; /* Bold text */
+    border-radius: 5px 5px 0 0; /* Rounded top corners */
+
+    user-select: none;
+    
+    
+}
+
+/* Contest list styling */
+.contest-list {
+    display: none; /* Initially hidden */
+    padding: 10px;
+    height: 300px;
+    background-color: #f9f9f9; /* Light background for contests */
+    border-top: 1px solid #ccc; /* Border for separation */
+
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    
+}
+
+/* Contest item styling */
+.contest-list ul {
+    list-style: none;
+    padding-left: 0; /* Remove default padding */
+    font-size: 15px;
+}
+
+.contest-list li {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+    background-color: #e9ecef; /* Light gray background */
+    transition: background-color 0.3s; /* Transition for hover effect */
+    background-color: rgb(115 152 177 / 29%);
+
+    color: #25190f;
+    font-weight: 500;
+}
+
+.contest-list li:hover {
+    background-color: #007BFF; /* Change background on hover */
+    color: #fff; /* White text on hover */
+    cursor: pointer; /* Pointer cursor on hover */
+}
