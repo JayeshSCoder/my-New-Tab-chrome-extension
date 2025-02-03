@@ -3,9 +3,18 @@
   "version": "1.0",
   "description": "",
   "manifest_version": 3,
-  "permissions": ["bookmarks", "storage"],
+  "permissions": [
+    "bookmarks",
+    "storage"
+  ],
   
-    "chrome_url_overrides": {
-      "newtab": "index.html"
-    }
+  "action" : {
+    "default_popup": "./pop_up/popup.html"
+  },
+
+
+
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  }
 }
