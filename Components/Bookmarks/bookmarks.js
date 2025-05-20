@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         link.target = "_self"; // Opens in the same tab
 
         // Use the favicon as the icon
-        icon.src = `https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}`;
+        icon.src = `https://www.google.com/s2/favicons?sz=64&domain=${new URL(bookmark.url).hostname}`;
         icon.alt = bookmark.title;
         icon.classList.add('bookmark-icon');
 
