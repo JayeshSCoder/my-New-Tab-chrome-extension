@@ -1,0 +1,174 @@
+/* General body style */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
+  color: white;
+  min-height: 100vh;
+}
+
+/* Main content */
+#main-content {
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 120px;
+}
+
+/* Drawer */
+#shortcut-drawer {
+  position: fixed;
+  bottom: 90px;
+  width: 50%;
+  
+  padding: 15px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  justify-self: anchor-center;
+  border-top: 0px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+}
+
+/* Shortcut cards */
+#shortcuts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Optional: make shortcut cards consistent in size */
+.shortcut-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    padding: 15px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+/* .shortcut-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+} */
+
+
+
+/* Add button */
+#add-shortcut-btn {
+  
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  transition: background 0.3s ease;
+}
+
+#add-shortcut-btn:hover {
+  background: #45a045;
+}
+
+/* Modal styles */
+#shortcut-modal {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  display: none;
+  z-index: 2000;
+  min-width: 260px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-content input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: #444;
+  color: white;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#save-shortcut {
+  background-color: #2196f3;
+  color: white;
+}
+
+#cancel-shortcut {
+  background-color: #e53935;
+  color: white;
+}
+
+/* Utility */
+.hidden {
+  display: none;
+}
+
+
+
+
+#custom-context-menu {
+  position: absolute;
+  background: rgba(30, 30, 30, 0.95);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  min-width: 130px;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.context-option {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.context-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hidden {
+  display: none;
+}

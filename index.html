@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./Components/Contests_Sidebar/contests.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
-
+    <link rel="stylesheet" href="./Components/AddShortcut/style.css">
 
 </head>
 
@@ -52,12 +52,33 @@
 
 
     <!-- Hidden file input to select background image -->
-    <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" /> 
+    <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" />
     <!-- Change Background button -->
     <button id="changeBackgroundBtn"></button>
 
 
 
+
+    <!-- Drawer Section -->
+    <div id="shortcut-drawer">
+        <div id="shortcuts-container">
+            <button id="add-shortcut-btn">+</button>
+        </div>
+    </div>
+
+
+
+    <!-- Shortcut Modal -->
+    <div id="shortcut-modal" class="hidden">
+        <div class="modal-content">
+            <input type="text" id="shortcut-name" placeholder="Name">
+            <input type="text" id="shortcut-url" placeholder="URL">
+            <div class="modal-buttons">
+                <button id="save-shortcut">Save</button>
+                <button id="cancel-shortcut">Cancel</button>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -69,6 +90,7 @@
     <script src="script.js"></script>
     <script src="./Components/Contests_Sidebar/contests.js"></script>
     <script src="./Components/Bookmarks/bookmarks.js"></script>
+    <script src="./Components/AddShortcut/script.js"></script>
 </body>
 
 </html>
