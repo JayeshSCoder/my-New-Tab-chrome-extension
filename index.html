@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./Components/Contests_Sidebar/contests.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
+    <link rel="stylesheet" href="./Components/SidePanel/style.css">
 
 </head>
 
@@ -28,7 +29,6 @@
 
 
 
-
     <div class="sidebar">
         <div class="sidebar-toggle" id="sidebarToggle">
             <p id="arrow">▼ </p>
@@ -38,8 +38,6 @@
             <ul id="contests"></ul>
         </div>
     </div>
-
-
 
 
 
@@ -59,14 +57,14 @@
 
 
 
+
+
     <!-- Drawer Section -->
     <div id="shortcut-drawer">
         <div id="shortcuts-container">
             <button id="add-shortcut-btn">+</button>
         </div>
     </div>
-
-
 
     <!-- Shortcut Modal -->
     <div id="shortcut-modal" class="hidden">
@@ -84,6 +82,32 @@
 
 
 
+    <!-- Right Side Drawer Toggle Button -->
+    <button id="open-right-drawer">⚙️</button>
+    <!-- Right Side Drawer -->
+    <div id="right-drawer">
+        <h3>Settings</h3>
+        <div class="drawer-option">
+            <label for="toggle-contests">Show Upcoming Contests</label>
+            <label class="switch">
+                <input type="checkbox" id="toggle-contests" checked>
+                <span class="slider round"></span>
+            </label>
+
+        </div>
+        <div class="drawer-option">
+            <label for="toggle-shortcuts">Show Shortcuts</label>
+            <label class="switch">
+                <input type="checkbox" id="toggle-shortcuts" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+
+
+
+
 
 
 
@@ -91,6 +115,7 @@
     <script src="./Components/Contests_Sidebar/contests.js"></script>
     <script src="./Components/Bookmarks/bookmarks.js"></script>
     <script src="./Components/AddShortcut/script.js"></script>
+    <script src="./Components/SidePanel/script.js"></script>
 </body>
 
 </html>
