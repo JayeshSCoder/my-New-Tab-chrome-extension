@@ -1,63 +1,55 @@
 const rightDrawer = document.getElementById("right-drawer");
-const openRightDrawerBtn = document.getElementById("open-right-drawer");
-
-const toggleContests = document.getElementById("toggle-contests");
-const toggleShortcuts = document.getElementById("toggle-shortcuts");
-
-const contestSidebar = document.querySelector(".sidebar");
-const shortcutDrawer = document.getElementById("shortcut-drawer");
-
-// Toggle drawer visibility
-openRightDrawerBtn.addEventListener("click", () => {
-    rightDrawer.classList.toggle("visible");
-});
-
-// Load saved preferences
-document.addEventListener("DOMContentLoaded", () => {
-    const showContests = localStorage.getItem("showContests");
-    const showShortcuts = localStorage.getItem("showShortcuts");
-
-    if (showContests === "false") {
-        contestSidebar.style.display = "none";
-        toggleContests.checked = false;
-    }
-
-    if (showShortcuts === "false") {
-        shortcutDrawer.style.display = "none";
-        toggleShortcuts.checked = false;
-    }
-});
-
-// Handle toggles
-toggleContests.addEventListener("change", () => {
-    const isVisible = toggleContests.checked;
-    contestSidebar.style.display = isVisible ? "block" : "none";
-    localStorage.setItem("showContests", isVisible);
-});
-
-toggleShortcuts.addEventListener("change", () => {
-    const isVisible = toggleShortcuts.checked;
-    shortcutDrawer.style.display = isVisible ? "flex" : "none";
-    localStorage.setItem("showShortcuts", isVisible);
-});
-
-
-
-
 const openDrawerBtn = document.getElementById("open-right-drawer");
 
+
+// Show drawer & hide button
 openDrawerBtn.addEventListener("click", () => {
-    rightDrawer.classList.add("open");
-    openDrawerBtn.style.display = "none";
+  rightDrawer.classList.add("open");
+  openDrawerBtn.style.display = "none";
 });
 
 // Hide drawer when clicking outside
 document.addEventListener("click", (e) => {
-    const isClickInsideDrawer = rightDrawer.contains(e.target);
-    const isClickOnButton = openDrawerBtn.contains(e.target);
-
-    if (!isClickInsideDrawer && !isClickOnButton) {
-        rightDrawer.classList.remove("open");
-        openDrawerBtn.style.display = "block";
-    }
+  if (!rightDrawer.contains(e.target) && !openDrawerBtn.contains(e.target)) {
+    rightDrawer.classList.remove("open");
+    openDrawerBtn.style.display = "block";
+  }
 });
+
+
+
+// Setup all toggles dynamically
+document.addEventListener("DOMContentLoaded", () => {
+  const toggles = document.querySelectorAll(".toggle-switch");
+
+  toggles.forEach(toggle => {
+    const targetSelector = toggle.dataset.target;
+    const targetEl = document.querySelector(targetSelector);
+
+    if (!targetEl) return;
+
+    // Apply saved preference
+    const savedValue = localStorage.getItem(toggle.id);
+    if (savedValue === "false") {
+      toggle.checked = false;
+      targetEl.style.display = "none";
+    } else {
+      toggle.checked = true;
+      targetEl.style.display = getDisplayStyle(targetEl);
+    }
+
+    // Listen to changes
+    toggle.addEventListener("change", () => {
+      const isChecked = toggle.checked;
+      localStorage.setItem(toggle.id, isChecked);
+      targetEl.style.display = isChecked ? getDisplayStyle(targetEl) : "none";
+    });
+  });
+});
+
+
+// Determine the default display style for different elements
+function getDisplayStyle(el) {
+  if (el.id === "shortcut-drawer") return "flex";
+  return "block"; // default fallback
+}
