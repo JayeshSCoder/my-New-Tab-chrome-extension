@@ -1,0 +1,84 @@
+/* Custom Context Menu Styles */
+.custom-context-menu {
+    position: fixed;
+    background: #2c2c2c;
+    border: 1px solid #555;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    padding: 5px 0;
+    min-width: 150px;
+    z-index: 10000;
+    display: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.custom-context-menu.show {
+    display: block;
+}
+
+.context-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.context-menu-item:hover {
+    background-color: #404040;
+}
+
+.context-menu-item:active {
+    background-color: #505050;
+}
+
+.context-menu-item::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.context-menu-item.reload::before {
+    content: '🔄';
+    font-size: 14px;
+}
+
+.context-menu-item.forward::before {
+    content: '→';
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.context-menu-item.inspect::before {
+    content: '🔍';
+    font-size: 14px;
+}
+
+.context-menu-separator {
+    height: 1px;
+    background-color: #555;
+    margin: 5px 0;
+}
+
+/* Animation for menu appearance */
+@keyframes contextMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.custom-context-menu.show {
+    animation: contextMenuFadeIn 0.15s ease-out;
+}

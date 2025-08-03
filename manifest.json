@@ -5,8 +5,14 @@
   "manifest_version": 3,
   "permissions": [
     "bookmarks",
-    "storage"
+    "storage",
+    "tabs",
+    "activeTab"
   ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
   
   "action" : {
     "default_popup": "./pop_up/popup.html"
