@@ -43,6 +43,12 @@ class CustomContextMenu {
     setupEventListeners() {
         // Prevent default context menu and show custom menu
         document.addEventListener('contextmenu', (e) => {
+            // Check if the right-click is on a shortcut or shortcut-related element
+            if (this.isShortcutElement(e.target)) {
+                // Allow default context menu for shortcuts
+                return;
+            }
+            
             e.preventDefault();
             this.showMenu(e.pageX, e.pageY);
         });
@@ -63,6 +69,41 @@ class CustomContextMenu {
         document.addEventListener('scroll', () => {
             this.hideMenu();
         });
+    }
+
+    isShortcutElement(element) {
+        // Check if the element or any of its parents is a shortcut-related element
+        let currentElement = element;
+        
+        while (currentElement && currentElement !== document.body) {
+            // Check for shortcut-related classes and IDs
+            if (currentElement.classList && (
+                currentElement.classList.contains('shortcut-card') ||
+                currentElement.classList.contains('shortcut-drawer') ||
+                currentElement.id === 'shortcut-drawer' ||
+                currentElement.id === 'shortcuts-container' ||
+                currentElement.id === 'add-shortcut-btn' ||
+                currentElement.id === 'shortcut-modal' ||
+                currentElement.closest('#shortcut-drawer') ||
+                currentElement.closest('#shortcut-modal') ||
+                currentElement.closest('.shortcut-card')
+            )) {
+                return true;
+            }
+            
+            // Also check if it's inside the bookmark sidebar (if you want to exclude bookmarks too)
+            if (currentElement.classList && (
+                currentElement.classList.contains('bookmark-sidebar') ||
+                currentElement.classList.contains('bookmark-list') ||
+                currentElement.closest('.bookmark-sidebar')
+            )) {
+                return true;
+            }
+            
+            currentElement = currentElement.parentElement;
+        }
+        
+        return false;
     }
 
     showMenu(x, y) {
