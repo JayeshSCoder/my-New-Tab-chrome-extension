@@ -91,11 +91,14 @@ class CustomContextMenu {
                 return true;
             }
             
-            // Also check if it's inside the bookmark sidebar (if you want to exclude bookmarks too)
+            // Also check if it's inside the bookmark sidebar or aesthetic bookmark box
             if (currentElement.classList && (
                 currentElement.classList.contains('bookmark-sidebar') ||
                 currentElement.classList.contains('bookmark-list') ||
-                currentElement.closest('.bookmark-sidebar')
+                currentElement.classList.contains('aesthetic-bookmark-box') ||
+                currentElement.id === 'aesthetic-bookmark-box' ||
+                currentElement.closest('.bookmark-sidebar') ||
+                currentElement.closest('.aesthetic-bookmark-box')
             )) {
                 return true;
             }
@@ -228,7 +231,7 @@ class CustomContextMenu {
             document.dispatchEvent(ctrlShiftI);
             
         } catch (error) {
-            console.log('Could not simulate keyboard shortcut:', error);
+            // Error handling without console output
         }
     }
     

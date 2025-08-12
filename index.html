@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./Components/Contests_Sidebar/contests.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
+    <link rel="stylesheet" href="./Components/Bookmarks/aesthetic-bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
     <link rel="stylesheet" href="./Components/ContextMenu/contextMenu.css">
@@ -49,6 +50,23 @@
 
 
 
+
+
+    <!-- Aesthetic Bookmark Box -->
+    <div id="aesthetic-bookmark-box" class="aesthetic-bookmark-box collapsed">
+        <div class="bookmark-box-header">
+            <h3>📚 All Bookmarks</h3>
+            <button id="bookmark-box-toggle" class="bookmark-box-toggle">+</button>
+        </div>
+        <div class="bookmark-box-content">
+            <div class="bookmark-folders">
+                <!-- Bookmark folders will be populated here -->
+            </div>
+            <div class="bookmark-items">
+                <!-- Non-bookmark-bar bookmarks will be populated here -->
+            </div>
+        </div>
+    </div>
 
     <!-- Hidden file input to select background image -->
     <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" />
@@ -105,6 +123,22 @@
                 <span class="slider round"></span>
             </label>
         </div>
+
+        <div class="drawer-option">
+            <label for="toggle-bookmarks">Show All Bookmarks</label>
+            <label class="switch">
+                <input type="checkbox" id="toggle-bookmarks" class="toggle-switch" data-target="#aesthetic-bookmark-box"
+                    checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="drawer-option">
+            <label for="refresh-favicons">Refresh Favicons</label>
+            <button id="refresh-favicons" class="refresh-icon-button">
+                🔄
+            </button>
+        </div>
         
     </div>
 
@@ -118,6 +152,7 @@
     <script src="script.js"></script>
     <script src="./Components/Contests_Sidebar/contests.js"></script>
     <script src="./Components/Bookmarks/bookmarks.js"></script>
+    <script src="./Components/Bookmarks/aesthetic-bookmarks.js"></script>
     <script src="./Components/AddShortcut/script.js"></script>
     <script src="./Components/SidePanel/script.js"></script>
     <script src="./Components/ContextMenu/contextMenu.js"></script>

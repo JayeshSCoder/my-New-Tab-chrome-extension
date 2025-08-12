@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             bookmarkTreeNodes.forEach((node) => processNode(node));
         });
     } else {
-        console.error("Chrome bookmarks API is not available.");
+        // Chrome bookmarks API is not available
     }
 
     // Function to process each bookmark node

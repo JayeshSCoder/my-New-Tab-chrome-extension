@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Save the image URL in Chrome storage
                 chrome.storage.local.set({ backgroundImage: imageUrl }, () => {
-                    console.log("Background image updated.");
+                    // Background image updated
                 });
             };
             reader.readAsDataURL(file);
