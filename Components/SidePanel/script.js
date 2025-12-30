@@ -77,5 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function getDisplayStyle(el) {
   if (el.id === "shortcut-drawer") return "flex";
   if (el.id === "aesthetic-bookmark-box") return "block";
+  if (el.id === "add-sticky-note-btn") return "flex";
   return "block"; // default fallback
 }

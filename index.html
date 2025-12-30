@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
     <link rel="stylesheet" href="./Components/ContextMenu/contextMenu.css">
+    <link rel="stylesheet" href="./Components/StickyNotes/sticky-notes.css">
 
 </head>
 
@@ -70,6 +71,8 @@
 
     <!-- Hidden file input to select background image -->
     <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" />
+    <!-- Sticky Notes button -->
+    <button id="add-sticky-note-btn" class="add-sticky-note-btn">📝</button>
     <!-- Change Background button -->
     <button id="changeBackgroundBtn"></button>
 
@@ -134,9 +137,25 @@
         </div>
 
         <div class="drawer-option">
+            <label for="toggle-sticky-notes">Show Sticky Notes</label>
+            <label class="switch">
+                <input type="checkbox" id="toggle-sticky-notes" class="toggle-switch" data-target="#add-sticky-note-btn"
+                    checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="drawer-option">
             <label for="refresh-favicons">Refresh Favicons</label>
             <button id="refresh-favicons" class="refresh-icon-button">
                 🔄
+            </button>
+        </div>
+
+        <div class="drawer-option">
+            <label for="clear-empty-notes">Clear Empty Notes</label>
+            <button id="clear-empty-notes" class="refresh-icon-button">
+                🧹
             </button>
         </div>
         
@@ -156,6 +175,7 @@
     <script src="./Components/AddShortcut/script.js"></script>
     <script src="./Components/SidePanel/script.js"></script>
     <script src="./Components/ContextMenu/contextMenu.js"></script>
+    <script src="./Components/StickyNotes/sticky-notes.js"></script>
 </body>
 
 </html>
