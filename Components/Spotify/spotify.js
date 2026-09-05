@@ -129,13 +129,33 @@ function randomString(length = 64) {
 
 function launchAuthFlow(url) {
   return new Promise((resolve, reject) => {
-    chrome.identity.launchWebAuthFlow({ url, interactive: true }, (redirectUrl) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(redirectUrl || "");
-    });
+    if (chrome?.identity?.launchWebAuthFlow) {
+      chrome.identity.launchWebAuthFlow({ url, interactive: true }, (redirectUrl) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        resolve(redirectUrl || "");
+      });
+      return;
+    }
+
+    if (chrome?.runtime?.sendMessage) {
+      chrome.runtime.sendMessage({ action: "spotifyLaunchAuthFlow", url }, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        if (!response?.success || !response.redirectUrl) {
+          reject(new Error(response?.message || "Spotify auth flow failed"));
+          return;
+        }
+        resolve(response.redirectUrl);
+      });
+      return;
+    }
+
+    reject(new Error("Spotify auth API unavailable"));
   });
 }
 
@@ -306,8 +326,8 @@ function disconnectSpotify() {
 }
 
 async function connectSpotify() {
-  if (!chrome?.identity?.launchWebAuthFlow || !chrome?.identity?.getRedirectURL) {
-    alert("Spotify connect is not available in this browser context.");
+  if (!chrome?.identity?.getRedirectURL) {
+    alert("Spotify connect redirect API is unavailable. Please reload the extension.");
     return;
   }
 
@@ -353,8 +373,8 @@ async function connectSpotify() {
     updateAuthButton();
     setConnectedUI(true);
     await loadSpotifyTracks();
-  } catch (_error) {
-    alert("Spotify connection failed. Please verify Client ID and app redirect URI.");
+  } catch (error) {
+    alert(`Spotify connection failed: ${error.message || "Unknown error"}. Verify Client ID and redirect URI.`);
     disconnectSpotify();
   }
 }

@@ -57,6 +57,25 @@ if (typeof chrome !== 'undefined' && chrome.runtime) {
                 }
                 return true;
             }
+
+            if (message.action === 'spotifyLaunchAuthFlow') {
+                if (!chrome.identity || !chrome.identity.launchWebAuthFlow) {
+                    sendResponse({ success: false, message: 'Identity auth API unavailable in background' });
+                    return false;
+                }
+
+                chrome.identity.launchWebAuthFlow(
+                    { url: message.url, interactive: true },
+                    (redirectUrl) => {
+                        if (chrome.runtime.lastError) {
+                            sendResponse({ success: false, message: chrome.runtime.lastError.message });
+                            return;
+                        }
+                        sendResponse({ success: true, redirectUrl: redirectUrl || '' });
+                    }
+                );
+                return true;
+            }
         });
     } else {
         console.log('chrome.runtime.onMessage not available');
