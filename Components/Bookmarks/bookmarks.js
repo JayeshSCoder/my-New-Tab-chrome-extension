@@ -6,14 +6,37 @@
 document.addEventListener('DOMContentLoaded', function () {
     const bookmarkList = document.querySelector('.bookmark-list');
 
+    if (!bookmarkList) {
+        return;
+    }
+
     // Check if bookmarks API is available
     if (chrome && chrome.bookmarks) {
-        // Fetch bookmarks bar node (usually has ID 1)
-        chrome.bookmarks.getChildren("1", (bookmarkTreeNodes) => {
+        loadBookmarkBarChildren((bookmarkTreeNodes) => {
             bookmarkTreeNodes.forEach((node) => processNode(node));
         });
     } else {
         // Chrome bookmarks API is not available
+    }
+
+    function loadBookmarkBarChildren(callback) {
+        chrome.bookmarks.getTree((tree) => {
+            const root = tree && tree[0];
+            const rootChildren = (root && root.children) ? root.children : [];
+
+            const bookmarkBarNode = rootChildren.find((node) =>
+                node.id === "1" ||
+                node.title === "Bookmarks bar" ||
+                node.title === "Bookmarks Bar" ||
+                node.title === "Bookmarks toolbar" ||
+                node.title === "Favorites bar"
+            );
+
+            const fallbackNode = rootChildren.find((node) => Array.isArray(node.children) && node.children.length > 0);
+            const targetNode = bookmarkBarNode || fallbackNode;
+
+            callback((targetNode && targetNode.children) ? targetNode.children : []);
+        });
     }
 
     // Function to process each bookmark node

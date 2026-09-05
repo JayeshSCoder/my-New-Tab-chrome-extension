@@ -6,6 +6,8 @@
 // Get references to the search input and button
 const searchInput = document.querySelector('.search-container input[type="text"]');
 const searchButton = document.querySelector('.search-container button');
+const clockTime = document.getElementById('clock-time');
+const clockDate = document.getElementById('clock-date');
 
 function performSearch() {
     const query = searchInput.value.trim();
@@ -25,6 +27,26 @@ searchInput.addEventListener('keypress', (event) => {
     }
 });
 
+function updateClockWidget() {
+    if (!clockTime || !clockDate) {
+        return;
+    }
+
+    const now = new Date();
+    clockTime.textContent = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    clockDate.textContent = now.toLocaleDateString([], {
+        weekday: 'short',
+        month: 'short',
+        day: '2-digit'
+    });
+}
+
+updateClockWidget();
+setInterval(updateClockWidget, 1000);
 
 
 
