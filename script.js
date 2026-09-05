@@ -8,6 +8,8 @@ const searchInput = document.querySelector('.search-container input[type="text"]
 const searchButton = document.querySelector('.search-container button');
 const clockTime = document.getElementById('clock-time');
 const clockDate = document.getElementById('clock-date');
+const clockWidget = document.getElementById('clock-widget');
+const CLOCK_POSITION_KEY = 'clock-widget-position-v1';
 
 function performSearch() {
     const query = searchInput.value.trim();
@@ -47,6 +49,91 @@ function updateClockWidget() {
 
 updateClockWidget();
 setInterval(updateClockWidget, 1000);
+document.addEventListener('visibilitychange', updateClockWidget);
+window.addEventListener('focus', updateClockWidget);
+
+function getSavedClockPosition() {
+    try {
+        const value = localStorage.getItem(CLOCK_POSITION_KEY);
+        return value ? JSON.parse(value) : null;
+    } catch (_error) {
+        return null;
+    }
+}
+
+function applyClockPosition(position) {
+    if (!clockWidget || !position) return;
+
+    const maxLeft = Math.max(0, window.innerWidth - clockWidget.offsetWidth);
+    const maxTop = Math.max(0, window.innerHeight - clockWidget.offsetHeight);
+    const safeLeft = Math.min(Math.max(0, position.left), maxLeft);
+    const safeTop = Math.min(Math.max(0, position.top), maxTop);
+
+    clockWidget.style.position = 'fixed';
+    clockWidget.style.left = `${safeLeft}px`;
+    clockWidget.style.top = `${safeTop}px`;
+    clockWidget.style.right = 'auto';
+    clockWidget.style.bottom = 'auto';
+    clockWidget.style.transform = 'none';
+}
+
+function saveClockPosition(left, top) {
+    localStorage.setItem(CLOCK_POSITION_KEY, JSON.stringify({ left, top }));
+}
+
+function setupClockDrag() {
+    if (!clockWidget) return;
+
+    const savedPosition = getSavedClockPosition();
+    if (savedPosition) {
+        applyClockPosition(savedPosition);
+    }
+
+    let dragging = false;
+    let pointerOffsetX = 0;
+    let pointerOffsetY = 0;
+
+    clockWidget.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+
+        const rect = clockWidget.getBoundingClientRect();
+        pointerOffsetX = event.clientX - rect.left;
+        pointerOffsetY = event.clientY - rect.top;
+        dragging = true;
+        clockWidget.style.cursor = 'grabbing';
+        clockWidget.setPointerCapture(event.pointerId);
+    });
+
+    clockWidget.addEventListener('pointermove', (event) => {
+        if (!dragging) return;
+
+        const maxLeft = Math.max(0, window.innerWidth - clockWidget.offsetWidth);
+        const maxTop = Math.max(0, window.innerHeight - clockWidget.offsetHeight);
+        const nextLeft = Math.min(Math.max(0, event.clientX - pointerOffsetX), maxLeft);
+        const nextTop = Math.min(Math.max(0, event.clientY - pointerOffsetY), maxTop);
+
+        applyClockPosition({ left: nextLeft, top: nextTop });
+    });
+
+    clockWidget.addEventListener('pointerup', (event) => {
+        if (!dragging) return;
+        dragging = false;
+        clockWidget.style.cursor = 'grab';
+        clockWidget.releasePointerCapture(event.pointerId);
+
+        const rect = clockWidget.getBoundingClientRect();
+        saveClockPosition(rect.left, rect.top);
+    });
+
+    window.addEventListener('resize', () => {
+        const position = getSavedClockPosition();
+        if (position) {
+            applyClockPosition(position);
+        }
+    });
+}
+
+setupClockDrag();
 
 
 

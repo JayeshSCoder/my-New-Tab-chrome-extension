@@ -1,0 +1,71 @@
+.spotify-controller {
+  position: fixed;
+  left: 50%;
+  bottom: 190px;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 40px));
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  z-index: 200;
+  backdrop-filter: blur(10px);
+}
+
+.spotify-controller.shortcuts-hidden {
+  bottom: 110px;
+}
+
+.spotify-now-playing {
+  margin-bottom: 8px;
+}
+
+#spotify-track-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#spotify-track-artist {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.spotify-seek-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.spotify-seek-row span {
+  font-size: 11px;
+  width: 30px;
+  text-align: center;
+}
+
+#spotify-seek {
+  flex: 1;
+}
+
+.spotify-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spotify-controls button {
+  width: 36px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  cursor: pointer;
+}
+
+#spotify-volume {
+  margin-left: auto;
+  width: 130px;
+}

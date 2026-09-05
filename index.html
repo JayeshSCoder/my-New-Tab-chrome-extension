@@ -11,8 +11,27 @@
     <link rel="stylesheet" href="./Components/Bookmarks/aesthetic-bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
+    <link rel="stylesheet" href="./Components/Spotify/spotify.css">
     <link rel="stylesheet" href="./Components/ContextMenu/contextMenu.css">
     <link rel="stylesheet" href="./Components/StickyNotes/sticky-notes.css">
+
+    <div id="spotify-controller" class="spotify-controller hidden">
+        <div class="spotify-now-playing">
+            <div id="spotify-track-name">Not playing</div>
+            <div id="spotify-track-artist">Connect Spotify to start</div>
+        </div>
+        <div class="spotify-seek-row">
+            <span id="spotify-current-time">0:00</span>
+            <input type="range" id="spotify-seek" min="0" max="100" value="0">
+            <span id="spotify-total-time">0:00</span>
+        </div>
+        <div class="spotify-controls">
+            <button id="spotify-prev" type="button">⏮</button>
+            <button id="spotify-play" type="button">▶</button>
+            <button id="spotify-next" type="button">⏭</button>
+            <input type="range" id="spotify-volume" min="0" max="100" value="75" aria-label="Volume">
+        </div>
+    </div>
 
 </head>
 
@@ -150,17 +169,16 @@
         </div>
 
         <div class="drawer-option">
-            <label for="refresh-favicons">Refresh Favicons</label>
-            <button id="refresh-favicons" class="refresh-icon-button">
-                🔄
-            </button>
-        </div>
-
-        <div class="drawer-option">
             <label for="clear-empty-notes">Clear Empty Notes</label>
             <button id="clear-empty-notes" class="refresh-icon-button">
                 🧹
             </button>
+        </div>
+
+        <div class="drawer-option drawer-option-stack">
+            <label for="spotify-client-id">Spotify Integration</label>
+            <input type="text" id="spotify-client-id" class="drawer-input" placeholder="Spotify Client ID">
+            <button id="spotify-auth-button" class="refresh-icon-button spotify-auth-button" type="button">Connect</button>
         </div>
         
     </div>
@@ -178,6 +196,7 @@
     <script src="./Components/Bookmarks/aesthetic-bookmarks.js"></script>
     <script src="./Components/AddShortcut/script.js"></script>
     <script src="./Components/SidePanel/script.js"></script>
+    <script src="./Components/Spotify/spotify.js"></script>
     <script src="./Components/ContextMenu/contextMenu.js"></script>
     <script src="./Components/StickyNotes/sticky-notes.js"></script>
 </body>

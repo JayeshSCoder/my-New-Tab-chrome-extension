@@ -7,7 +7,12 @@
     "bookmarks",
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://accounts.spotify.com/*",
+    "https://api.spotify.com/*"
   ],
   
   "background": {
