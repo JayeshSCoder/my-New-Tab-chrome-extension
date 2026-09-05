@@ -20,6 +20,8 @@ header {
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 16px;
     padding: 0; /* Remove any extra padding */
     background: none; /* Ensure no background color */
     position: absolute;
@@ -59,6 +61,27 @@ header {
 
 .search-container button:hover {
     background-color: #555;
+}
+
+.clock-widget {
+    min-width: 155px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(35, 38, 43, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    line-height: 1.2;
+}
+
+.clock-time {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.clock-date {
+    margin-top: 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 
@@ -149,4 +172,3 @@ header {
 #changeBackgroundBtn:hover::after {
     opacity: 1;
 }
-
