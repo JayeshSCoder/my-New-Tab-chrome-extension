@@ -231,10 +231,6 @@ body.bookmark-bar-resizing {
     background-color: #404040;
 }
 
-.bookmark-context-option.danger:hover {
-    background-color: rgba(229, 57, 53, 0.35);
-}
-
 .bookmark-context-separator {
     height: 1px;
     margin: 5px 0;

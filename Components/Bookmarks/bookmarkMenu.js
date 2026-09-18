@@ -4,12 +4,17 @@
     Every option works on the real browser bookmarks:
     - Edit opens a small editor showing the saved name and URL and writes the
       changes back with chrome.bookmarks.update()
-    - Open in new tab, Copy link and Delete use the matching browser APIs
+    - Open in new tab, Open in incognito and Copy link use the matching
+      browser APIs
+
+    While the menu is open the bookmark bar is kept visible, so moving the
+    pointer from the bar onto the menu does not close the bar.
 */
 
 const BOOKMARK_MENU_ID = 'bookmark-context-menu';
 const BOOKMARK_EDITOR_ID = 'bookmark-editor';
 const BOOKMARK_EDITOR_OPEN_CLASS = 'bookmark-editor-open'; // Keeps the bar visible while editing
+const BOOKMARK_MENU_OPEN_CLASS = 'bookmark-menu-open'; // Keeps the bar visible while the menu is open
 
 let bookmarkMenuElement = null;
 let bookmarkEditorElement = null;
@@ -26,10 +31,10 @@ function buildBookmarkMenu() {
     document.body.insertAdjacentHTML('beforeend', `
         <div id="${BOOKMARK_MENU_ID}" class="bookmark-context-menu">
             <div class="bookmark-context-option" data-action="edit">✏️ Edit</div>
-            <div class="bookmark-context-option" data-action="open">↗️ Open in new tab</div>
-            <div class="bookmark-context-option" data-action="copy">🔗 Copy link</div>
             <div class="bookmark-context-separator"></div>
-            <div class="bookmark-context-option danger" data-action="delete">🗑️ Delete</div>
+            <div class="bookmark-context-option" data-action="open">↗️ Open in new tab</div>
+            <div class="bookmark-context-option" data-action="incognito">🕶️ Open in incognito</div>
+            <div class="bookmark-context-option" data-action="copy">🔗 Copy link</div>
         </div>
         <div id="${BOOKMARK_EDITOR_ID}" class="bookmark-editor hidden">
             <div class="bookmark-editor-dialog">
@@ -65,10 +70,10 @@ function buildBookmarkMenu() {
             openBookmarkEditor(bookmark);
         } else if (action === 'open') {
             openBookmarkInNewTab(bookmark);
+        } else if (action === 'incognito') {
+            openBookmarkInIncognito(bookmark);
         } else if (action === 'copy') {
             copyBookmarkLink(bookmark);
-        } else if (action === 'delete') {
-            deleteBookmark(bookmark);
         }
     });
 
@@ -106,6 +111,9 @@ function showBookmarkContextMenu(event, bookmark, onChanged) {
     bookmarkMenuElement.style.top = `${event.pageY}px`;
     bookmarkMenuElement.classList.add('show');
 
+    // Keep the bookmark bar visible while the pointer is on the menu
+    document.body.classList.add(BOOKMARK_MENU_OPEN_CLASS);
+
     // Keep the whole menu inside the window
     const rect = bookmarkMenuElement.getBoundingClientRect();
     const windowWidth = window.innerWidth;
@@ -124,6 +132,8 @@ function hideBookmarkContextMenu() {
     if (bookmarkMenuElement) {
         bookmarkMenuElement.classList.remove('show');
     }
+
+    document.body.classList.remove(BOOKMARK_MENU_OPEN_CLASS);
 }
 
 // ---------------- Bookmark editor (name and URL of the browser bookmark) ----------------
@@ -301,33 +311,61 @@ function copyBookmarkLinkFallback(url) {
     document.body.removeChild(textarea);
 }
 
-function deleteBookmark(bookmark) {
-    if (!bookmark || !bookmark.id) {
+function openBookmarkInIncognito(bookmark) {
+    if (!bookmark || !bookmark.url) {
         return;
     }
 
-    if (typeof chrome === 'undefined' || !chrome.bookmarks) {
+    if (typeof chrome === 'undefined' || !chrome.windows || !chrome.windows.create) {
+        showBookmarkMenuToast('Incognito windows are not available');
         return;
     }
 
-    const name = bookmark.title || bookmark.url || 'this bookmark';
-    if (!window.confirm(`Delete "${name}" from the browser bookmarks?`)) {
-        return;
-    }
-
-    chrome.bookmarks.remove(bookmark.id, () => {
-        if (chrome.runtime.lastError) {
-            showBookmarkMenuToast('Could not delete the bookmark');
+    isIncognitoAllowed().then((allowed) => {
+        if (!allowed) {
+            showBookmarkMenuToast('Allow this extension in Incognito first');
             return;
         }
 
-        if (bookmarkMenuRefresh) {
-            bookmarkMenuRefresh();
+        // chrome.windows.create() only works when the extension is allowed in
+        // incognito mode (chrome://extensions -> Details -> Allow in Incognito)
+        chrome.windows.create({ url: bookmark.url, incognito: true }, () => {
+            if (chrome.runtime.lastError) {
+                showBookmarkMenuToast('Allow this extension in Incognito first');
+            }
+        });
+    });
+}
+
+// Ask Chrome whether the extension may use incognito mode
+function isIncognitoAllowed() {
+    return new Promise((resolve) => {
+        if (!(chrome.extension && chrome.extension.isAllowedIncognitoAccess)) {
+            resolve(true);
+            return;
+        }
+
+        let settled = false;
+        const finish = (allowed) => {
+            if (!settled) {
+                settled = true;
+                resolve(allowed !== false);
+            }
+        };
+
+        try {
+            // Works with both the callback and the promise flavour of the API
+            const result = chrome.extension.isAllowedIncognitoAccess(finish);
+            if (result && typeof result.then === 'function') {
+                result.then(finish, () => finish(true));
+            }
+        } catch (error) {
+            finish(true);
         }
     });
 }
 
-// Small feedback message used by the copy and delete actions
+// Small feedback message used by the menu actions
 function showBookmarkMenuToast(text) {
     buildBookmarkMenu();
 

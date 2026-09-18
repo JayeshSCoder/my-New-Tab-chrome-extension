@@ -190,9 +190,12 @@ function initBookmarkBar() {
 
     // Hide sidebar when mouse leaves sidebar area
     sidebar.addEventListener('mouseleave', () => {
-        // Stay open while a bookmark is being edited from the bar
-        // (the class is set by Components/Bookmarks/bookmarkMenu.js)
-        if (!isResizing && !document.body.classList.contains('bookmark-editor-open')) {
+        // Stay open while the options list or the editor is in use from the bar
+        // (both classes are set by Components/Bookmarks/bookmarkMenu.js)
+        const busy = document.body.classList.contains('bookmark-menu-open') ||
+            document.body.classList.contains('bookmark-editor-open');
+
+        if (!isResizing && !busy) {
             hideBookmarkBar();
         }
     });
