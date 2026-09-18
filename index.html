@@ -162,14 +162,8 @@
             </label>
         </div>
 
-        <div class="drawer-option">
-            <label for="refresh-favicons">Refresh Favicons</label>
-            <button id="refresh-favicons" class="refresh-icon-button">
-                🔄
-            </button>
-        </div>
-
-        <div class="drawer-option">
+        <!-- Only shown while the sticky notes are enabled -->
+        <div class="drawer-option" id="clear-empty-notes-option" data-visible-with="toggle-sticky-notes">
             <label for="clear-empty-notes">Clear Empty Notes</label>
             <button id="clear-empty-notes" class="refresh-icon-button">
                 🧹

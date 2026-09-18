@@ -31,11 +31,6 @@ class AestheticBookmarkBox {
 
 
 
-    async refreshAllFavicons() {
-        // The favicons come from the browser itself, so reloading is enough
-        this.loadBookmarks();
-    }
-
     loadState() {
         // Get saved state from localStorage
         const savedState = localStorage.getItem('aesthetic-bookmark-box-state');
@@ -415,10 +410,3 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initializeBookmarkBox, 1000);
 }
-
-// Global function to refresh favicons (can be called from settings)
-window.refreshBookmarkFavicons = function() {
-    if (window.aestheticBookmarkBoxInstance) {
-        window.aestheticBookmarkBoxInstance.refreshAllFavicons();
-    }
-};
