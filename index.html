@@ -50,7 +50,12 @@
 
 
     <div class="bookmark-sidebar">
-        <ul class="bookmark-list"></ul>
+        <div class="bookmark-sidebar-scroll">
+            <ul class="bookmark-list"></ul>
+        </div>
+        <!-- Drag the handle to change the width of the bookmark bar -->
+        <div class="bookmark-resize-handle" id="bookmarkResizeHandle"
+            title="Drag to resize · Double-click to reset"></div>
     </div>
 
 
@@ -140,6 +145,14 @@
             </label>
         </div>
 
+        <div class="drawer-option drawer-option-stack">
+            <div class="drawer-option-label">
+                <label for="bookmark-bar-width">Bookmark Bar Width</label>
+                <span id="bookmark-bar-width-value" class="drawer-option-value">220px</span>
+            </div>
+            <input type="range" id="bookmark-bar-width" min="60" max="520" step="10" value="220">
+        </div>
+
         <div class="drawer-option">
             <label for="toggle-sticky-notes">Show Sticky Notes</label>
             <label class="switch">
@@ -149,14 +162,8 @@
             </label>
         </div>
 
-        <div class="drawer-option">
-            <label for="refresh-favicons">Refresh Favicons</label>
-            <button id="refresh-favicons" class="refresh-icon-button">
-                🔄
-            </button>
-        </div>
-
-        <div class="drawer-option">
+        <!-- Only shown while the sticky notes are enabled -->
+        <div class="drawer-option" id="clear-empty-notes-option" data-visible-with="toggle-sticky-notes">
             <label for="clear-empty-notes">Clear Empty Notes</label>
             <button id="clear-empty-notes" class="refresh-icon-button">
                 🧹
@@ -174,10 +181,13 @@
 
     <script src="script.js"></script>
     <script src="./Components/Contests_Sidebar/contests.js"></script>
+    <script src="./Components/Favicon/favicon.js"></script>
     <script src="./Components/Bookmarks/bookmarks.js"></script>
+    <script src="./Components/Bookmarks/bookmarkMenu.js"></script>
     <script src="./Components/Bookmarks/aesthetic-bookmarks.js"></script>
     <script src="./Components/AddShortcut/script.js"></script>
     <script src="./Components/SidePanel/script.js"></script>
+    <script src="./Components/Platform/platform.js"></script>
     <script src="./Components/ContextMenu/contextMenu.js"></script>
     <script src="./Components/StickyNotes/sticky-notes.js"></script>
 </body>

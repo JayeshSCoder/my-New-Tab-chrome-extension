@@ -24,12 +24,13 @@ function renderShortcuts() {
         card.className = "shortcut-card";
 
         const formattedURL = url.startsWith("http") ? url : `https://${url}`;
-        const faviconURL = `https://www.google.com/s2/favicons?sz=64&domain_url=${formattedURL}`;
-
         card.innerHTML = `
-      <img src="${faviconURL}" alt="favicon" width="24" height="24" style="margin-bottom: 6px;" />
+      <img alt="favicon" width="24" height="24" style="margin-bottom: 6px;" />
       <div style="font-size: 13px;">${name}</div>
     `;
+
+        // Browser favicon first, then the icon of the site itself
+        applyFaviconWithFallback(card.querySelector('img'), formattedURL, { size: 32 });
 
         card.onclick = () => {
             window.location.href = formattedURL;

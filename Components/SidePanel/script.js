@@ -46,30 +46,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Setup refresh favicons button
-  const refreshFaviconsBtn = document.getElementById("refresh-favicons");
-  if (refreshFaviconsBtn) {
-    refreshFaviconsBtn.addEventListener("click", async () => {
-      // Add loading state
-      refreshFaviconsBtn.classList.add("loading");
-      refreshFaviconsBtn.disabled = true;
-      
-      try {
-        // Call the global refresh function
-        if (window.refreshBookmarkFavicons) {
-          await window.refreshBookmarkFavicons();
-        }
-      } catch (error) {
-        // Error handling without console output
-      } finally {
-        // Remove loading state
-        setTimeout(() => {
-          refreshFaviconsBtn.classList.remove("loading");
-          refreshFaviconsBtn.disabled = false;
-        }, 1000);
-      }
-    });
-  }
+  // Options that are only shown while another feature is enabled,
+  // for example "Clear Empty Notes" while sticky notes are on
+  document.querySelectorAll("[data-visible-with]").forEach((option) => {
+    const controller = document.getElementById(option.dataset.visibleWith);
+
+    if (!controller) return;
+
+    const syncVisibility = () => {
+      option.style.display = controller.checked ? "flex" : "none";
+    };
+
+    controller.addEventListener("change", syncVisibility);
+    syncVisibility();
+  });
 });
 
 

@@ -203,39 +203,47 @@ class CustomContextMenu {
     }
     
     simulateDevToolsShortcut() {
-        // Create a keyboard event for F12
+        // DevTools cannot be opened programmatically, so the matching key
+        // combination of the platform is dispatched instead
+        const mac = typeof isMacOS === 'function' && isMacOS();
+
         try {
-            const event = new KeyboardEvent('keydown', {
-                key: 'F12',
-                code: 'F12',
-                keyCode: 123,
-                which: 123,
-                bubbles: true,
-                cancelable: true
-            });
-            
-            document.dispatchEvent(event);
-            
-            // Also try Ctrl+Shift+I
-            const ctrlShiftI = new KeyboardEvent('keydown', {
+            const inspectorShortcut = {
                 key: 'I',
                 code: 'KeyI',
                 keyCode: 73,
                 which: 73,
-                ctrlKey: true,
-                shiftKey: true,
                 bubbles: true,
-                cancelable: true
-            });
-            
-            document.dispatchEvent(ctrlShiftI);
-            
+                cancelable: true,
+                ...(mac
+                    ? { metaKey: true, altKey: true }
+                    : { ctrlKey: true, shiftKey: true })
+            };
+
+            document.dispatchEvent(new KeyboardEvent('keydown', inspectorShortcut));
+
+            // F12 only exists on Windows and Linux
+            if (!mac) {
+                document.dispatchEvent(new KeyboardEvent('keydown', {
+                    key: 'F12',
+                    code: 'F12',
+                    keyCode: 123,
+                    which: 123,
+                    bubbles: true,
+                    cancelable: true
+                }));
+            }
         } catch (error) {
             // Error handling without console output
         }
     }
     
     showInspectHelp() {
+        // Keyboard label differs between macOS and Windows / Linux
+        const shortcutLabel = typeof getDevToolsShortcutLabel === 'function'
+            ? getDevToolsShortcutLabel()
+            : 'F12 or Ctrl + Shift + I';
+
         // Create a more detailed help dialog
         const helpDialog = document.createElement('div');
         helpDialog.style.cssText = `
@@ -258,9 +266,9 @@ class CustomContextMenu {
         
         helpDialog.innerHTML = `
             <h3 style="margin: 0 0 15px 0; color: #fff;">Open Developer Tools</h3>
-            <p style="margin: 10px 0; line-height: 1.5;">Use one of these keyboard shortcuts:</p>
+            <p style="margin: 10px 0; line-height: 1.5;">Use this keyboard shortcut:</p>
             <div style="background: #1a1a1a; padding: 10px; border-radius: 6px; margin: 10px 0;">
-                <strong>F12</strong> or <strong>Ctrl + Shift + I</strong>
+                <strong>${shortcutLabel}</strong>
             </div>
             <p style="margin: 10px 0; font-size: 12px; color: #ccc;">
                 Right-click on any element and select "Inspect Element" for element-specific inspection.

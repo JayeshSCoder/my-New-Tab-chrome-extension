@@ -15,10 +15,11 @@ body, html {
     height: 100%;
 }
 
-/* Header for the search bar */
+/* Header for the search bar, the clock sits above it */
 header {
     width: 100%;
     display: flex;
+    flex-direction: column; /* Clock above the search bar */
     justify-content: center;
     align-items: center;
     gap: 16px;
@@ -64,23 +65,25 @@ header {
 }
 
 .clock-widget {
-    min-width: 155px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    min-width: 320px; /* Wide enough for the larger time + AM / PM suffix */
+    padding: 16px 28px;
+    border-radius: 12px;
     background: rgba(35, 38, 43, 0.78);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
     line-height: 1.2;
+    text-align: center;
 }
 
 .clock-time {
-    font-size: 24px;
+    font-size: 48px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .clock-date {
-    margin-top: 4px;
-    font-size: 12px;
+    margin-top: 6px;
+    font-size: 15px;
     color: rgba(255, 255, 255, 0.85);
 }
 

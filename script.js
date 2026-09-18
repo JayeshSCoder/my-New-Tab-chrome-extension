@@ -36,7 +36,7 @@ function updateClockWidget() {
     clockTime.textContent = now.toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
+        hour12: true // Show AM / PM
     });
     clockDate.textContent = now.toLocaleDateString([], {
         weekday: 'short',

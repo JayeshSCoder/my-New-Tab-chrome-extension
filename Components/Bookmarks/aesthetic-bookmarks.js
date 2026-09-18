@@ -4,7 +4,6 @@ class AestheticBookmarkBox {
         this.bookmarkBox = null;
         this.bookmarkContent = null;
         this.isCollapsed = true; // Start collapsed by default
-        this.faviconCache = new Map(); // Cache for favicons
         this.init();
     }
 
@@ -26,43 +25,11 @@ class AestheticBookmarkBox {
         
         // Load saved state from localStorage
         this.loadState();
-        this.loadFaviconCache();
         this.setupEventListeners();
         this.loadBookmarks();
     }
 
-    loadFaviconCache() {
-        // Load cached favicons from localStorage
-        const cachedFavicons = localStorage.getItem('bookmark-favicons-cache');
-        if (cachedFavicons) {
-            try {
-                const faviconData = JSON.parse(cachedFavicons);
-                this.faviconCache = new Map(Object.entries(faviconData));
-            } catch (error) {
-                this.faviconCache = new Map();
-            }
-        } else {
-            this.faviconCache = new Map();
-        }
-    }
 
-    saveFaviconCache() {
-        // Save favicon cache to localStorage
-        const faviconData = Object.fromEntries(this.faviconCache);
-        localStorage.setItem('bookmark-favicons-cache', JSON.stringify(faviconData));
-    }
-
-    async refreshAllFavicons() {
-        // Clear current cache
-        this.faviconCache.clear();
-        localStorage.removeItem('bookmark-favicons-cache');
-        
-        // Show loading state
-        this.showLoading();
-        
-        // Reload bookmarks which will fetch fresh favicons
-        this.loadBookmarks();
-    }
 
     loadState() {
         // Get saved state from localStorage
@@ -305,7 +272,6 @@ class AestheticBookmarkBox {
         const faviconImg = document.createElement('img');
         faviconImg.className = 'bookmark-favicon';
         faviconImg.alt = '';
-        faviconImg.onerror = function() { this.style.display = 'none'; };
         
         // Create title div
         const titleDiv = document.createElement('div');
@@ -317,18 +283,8 @@ class AestheticBookmarkBox {
         urlDiv.className = 'bookmark-url';
         urlDiv.textContent = domain;
         
-        // Check if we have cached favicon
-        if (this.faviconCache.has(domain)) {
-            const cachedFavicon = this.faviconCache.get(domain);
-            faviconImg.src = cachedFavicon;
-        } else {
-            // Use Google favicon service immediately and cache in background
-            const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
-            faviconImg.src = faviconUrl;
-            
-            // Cache favicon in background without waiting
-            this.cacheFaviconInBackground(domain, faviconUrl);
-        }
+        // Favicon kept by the browser itself, no favicon service involved
+        applyFaviconWithFallback(faviconImg, bookmark.url, { size: 32 });
         
         // Append elements
         bookmarkElement.appendChild(faviconImg);
@@ -338,38 +294,6 @@ class AestheticBookmarkBox {
         return bookmarkElement;
     }
     
-    cacheFaviconInBackground(domain, faviconUrl) {
-        // Cache favicon without blocking the UI
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        
-        img.onload = () => {
-            try {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                
-                const base64 = canvas.toDataURL('image/png');
-                this.faviconCache.set(domain, base64);
-                this.saveFaviconCache();
-            } catch (error) {
-                // If conversion fails, just cache the original URL
-                this.faviconCache.set(domain, faviconUrl);
-                this.saveFaviconCache();
-            }
-        };
-        
-        img.onerror = () => {
-            // Cache a default favicon
-            const fallbackFavicon = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
-            this.faviconCache.set(domain, fallbackFavicon);
-            this.saveFaviconCache();
-        };
-        
-        img.src = faviconUrl;
-    }
 
     getDomainFromUrl(url) {
         try {
@@ -486,10 +410,3 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initializeBookmarkBox, 1000);
 }
-
-// Global function to refresh favicons (can be called from settings)
-window.refreshBookmarkFavicons = function() {
-    if (window.aestheticBookmarkBoxInstance) {
-        window.aestheticBookmarkBoxInstance.refreshAllFavicons();
-    }
-};

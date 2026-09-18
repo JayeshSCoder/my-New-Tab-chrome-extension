@@ -1,6 +1,20 @@
 // Background script for handling Chrome extension APIs
 console.log('Background script loaded');
 
+// Platform aware hint for opening the browser developer tools
+function getDeveloperToolsHint() {
+    const platform = String(
+        (typeof navigator !== 'undefined' && navigator.userAgentData && navigator.userAgentData.platform) ||
+        (typeof navigator !== 'undefined' && navigator.userAgent) ||
+        ''
+    ).toLowerCase();
+
+    // macOS uses ⌘ + ⌥ + I, Windows and Linux accept F12 or Ctrl + Shift + I
+    return platform.includes('mac')
+        ? 'Press ⌘ + ⌥ + I to open Developer Tools'
+        : 'Press F12 or Ctrl + Shift + I to open Developer Tools';
+}
+
 // Check if we're in a service worker context
 if (typeof chrome !== 'undefined' && chrome.runtime) {
     console.log('Chrome runtime available');
@@ -16,11 +30,11 @@ if (typeof chrome !== 'undefined' && chrome.runtime) {
                     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                         if (tabs[0]) {
                             // For Chrome extensions, we can't directly open dev tools
-                            sendResponse({ success: false, message: 'Press F12 to open Developer Tools' });
+                            sendResponse({ success: false, message: getDeveloperToolsHint() });
                         }
                     });
                 } else {
-                    sendResponse({ success: false, message: 'Press F12 to open Developer Tools' });
+                    sendResponse({ success: false, message: getDeveloperToolsHint() });
                 }
                 return true; // Indicates we will send a response asynchronously
             }
