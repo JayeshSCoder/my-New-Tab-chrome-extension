@@ -23,6 +23,9 @@
   right: -300px; /* Hidden by default */
   width: 280px;
   height: 100vh;
+  overflow-y: auto; /* Keep every option reachable on short screens */
+  scrollbar-width: none; /* Hide the scrollbar */
+  -ms-overflow-style: none;
   background: rgba(30, 30, 30, 0.95);
   backdrop-filter: blur(12px);
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
@@ -57,6 +60,61 @@
   color: white;
   padding: 10px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+/* Drawer option that stacks a label above a control */
+.drawer-option-stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.drawer-option-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-option-value {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Range slider used for the width of the bookmark bar */
+#bookmark-bar-width {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#bookmark-bar-width::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+#bookmark-bar-width::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+#right-drawer::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 /* Modern Toggle Switch */

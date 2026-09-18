@@ -50,7 +50,12 @@
 
 
     <div class="bookmark-sidebar">
-        <ul class="bookmark-list"></ul>
+        <div class="bookmark-sidebar-scroll">
+            <ul class="bookmark-list"></ul>
+        </div>
+        <!-- Drag the handle to change the width of the bookmark bar -->
+        <div class="bookmark-resize-handle" id="bookmarkResizeHandle"
+            title="Drag to resize · Double-click to reset"></div>
     </div>
 
 
@@ -138,6 +143,14 @@
                     checked>
                 <span class="slider round"></span>
             </label>
+        </div>
+
+        <div class="drawer-option drawer-option-stack">
+            <div class="drawer-option-label">
+                <label for="bookmark-bar-width">Bookmark Bar Width</label>
+                <span id="bookmark-bar-width-value" class="drawer-option-value">220px</span>
+            </div>
+            <input type="range" id="bookmark-bar-width" min="60" max="520" step="10" value="220">
         </div>
 
         <div class="drawer-option">
