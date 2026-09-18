@@ -65,9 +65,9 @@ header {
 }
 
 .clock-widget {
-    min-width: 175px; /* Wide enough for the AM / PM suffix */
-    padding: 8px 12px;
-    border-radius: 8px;
+    min-width: 320px; /* Wide enough for the larger time + AM / PM suffix */
+    padding: 16px 28px;
+    border-radius: 12px;
     background: rgba(35, 38, 43, 0.78);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
@@ -76,14 +76,14 @@ header {
 }
 
 .clock-time {
-    font-size: 24px;
+    font-size: 48px;
     font-weight: 600;
     white-space: nowrap;
 }
 
 .clock-date {
-    margin-top: 4px;
-    font-size: 12px;
+    margin-top: 6px;
+    font-size: 15px;
     color: rgba(255, 255, 255, 0.85);
 }
 
