@@ -18,87 +18,131 @@ const FALLBACK_BOOKMARK_ICON = 'data:image/svg+xml;charset=UTF-8,' + encodeURICo
 );
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const bookmarkList = document.querySelector('.bookmark-list');
+const bookmarkList = document.querySelector('.bookmark-list');
+const bookmarkNodes = new Map(); // Bookmark id -> bookmark node, used by the options list
 
+document.addEventListener('DOMContentLoaded', () => {
+    if (!bookmarkList) {
+        return;
+    }
+
+    // Right-clicking an item opens our own options list
+    bookmarkList.addEventListener('contextmenu', handleBookmarkItemContextMenu);
+
+    renderBookmarkBar();
+});
+
+// (Re)build the list from the browser bookmarks
+function renderBookmarkBar() {
     if (!bookmarkList) {
         return;
     }
 
     // Check if bookmarks API is available
-    if (chrome && chrome.bookmarks) {
-        loadBookmarkBarChildren((bookmarkTreeNodes) => {
-            bookmarkTreeNodes.forEach((node) => processNode(node));
-        });
-    } else {
+    if (!(chrome && chrome.bookmarks)) {
         // Chrome bookmarks API is not available
+        return;
     }
 
-    function loadBookmarkBarChildren(callback) {
-        chrome.bookmarks.getTree((tree) => {
-            const root = tree && tree[0];
-            const rootChildren = (root && root.children) ? root.children : [];
+    loadBookmarkBarChildren((bookmarkTreeNodes) => {
+        bookmarkList.innerHTML = '';
+        bookmarkNodes.clear();
+        bookmarkTreeNodes.forEach((node) => processNode(node));
+    });
+}
 
-            const bookmarkBarNode = rootChildren.find((node) =>
-                node.id === "1" ||
-                node.title === "Bookmarks bar" ||
-                node.title === "Bookmarks Bar" ||
-                node.title === "Bookmarks toolbar" ||
-                node.title === "Favorites bar"
-            );
+function loadBookmarkBarChildren(callback) {
+    chrome.bookmarks.getTree((tree) => {
+        const root = tree && tree[0];
+        const rootChildren = (root && root.children) ? root.children : [];
 
-            const fallbackNode = rootChildren.find((node) => Array.isArray(node.children) && node.children.length > 0);
-            const targetNode = bookmarkBarNode || fallbackNode;
+        const bookmarkBarNode = rootChildren.find((node) =>
+            node.id === "1" ||
+            node.title === "Bookmarks bar" ||
+            node.title === "Bookmarks Bar" ||
+            node.title === "Bookmarks toolbar" ||
+            node.title === "Favorites bar"
+        );
 
-            callback((targetNode && targetNode.children) ? targetNode.children : []);
-        });
+        const fallbackNode = rootChildren.find((node) => Array.isArray(node.children) && node.children.length > 0);
+        const targetNode = bookmarkBarNode || fallbackNode;
+
+        callback((targetNode && targetNode.children) ? targetNode.children : []);
+    });
+}
+
+// Function to process each bookmark node
+function processNode(node) {
+    if (node.children) {
+        // If the node has children, process them as well (for folders)
+        node.children.forEach((child) => processNode(child));
+    } else if (node.url) {
+        // Add bookmarks that have URLs to the sidebar
+        addBookmarkToSidebar(node);
     }
+}
 
-    // Function to process each bookmark node
-    function processNode(node) {
-        if (node.children) {
-            // If the node has children, process them as well (for folders)
-            node.children.forEach((child) => processNode(child));
-        } else if (node.url) {
-            // Add bookmarks that have URLs to the sidebar
-            addBookmarkToSidebar(node);
+// Function to add a bookmark item to the sidebar
+function addBookmarkToSidebar(bookmark) {
+    const listItem = document.createElement('li');
+    const link = document.createElement('a');
+    const icon = document.createElement('img');
+    const title = document.createElement('span');
+    const hostname = getHostname(bookmark.url);
+    const faviconUrl = getBrowserFaviconUrl(bookmark.url, 32);
+
+    link.href = bookmark.url;
+    link.title = bookmark.title || hostname;
+    link.target = "_self"; // Opens in the same tab
+    link.dataset.bookmarkId = bookmark.id;
+
+    // Keep the node so the options list can work on the real bookmark
+    bookmarkNodes.set(bookmark.id, bookmark);
+
+    // Favicon kept by the browser itself, no favicon service involved
+    icon.src = faviconUrl || FALLBACK_BOOKMARK_ICON;
+    icon.alt = bookmark.title || hostname;
+    icon.loading = 'lazy';
+    icon.classList.add('bookmark-icon');
+    icon.addEventListener('error', () => {
+        // Keep the bar tidy when a favicon cannot be loaded
+        if (icon.src !== FALLBACK_BOOKMARK_ICON) {
+            icon.src = FALLBACK_BOOKMARK_ICON;
         }
+    });
+
+    // Title shown next to the icon
+    title.textContent = bookmark.title || hostname;
+    title.classList.add('bookmark-title');
+
+    link.appendChild(icon);
+    link.appendChild(title);
+    listItem.appendChild(link);
+    bookmarkList.appendChild(listItem);
+}
+
+// Open the bookmark options list where the item was right-clicked
+function handleBookmarkItemContextMenu(event) {
+    const link = event.target.closest('.bookmark-list a');
+
+    if (!link) {
+        return;
     }
 
-    // Function to add a bookmark item to the sidebar
-    function addBookmarkToSidebar(bookmark) {
-        const listItem = document.createElement('li');
-        const link = document.createElement('a');
-        const icon = document.createElement('img');
-        const title = document.createElement('span');
-        const hostname = getHostname(bookmark.url);
+    const bookmark = bookmarkNodes.get(link.dataset.bookmarkId);
 
-        link.href = bookmark.url;
-        link.title = bookmark.title || hostname;
-        link.target = "_self"; // Opens in the same tab
-
-        // Use the favicon as the icon
-        icon.src = `https://www.google.com/s2/favicons?sz=64&domain=${hostname}`;
-        icon.alt = bookmark.title || hostname;
-        icon.loading = 'lazy';
-        icon.classList.add('bookmark-icon');
-        icon.addEventListener('error', () => {
-            // Keep the bar tidy when a favicon cannot be loaded
-            if (icon.src !== FALLBACK_BOOKMARK_ICON) {
-                icon.src = FALLBACK_BOOKMARK_ICON;
-            }
-        });
-
-        // Title shown next to the icon
-        title.textContent = bookmark.title || hostname;
-        title.classList.add('bookmark-title');
-
-        link.appendChild(icon);
-        link.appendChild(title);
-        listItem.appendChild(link);
-        bookmarkList.appendChild(listItem);
+    if (!bookmark) {
+        return;
     }
-});
+
+    // Keep the native menu and the page context menu out of the way
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (window.showBookmarkContextMenu) {
+        window.showBookmarkContextMenu(event, bookmark, renderBookmarkBar);
+    }
+}
 
 // Read the hostname without breaking on malformed URLs
 function getHostname(url) {
@@ -146,7 +190,9 @@ function initBookmarkBar() {
 
     // Hide sidebar when mouse leaves sidebar area
     sidebar.addEventListener('mouseleave', () => {
-        if (!isResizing) {
+        // Stay open while a bookmark is being edited from the bar
+        // (the class is set by Components/Bookmarks/bookmarkMenu.js)
+        if (!isResizing && !document.body.classList.contains('bookmark-editor-open')) {
             hideBookmarkBar();
         }
     });

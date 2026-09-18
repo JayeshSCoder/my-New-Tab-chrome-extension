@@ -24,7 +24,7 @@ function renderShortcuts() {
         card.className = "shortcut-card";
 
         const formattedURL = url.startsWith("http") ? url : `https://${url}`;
-        const faviconURL = `https://www.google.com/s2/favicons?sz=64&domain_url=${formattedURL}`;
+        const faviconURL = getBrowserFaviconUrl(formattedURL, 32);
 
         card.innerHTML = `
       <img src="${faviconURL}" alt="favicon" width="24" height="24" style="margin-bottom: 6px;" />

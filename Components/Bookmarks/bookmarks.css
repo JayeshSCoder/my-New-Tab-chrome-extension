@@ -184,6 +184,182 @@ body.bookmark-bar-resizing {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
+/* ---------- Options list shown when a bookmark is right-clicked ---------- */
+
+.bookmark-context-menu {
+    position: fixed;
+    display: none;
+    min-width: 180px;
+    padding: 5px 0;
+    background: #2c2c2c;
+    border: 1px solid #555;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10001; /* Above the sidebar and the page context menu */
+    font-size: 14px;
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.bookmark-context-menu.show {
+    display: block;
+    animation: bookmarkMenuFadeIn 0.15s ease-out;
+}
+
+@keyframes bookmarkMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.bookmark-context-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.bookmark-context-option:hover {
+    background-color: #404040;
+}
+
+.bookmark-context-option.danger:hover {
+    background-color: rgba(229, 57, 53, 0.35);
+}
+
+.bookmark-context-separator {
+    height: 1px;
+    margin: 5px 0;
+    background-color: #555;
+}
+
+/* ---------- Editor for the name and URL of a bookmark ---------- */
+
+.bookmark-editor {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 10002;
+}
+
+.bookmark-editor.hidden {
+    display: none;
+}
+
+.bookmark-editor-dialog {
+    width: min(420px, 90vw);
+    padding: 24px;
+    background: rgba(30, 30, 30, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #ffffff;
+}
+
+.bookmark-editor-dialog h3 {
+    margin-bottom: 6px;
+    font-size: 17px;
+}
+
+.bookmark-editor-dialog label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.bookmark-editor-dialog input {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    background: #444;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.bookmark-editor-dialog input:focus {
+    background: #4d4d4d;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.bookmark-editor-message {
+    min-height: 16px;
+    font-size: 12px;
+    color: #ff8a80;
+}
+
+.bookmark-editor-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.bookmark-editor-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#bookmark-editor-save {
+    background-color: #2196f3;
+    color: #ffffff;
+}
+
+#bookmark-editor-save:hover {
+    background-color: #1e88e5;
+}
+
+#bookmark-editor-cancel {
+    background-color: #e53935;
+    color: #ffffff;
+}
+
+#bookmark-editor-cancel:hover {
+    background-color: #d32f2f;
+}
+
+/* ---------- Small feedback message ---------- */
+
+.bookmark-menu-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%) translateY(10px);
+    padding: 10px 18px;
+    background: rgba(35, 38, 43, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10003;
+}
+
+.bookmark-menu-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 /* Main content area */
 .content {
     margin-left: 100px;
