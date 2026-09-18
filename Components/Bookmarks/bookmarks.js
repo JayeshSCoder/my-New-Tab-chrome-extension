@@ -89,7 +89,6 @@ function addBookmarkToSidebar(bookmark) {
     const icon = document.createElement('img');
     const title = document.createElement('span');
     const hostname = getHostname(bookmark.url);
-    const faviconUrl = getBrowserFaviconUrl(bookmark.url, 32);
 
     link.href = bookmark.url;
     link.title = bookmark.title || hostname;
@@ -100,16 +99,9 @@ function addBookmarkToSidebar(bookmark) {
     bookmarkNodes.set(bookmark.id, bookmark);
 
     // Favicon kept by the browser itself, no favicon service involved
-    icon.src = faviconUrl || FALLBACK_BOOKMARK_ICON;
     icon.alt = bookmark.title || hostname;
-    icon.loading = 'lazy';
     icon.classList.add('bookmark-icon');
-    icon.addEventListener('error', () => {
-        // Keep the bar tidy when a favicon cannot be loaded
-        if (icon.src !== FALLBACK_BOOKMARK_ICON) {
-            icon.src = FALLBACK_BOOKMARK_ICON;
-        }
-    });
+    applyFaviconWithFallback(icon, bookmark.url, { size: 32, placeholder: FALLBACK_BOOKMARK_ICON });
 
     // Title shown next to the icon
     title.textContent = bookmark.title || hostname;

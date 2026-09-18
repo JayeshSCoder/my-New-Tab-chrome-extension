@@ -277,7 +277,6 @@ class AestheticBookmarkBox {
         const faviconImg = document.createElement('img');
         faviconImg.className = 'bookmark-favicon';
         faviconImg.alt = '';
-        faviconImg.onerror = function() { this.style.display = 'none'; };
         
         // Create title div
         const titleDiv = document.createElement('div');
@@ -290,13 +289,7 @@ class AestheticBookmarkBox {
         urlDiv.textContent = domain;
         
         // Favicon kept by the browser itself, no favicon service involved
-        const faviconUrl = getBrowserFaviconUrl(bookmark.url, 32);
-
-        if (faviconUrl) {
-            faviconImg.src = faviconUrl;
-        } else {
-            faviconImg.style.display = 'none';
-        }
+        applyFaviconWithFallback(faviconImg, bookmark.url, { size: 32 });
         
         // Append elements
         bookmarkElement.appendChild(faviconImg);

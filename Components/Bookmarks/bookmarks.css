@@ -118,7 +118,10 @@ body.bookmark-bar-resizing {
     width: 30px; /* Set width of icon */
     height: 30px; /* Set height of icon */
     border-radius: 50%; /* Make the icon circular */
-    object-fit: cover; /* Ensure the icon covers the area */
+    object-fit: contain; /* Show the whole icon */
+    /* Light plate so dark or transparent favicons stay visible on the bar */
+    background-color: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
     transition: transform 0.3s; /* Smooth scaling effect */
 }
 
