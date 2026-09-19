@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./Components/Contests_Sidebar/contests.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
-    <link rel="stylesheet" href="./Components/Bookmarks/aesthetic-bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
     <link rel="stylesheet" href="./Components/ContextMenu/contextMenu.css">
@@ -72,21 +71,7 @@
 
 
 
-    <!-- Aesthetic Bookmark Box -->
-    <div id="aesthetic-bookmark-box" class="aesthetic-bookmark-box collapsed">
-        <div class="bookmark-box-header">
-            <h3>📚 All Bookmarks</h3>
-            <button id="bookmark-box-toggle" class="bookmark-box-toggle">+</button>
-        </div>
-        <div class="bookmark-box-content">
-            <div class="bookmark-folders">
-                <!-- Bookmark folders will be populated here -->
-            </div>
-            <div class="bookmark-items">
-                <!-- Non-bookmark-bar bookmarks will be populated here -->
-            </div>
-        </div>
-    </div>
+
 
     <!-- Hidden file input to select background image -->
     <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" />
@@ -135,6 +120,26 @@
     <div id="right-drawer">
         <h3>Settings</h3>
 
+        <div class="drawer-option drawer-option-stack">
+            <div class="drawer-option-label">
+                <label>Theme Style</label>
+            </div>
+            <div class="theme-switcher" id="theme-switcher">
+                <button type="button" class="theme-pill-btn active" data-theme="glassmorphism" title="Modern Acrylic Glass">
+                    <span class="theme-indicator glass-indicator"></span>
+                    <span>Glass</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="legacy" title="Classic Original">
+                    <span class="theme-indicator legacy-indicator"></span>
+                    <span>Legacy</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="cyber-neon" title="Futuristic Cyber Neon">
+                    <span class="theme-indicator cyber-indicator"></span>
+                    <span>Cyber</span>
+                </button>
+            </div>
+        </div>
+
         <div class="drawer-option">
             <label for="toggle-contests">Show Upcoming Contests</label>
             <label class="switch">
@@ -147,15 +152,6 @@
             <label for="toggle-shortcuts">Show Shortcuts</label>
             <label class="switch">
                 <input type="checkbox" id="toggle-shortcuts" class="toggle-switch" data-target="#shortcut-drawer"
-                    checked>
-                <span class="slider round"></span>
-            </label>
-        </div>
-
-        <div class="drawer-option">
-            <label for="toggle-bookmarks">Show All Bookmarks</label>
-            <label class="switch">
-                <input type="checkbox" id="toggle-bookmarks" class="toggle-switch" data-target="#aesthetic-bookmark-box"
                     checked>
                 <span class="slider round"></span>
             </label>
@@ -200,7 +196,6 @@
     <script src="./Components/Favicon/favicon.js"></script>
     <script src="./Components/Bookmarks/bookmarks.js"></script>
     <script src="./Components/Bookmarks/bookmarkMenu.js"></script>
-    <script src="./Components/Bookmarks/aesthetic-bookmarks.js"></script>
     <script src="./Components/AddShortcut/script.js"></script>
     <script src="./Components/SidePanel/script.js"></script>
     <script src="./Components/Platform/platform.js"></script>

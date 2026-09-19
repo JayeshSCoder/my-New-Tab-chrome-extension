@@ -43,7 +43,7 @@ body, html {
     user-select: none;
 }
 
-/* Cosmic Mesh Ambient Background */
+/* Cosmic Mesh Ambient Background (Glassmorphism Default) */
 .background {
     position: fixed;
     inset: 0;
@@ -56,7 +56,7 @@ body, html {
     background-size: cover;
     background-position: center;
     z-index: -1;
-    transition: background-image 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-image 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
 }
 
 /* Subtle darkened vignette when custom wallpaper is loaded for readability */
@@ -311,4 +311,259 @@ header {
         opacity: 1;
         transform: translateY(-50%);
     }
+}
+
+/* ==========================================================================
+   THEME 1: LEGACY (Classic Original Design)
+   ========================================================================== */
+
+[data-theme="legacy"] body {
+    font-family: Arial, sans-serif;
+}
+
+[data-theme="legacy"] .background {
+    background: none;
+    background-color: #333333e6;
+}
+
+[data-theme="legacy"] .background.has-custom-bg::after {
+    display: none;
+}
+
+[data-theme="legacy"] header {
+    top: 15%;
+    gap: 16px;
+}
+
+[data-theme="legacy"] .clock-widget {
+    min-width: 320px;
+    padding: 16px 28px;
+    border-radius: 12px;
+    background: rgba(35, 38, 43, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: #fff;
+    transform: none;
+}
+
+[data-theme="legacy"] .clock-widget:hover {
+    transform: none;
+    box-shadow: none;
+    background: rgba(35, 38, 43, 0.78);
+}
+
+[data-theme="legacy"] .clock-greeting {
+    display: none;
+}
+
+[data-theme="legacy"] .clock-time {
+    font-family: Arial, sans-serif;
+    font-size: 48px;
+    font-weight: 600;
+    text-shadow: none;
+}
+
+[data-theme="legacy"] .clock-date {
+    margin-top: 6px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: Arial, sans-serif;
+}
+
+[data-theme="legacy"] .search-container {
+    width: 60%;
+    max-width: 500px;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0;
+}
+
+[data-theme="legacy"] .search-container:hover,
+[data-theme="legacy"] .search-container:focus-within {
+    background-color: #fff;
+    border-color: #ccc;
+    box-shadow: none;
+    transform: none;
+}
+
+[data-theme="legacy"] .search-icon-wrapper {
+    display: none;
+}
+
+[data-theme="legacy"] .search-container input[type="text"] {
+    padding: 10px;
+    color: #333;
+    font-size: 14px;
+}
+
+[data-theme="legacy"] .search-container input[type="text"]::placeholder {
+    color: #888;
+}
+
+[data-theme="legacy"] .search-container button {
+    width: auto;
+    height: auto;
+    padding: 10px 14px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] .search-container button:hover {
+    background-color: #555;
+    transform: none;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] #changeBackgroundBtn {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background-image: url('./icons/pen.png');
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] #changeBackgroundBtn svg {
+    display: none;
+}
+
+[data-theme="legacy"] #changeBackgroundBtn:hover {
+    transform: scale(1.1);
+    background-image: url('./icons/pen.png');
+    box-shadow: none;
+}
+
+[data-theme="legacy"] #add-sticky-note-btn {
+    bottom: 20px;
+    right: 80px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] #add-sticky-note-btn:hover {
+    transform: scale(1.1);
+    box-shadow: none;
+}
+
+[data-theme="legacy"] #open-right-drawer {
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background-color: #444;
+    border-radius: 8px;
+    border: none;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] #open-right-drawer:hover {
+    background-color: #555;
+    transform: none;
+}
+
+/* ==========================================================================
+   THEME 2: CYBER NEON (Futuristic Cyberpunk Aesthetic)
+   ========================================================================== */
+
+[data-theme="cyber-neon"] .background {
+    background: 
+        radial-gradient(circle at 18% 18%, rgba(0, 240, 255, 0.2) 0%, transparent 45%),
+        radial-gradient(circle at 82% 82%, rgba(255, 0, 127, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+        linear-gradient(180deg, #050711 0%, #090e24 100%);
+    background-color: #050711;
+}
+
+[data-theme="cyber-neon"] .clock-widget {
+    background: rgba(8, 12, 28, 0.88);
+    border: 1px solid rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.25), inset 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+[data-theme="cyber-neon"] .clock-widget:hover {
+    border-color: #00f0ff;
+    box-shadow: 0 0 35px rgba(0, 240, 255, 0.45), inset 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+[data-theme="cyber-neon"] .clock-greeting {
+    color: #00f0ff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+}
+
+[data-theme="cyber-neon"] .clock-time {
+    color: #ffffff;
+    text-shadow: 0 0 16px rgba(0, 240, 255, 0.85), 0 0 32px rgba(0, 240, 255, 0.45);
+}
+
+[data-theme="cyber-neon"] .clock-date {
+    color: #e0e7ff;
+    text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+}
+
+[data-theme="cyber-neon"] .search-container {
+    background: rgba(10, 15, 34, 0.8);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+[data-theme="cyber-neon"] .search-container:hover {
+    border-color: rgba(0, 240, 255, 0.7);
+    box-shadow: 0 0 28px rgba(0, 240, 255, 0.35);
+}
+
+[data-theme="cyber-neon"] .search-container:focus-within {
+    border-color: #00f0ff;
+    box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.35), 0 0 30px rgba(0, 240, 255, 0.5);
+}
+
+[data-theme="cyber-neon"] .search-container button {
+    background: linear-gradient(135deg, #00f0ff, #0077ff);
+    color: #050711;
+    font-weight: 700;
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.6);
+}
+
+[data-theme="cyber-neon"] .search-container button:hover {
+    background: linear-gradient(135deg, #33f3ff, #1a88ff);
+    box-shadow: 0 0 24px rgba(0, 240, 255, 0.9);
+}
+
+[data-theme="cyber-neon"] #changeBackgroundBtn,
+[data-theme="cyber-neon"] #add-sticky-note-btn,
+[data-theme="cyber-neon"] #open-right-drawer {
+    background: rgba(10, 14, 30, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    color: #00f0ff;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+}
+
+[data-theme="cyber-neon"] #changeBackgroundBtn:hover,
+[data-theme="cyber-neon"] #add-sticky-note-btn:hover,
+[data-theme="cyber-neon"] #open-right-drawer:hover {
+    border-color: #00f0ff;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+    transform: translateY(-2px) scale(1.08);
 }

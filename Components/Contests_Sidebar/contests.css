@@ -158,3 +158,92 @@
 .contest-error:hover {
     transform: none !important;
 }
+
+/* ==================== THEME OVERRIDES FOR CONTESTS ==================== */
+
+/* Legacy Theme */
+[data-theme="legacy"] .sidebar {
+    top: 80px;
+    right: 20px;
+    width: 200px;
+    background-color: #ffffff;
+    border-left: 2px solid #ccc;
+    box-shadow: -2px 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+[data-theme="legacy"] .sidebar-toggle {
+    padding: 15px;
+    height: 45px;
+    background-color: #007BFF;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+}
+
+[data-theme="legacy"] .contest-list {
+    background-color: #f9f9f9;
+    border-top: 1px solid #ccc;
+    height: 300px;
+    padding: 10px;
+}
+
+[data-theme="legacy"] .contest-list li {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(115 152 177 / 29%);
+    color: #25190f;
+    font-weight: 500;
+    border: none;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] .contest-list li:hover {
+    background-color: #007BFF;
+    color: #fff;
+    transform: none;
+    box-shadow: none;
+}
+
+[data-theme="legacy"] .contest-title {
+    color: inherit;
+    font-size: 13px;
+}
+
+[data-theme="legacy"] .contest-badge {
+    display: none;
+}
+
+[data-theme="legacy"] .contest-time {
+    color: inherit;
+    font-size: 12px;
+}
+
+/* Cyber Neon Theme */
+[data-theme="cyber-neon"] .sidebar {
+    background: rgba(8, 12, 28, 0.94);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+}
+
+[data-theme="cyber-neon"] .sidebar-toggle {
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 127, 0.2));
+    color: #00f0ff;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+[data-theme="cyber-neon"] .contest-badge {
+    background: rgba(255, 0, 127, 0.25);
+    color: #ff66b2;
+    box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+    border: 1px solid rgba(255, 0, 127, 0.4);
+}
+
+[data-theme="cyber-neon"] .contest-list li:hover {
+    background: rgba(0, 240, 255, 0.15);
+    border-color: rgba(0, 240, 255, 0.6);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+}

@@ -1,25 +1,52 @@
 const rightDrawer = document.getElementById("right-drawer");
 const openDrawerBtn = document.getElementById("open-right-drawer");
 
+// Theme management
+const THEME_STORAGE_KEY = 'app-theme';
+const DEFAULT_THEME = 'glassmorphism';
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(THEME_STORAGE_KEY, theme);
+
+  const themeButtons = document.querySelectorAll('.theme-pill-btn');
+  themeButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+}
+
+// Immediately apply saved theme on initial script load
+const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME;
+document.documentElement.setAttribute('data-theme', savedTheme);
 
 // Show drawer & hide button
-openDrawerBtn.addEventListener("click", () => {
-  rightDrawer.classList.add("open");
-  openDrawerBtn.style.display = "none";
-});
+if (openDrawerBtn && rightDrawer) {
+  openDrawerBtn.addEventListener("click", () => {
+    rightDrawer.classList.add("open");
+    openDrawerBtn.style.display = "none";
+  });
 
-// Hide drawer when clicking outside
-document.addEventListener("click", (e) => {
-  if (!rightDrawer.contains(e.target) && !openDrawerBtn.contains(e.target)) {
-    rightDrawer.classList.remove("open");
-    openDrawerBtn.style.display = "block";
-  }
-});
+  // Hide drawer when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!rightDrawer.contains(e.target) && !openDrawerBtn.contains(e.target)) {
+      rightDrawer.classList.remove("open");
+      openDrawerBtn.style.display = "flex";
+    }
+  });
+}
 
-
-
-// Setup all toggles dynamically
+// Setup all toggles and theme switcher dynamically
 document.addEventListener("DOMContentLoaded", () => {
+  // Theme switcher buttons
+  const themeButtons = document.querySelectorAll('.theme-pill-btn');
+  themeButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+    btn.addEventListener('click', () => {
+      applyTheme(btn.dataset.theme);
+    });
+  });
+
+  // Feature toggles
   const toggles = document.querySelectorAll(".toggle-switch");
 
   toggles.forEach(toggle => {
@@ -46,8 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Options that are only shown while another feature is enabled,
-  // for example "Clear Empty Notes" while sticky notes are on
+  // Options that are only shown while another feature is enabled
   document.querySelectorAll("[data-visible-with]").forEach((option) => {
     const controller = document.getElementById(option.dataset.visibleWith);
 
@@ -62,11 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 // Determine the default display style for different elements
 function getDisplayStyle(el) {
   if (el.id === "shortcut-drawer") return "flex";
-  if (el.id === "aesthetic-bookmark-box") return "block";
   if (el.id === "add-sticky-note-btn") return "flex";
   return "block"; // default fallback
 }

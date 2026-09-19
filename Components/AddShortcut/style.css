@@ -278,3 +278,93 @@
     transform: scale(1);
   }
 }
+
+/* ==================== THEME OVERRIDES FOR SHORTCUTS ==================== */
+
+/* Legacy Theme */
+[data-theme="legacy"] #shortcut-drawer {
+  bottom: 90px;
+  width: 50%;
+}
+
+[data-theme="legacy"] #shortcuts-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  gap: 15px;
+  padding: 15px 20px;
+}
+
+[data-theme="legacy"] .shortcut-card {
+  width: 70px;
+  height: 70px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #526065;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: none;
+}
+
+[data-theme="legacy"] .shortcut-card:hover {
+  background-color: #526065;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: none;
+}
+
+[data-theme="legacy"] .shortcut-card img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 6px;
+  filter: none;
+}
+
+[data-theme="legacy"] .shortcut-card div {
+  font-size: 13px;
+}
+
+[data-theme="legacy"] #add-shortcut-btn {
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #4caf50;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="legacy"] #add-shortcut-btn:hover {
+  background: #45a045;
+  transform: none;
+}
+
+/* Cyber Neon Theme */
+[data-theme="cyber-neon"] #shortcuts-container {
+  border: 1px solid rgba(255, 0, 127, 0.4);
+  background: rgba(8, 12, 28, 0.85);
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.2);
+}
+
+[data-theme="cyber-neon"] .shortcut-card {
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  background: rgba(14, 20, 42, 0.85);
+}
+
+[data-theme="cyber-neon"] .shortcut-card:hover {
+  border-color: #00f0ff;
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.6);
+  transform: translateY(-4px);
+}
+
+[data-theme="cyber-neon"] #add-shortcut-btn {
+  border: 1px dashed #00f0ff;
+  color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+[data-theme="cyber-neon"] #add-shortcut-btn:hover {
+  background: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.7);
+}
