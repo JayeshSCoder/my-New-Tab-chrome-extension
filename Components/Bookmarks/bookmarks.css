@@ -1,42 +1,31 @@
-/* Reset for margins and padding */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Style for the entire page */
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-}
-
-
-/* Bookmark bar that slides in from the left edge */
+/* Bookmark Bar - Modern Sliding Acrylic Glass Shelf */
 .bookmark-sidebar {
-    --bookmark-bar-width: 220px; /* Kept in sync by bookmarks.js */
+    --bookmark-bar-width: 220px;
 
     position: fixed;
-    top: 20px; /* Adjust if needed */
+    top: 24px;
     left: 0;
     width: var(--bookmark-bar-width);
     max-width: calc(100vw - 20px);
-    height: 90vh; /* Cover most of the viewport height */
-    border: 2px solid rgba(255, 255, 255, 0.3); /* Add a light border */
-    border-radius: 10px; /* Make border rounded */
+    height: calc(100vh - 48px);
+    background: rgba(18, 23, 34, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: none;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 12px 0 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
-    padding: 10px 0;
+    padding: 14px 0;
     z-index: 1000;
-    background-color: #23262bc4;
 
-    transform: translateX(-100%); /* Hidden by default */
-    transition: transform 0.3s ease; /* Slide animation */
-
-    /* Scrolling happens inside .bookmark-sidebar-scroll so no scrollbar is painted */
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Legacy Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
 }
 
 .bookmark-sidebar::-webkit-scrollbar {
@@ -47,29 +36,28 @@ body {
 
 /* Class to show sidebar */
 .bookmark-sidebar.show {
-    transform: translateX(0); /* Slide into view */
+    transform: translateX(0);
 }
 
-/* No slide animation while the width is being dragged */
+/* No slide animation while width is being dragged */
 .bookmark-sidebar.resizing {
     transition: none;
     user-select: none;
 }
 
-/* Keep the resize cursor while dragging, even outside of the bar */
 body.bookmark-bar-resizing {
     cursor: ew-resize;
     user-select: none;
 }
 
-/* Invisible scroll area that holds the bookmark items */
+/* Scroll area for bookmarks */
 .bookmark-sidebar-scroll {
     flex: 1;
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Legacy Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .bookmark-sidebar-scroll::-webkit-scrollbar {
@@ -78,69 +66,72 @@ body.bookmark-bar-resizing {
     display: none;
 }
 
-/* Bookmark list styling */
+/* Bookmark list */
 .bookmark-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 0 8px; /* Remove default padding */
+    gap: 4px;
+    padding: 0 10px;
+    margin: 0;
 }
 
 .bookmark-list li {
-    /* Remove the default list item margin */
     margin: 0;
     width: 100%;
 }
 
-/* Bookmark link styling */
+/* Bookmark item link */
 .bookmark-list a {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
     min-width: 0;
-    padding: 6px 8px;
-    border-radius: 8px;
-    color: #ffffff;
+    padding: 8px 10px;
+    border-radius: 12px;
+    color: #f1f5f9;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bookmark-list a:hover {
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateX(2px);
 }
 
-/* Bookmark icon styling */
+/* Bookmark icon */
 .bookmark-icon {
     flex: 0 0 auto;
-    width: 30px; /* Set width of icon */
-    height: 30px; /* Set height of icon */
-    border-radius: 50%; /* Make the icon circular */
-    object-fit: contain; /* Show the whole icon */
-    /* Light plate so dark or transparent favicons stay visible on the bar */
-    background-color: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
-    transition: transform 0.3s; /* Smooth scaling effect */
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: contain;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
 }
 
 .bookmark-list a:hover .bookmark-icon {
-    transform: scale(1.1); /* Scale effect on hover */
+    transform: scale(1.1);
 }
 
-/* Bookmark title shown next to the icon */
+/* Bookmark title */
 .bookmark-title {
     flex: 1 1 auto;
     min-width: 0;
     font-size: 13px;
+    font-weight: 500;
     line-height: 1.3;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Long names end with "..." */
+    text-overflow: ellipsis;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-/* Very narrow bar: keep only the icons visible */
+/* Narrow bar - icons only */
 .bookmark-sidebar.icons-only .bookmark-list {
     padding: 0;
 }
@@ -151,19 +142,19 @@ body.bookmark-bar-resizing {
 
 .bookmark-sidebar.icons-only .bookmark-list a {
     justify-content: center;
-    padding: 6px;
+    padding: 8px;
 }
 
 .bookmark-sidebar.icons-only .bookmark-title {
     display: none;
 }
 
-/* Drag handle used to resize the bar horizontally */
+/* Drag Handle */
 .bookmark-resize-handle {
     position: absolute;
     top: 0;
     right: 0;
-    width: 10px;
+    width: 12px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -171,37 +162,45 @@ body.bookmark-bar-resizing {
     cursor: ew-resize;
     background-color: transparent;
     transition: background-color 0.2s ease;
-    touch-action: none; /* Let the handle receive touch drags */
+    touch-action: none;
 }
 
 .bookmark-resize-handle::after {
     content: "";
-    width: 2px;
-    height: 44px;
-    border-radius: 2px;
-    background-color: rgba(255, 255, 255, 0.35);
+    width: 3px;
+    height: 48px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.25);
+    transition: background-color 0.2s;
+}
+
+.bookmark-resize-handle:hover::after,
+.bookmark-resize-handle.active::after {
+    background-color: rgba(99, 102, 241, 0.8);
+    height: 60px;
 }
 
 .bookmark-resize-handle:hover,
 .bookmark-resize-handle.active {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* ---------- Options list shown when a bookmark is right-clicked ---------- */
-
+/* Context Menu */
 .bookmark-context-menu {
     position: fixed;
     display: none;
     min-width: 180px;
-    padding: 5px 0;
-    background: #2c2c2c;
-    border: 1px solid #555;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    z-index: 10001; /* Above the sidebar and the page context menu */
-    font-size: 14px;
-    color: #fff;
-    backdrop-filter: blur(10px);
+    padding: 6px;
+    background: rgba(22, 27, 38, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    font-size: 13px;
+    font-family: inherit;
+    color: #ffffff;
 }
 
 .bookmark-context-menu.show {
@@ -224,32 +223,36 @@ body.bookmark-bar-resizing {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.15s ease;
     white-space: nowrap;
+    font-weight: 500;
 }
 
 .bookmark-context-option:hover {
-    background-color: #404040;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .bookmark-context-separator {
     height: 1px;
-    margin: 5px 0;
-    background-color: #555;
+    margin: 4px 0;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ---------- Editor for the name and URL of a bookmark ---------- */
-
+/* Editor Dialog */
 .bookmark-editor {
     position: fixed;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 10002;
+    animation: modalFadeIn 0.2s ease-out;
 }
 
 .bookmark-editor.hidden {
@@ -257,118 +260,121 @@ body.bookmark-bar-resizing {
 }
 
 .bookmark-editor-dialog {
-    width: min(420px, 90vw);
+    width: min(420px, 92vw);
     padding: 24px;
-    background: rgba(30, 30, 30, 0.97);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(12px);
+    background: rgba(22, 27, 38, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     color: #ffffff;
+    font-family: inherit;
 }
 
 .bookmark-editor-dialog h3 {
-    margin-bottom: 6px;
-    font-size: 17px;
+    margin-bottom: 4px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .bookmark-editor-dialog label {
     font-size: 12px;
+    font-weight: 500;
     color: rgba(255, 255, 255, 0.7);
 }
 
 .bookmark-editor-dialog input {
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
     outline: none;
-    background: #444;
+    background: rgba(255, 255, 255, 0.06);
     color: #ffffff;
     font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s ease;
 }
 
 .bookmark-editor-dialog input:focus {
-    background: #4d4d4d;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.8);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
 
 .bookmark-editor-message {
     min-height: 16px;
     font-size: 12px;
-    color: #ff8a80;
+    color: #f87171;
 }
 
 .bookmark-editor-buttons {
     display: flex;
     gap: 10px;
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
 .bookmark-editor-buttons button {
     flex: 1;
-    padding: 10px;
+    padding: 11px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #bookmark-editor-save {
-    background-color: #2196f3;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
     color: #ffffff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
 }
 
 #bookmark-editor-save:hover {
-    background-color: #1e88e5;
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.45);
 }
 
 #bookmark-editor-cancel {
-    background-color: #e53935;
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 #bookmark-editor-cancel:hover {
-    background-color: #d32f2f;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
 }
 
-/* ---------- Small feedback message ---------- */
-
+/* Toast Message */
 .bookmark-menu-toast {
     position: fixed;
     left: 50%;
     bottom: 40px;
     transform: translateX(-50%) translateY(10px);
-    padding: 10px 18px;
-    background: rgba(35, 38, 43, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
+    padding: 10px 20px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
     color: #ffffff;
     font-size: 13px;
+    font-weight: 500;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 10003;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .bookmark-menu-toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
-}
-
-/* Main content area */
-.content {
-    margin-left: 100px;
-    padding: 20px;
-}
-
-h1 {
-    margin-bottom: 10px;
-}
-
-p {
-    color: #333;
 }

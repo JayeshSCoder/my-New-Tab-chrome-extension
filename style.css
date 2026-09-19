@@ -1,177 +1,314 @@
-/* Basic reset for margins and padding */
+/* Modern Google Fonts & Design System */
+:root {
+    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-hover: rgba(255, 255, 255, 0.09);
+    --glass-panel: rgba(22, 27, 38, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-border-hover: rgba(255, 255, 255, 0.24);
+    
+    --color-primary: #6366f1;
+    --color-primary-glow: rgba(99, 102, 241, 0.35);
+    --color-accent: #38bdf8;
+    
+    --text-main: #f8fafc;
+    --text-muted: rgba(248, 250, 252, 0.7);
+    --text-dim: rgba(248, 250, 252, 0.45);
+    
+    --shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.2);
+    --shadow-elevated: 0 12px 36px rgba(0, 0, 0, 0.35);
+    --shadow-glass: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Basic Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-
-/* Reset margin and padding for the body */
 body, html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    font-family: var(--font-body);
+    color: var(--text-main);
+    overflow: hidden;
+    user-select: none;
 }
 
-/* Header for the search bar, the clock sits above it */
+/* Cosmic Mesh Ambient Background */
+.background {
+    position: fixed;
+    inset: 0;
+    background: 
+        radial-gradient(ellipse 90% 60% at 50% -15%, rgba(99, 102, 241, 0.22), transparent 70%),
+        radial-gradient(ellipse 70% 50% at 85% 95%, rgba(139, 92, 246, 0.18), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 15% 90%, rgba(56, 189, 248, 0.14), transparent 70%),
+        #0b0f19;
+    background-color: #0b0f19;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    transition: background-image 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Subtle darkened vignette when custom wallpaper is loaded for readability */
+.background.has-custom-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(11, 15, 25, 0.3) 0%, rgba(11, 15, 25, 0.65) 100%);
+    pointer-events: none;
+}
+
+/* Header container: clock widget and search bar */
 header {
     width: 100%;
     display: flex;
-    flex-direction: column; /* Clock above the search bar */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 16px;
-    padding: 0; /* Remove any extra padding */
-    background: none; /* Ensure no background color */
+    gap: 20px;
+    padding: 0;
     position: absolute;
-    top: 15%; /* Adjust this value to position the search bar */
+    top: 20%;
     transform: translateY(-50%);
-    border: none; /* Remove any default border */
-}
-
-
-/* Center the search container and style */
-.search-container {
-    width: 60%;
-    max-width: 500px;
-    display: flex;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    overflow: hidden;
-    background-color: #fff; /* Keeps background of search box white */
-}
-
-/* Style search input */
-.search-container input[type="text"] {
-    flex: 1;
-    padding: 10px;
     border: none;
-    outline: none;
+    z-index: 10;
+    animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Style search button */
-.search-container button {
-    padding: 10px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-.search-container button:hover {
-    background-color: #555;
-}
-
+/* Clock Widget: Modern Floating Glass Card */
 .clock-widget {
-    min-width: 320px; /* Wide enough for the larger time + AM / PM suffix */
-    padding: 16px 28px;
-    border-radius: 12px;
-    background: rgba(35, 38, 43, 0.78);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    line-height: 1.2;
+    min-width: 340px;
+    padding: 20px 36px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+    color: var(--text-main);
     text-align: center;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: default;
+}
+
+.clock-widget:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--glass-border-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.clock-greeting {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
 }
 
 .clock-time {
-    font-size: 48px;
+    font-family: var(--font-heading);
+    font-size: 60px;
     font-weight: 600;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
     white-space: nowrap;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
 }
 
 .clock-date {
-    margin-top: 6px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+
+/* Search Container: Sleek Frosted Pill */
+.search-container {
+    width: 90%;
+    max-width: 580px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px 0 18px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-elevated), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.search-container:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: var(--glass-border-hover);
+}
+
+.search-container:focus-within {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(129, 140, 248, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-glow), var(--shadow-elevated);
+    transform: translateY(-1px);
+}
+
+.search-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    margin-right: 12px;
+    transition: color 0.2s ease;
+}
+
+.search-container:focus-within .search-icon-wrapper {
+    color: var(--text-main);
+}
+
+.search-container input[type="text"] {
+    flex: 1;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: inherit;
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.85);
+    font-weight: 400;
+    color: var(--text-main);
+    user-select: text;
 }
 
-
-
-
-
-
-
-
-
-
-/* Full-page background just below the search box */
-.background {
-    position: absolute; /* Allows it to cover the entire page */
-    top:0; /* Adjust this value based on the height of your search box */
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* background-image: url('./images/bg.jpg'); Default image */
-    background-color: #333333e6;
-    
-    background-size: cover; /* Ensures the image covers the entire area */
-    background-position: center; /* Centers the image */
-    z-index: -1; /* Keeps it behind other content */
-    transition: background-image 0.5s ease-in-out; /* Smooth transition for background change */
+.search-container input[type="text"]::placeholder {
+    color: var(--text-dim);
+    font-weight: 400;
 }
 
-
-
-
-/*--------------------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
-
-/*
-    Change Background
-*/
-#changeBackgroundBtn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%; /* Makes the button circular */
-    backdrop-filter: blur(8px);
+.search-container button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    z-index: 1000;
-    background-image: url('./icons/pen.png'); /* Replace with your pen icon URL or path */
-    background-size: 100%; /* Size of the icon inside the button */
-    background-position: center;
-    background-repeat: no-repeat;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#changeBackgroundBtn:hover {
-    background-image: url('./icons/pen.png'); /* Replace with your pen icon URL or path */
-    transform: scale(1.1);
+.search-container button:hover {
+    background: var(--color-primary);
+    border-color: rgba(199, 210, 254, 0.6);
+    transform: scale(1.08);
+    box-shadow: 0 4px 14px var(--color-primary-glow);
 }
 
+.search-container button:active {
+    transform: scale(0.96);
+}
 
+/* Floating Action Buttons at Bottom Right */
+#changeBackgroundBtn,
+#add-sticky-note-btn {
+    position: fixed;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(22, 27, 38, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-subtle), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999;
+}
 
+#changeBackgroundBtn {
+    bottom: 24px;
+    right: 24px;
+}
 
-/* Default tooltip styling */
-#changeBackgroundBtn::after {
-    content: "Customise";
+#add-sticky-note-btn {
+    bottom: 24px;
+    right: 80px;
+}
+
+#changeBackgroundBtn:hover,
+#add-sticky-note-btn:hover {
+    background: rgba(30, 38, 54, 0.92);
+    border-color: var(--glass-border-hover);
+    transform: translateY(-3px) scale(1.06);
+    box-shadow: var(--shadow-elevated);
+}
+
+#changeBackgroundBtn:active,
+#add-sticky-note-btn:active {
+    transform: translateY(0) scale(0.96);
+}
+
+/* Polished Tooltips */
+#changeBackgroundBtn::after,
+#add-sticky-note-btn::after {
     position: absolute;
-    bottom: 70px;
-    right: 50%;
-    transform: translateX(50%);
-    padding: 5px 10px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+    bottom: 58px;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 6px 12px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
     font-size: 12px;
-    border-radius: 5px;
+    font-weight: 500;
+    border-radius: 8px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease-in-out;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
+    box-shadow: var(--shadow-elevated);
 }
 
-/* Tooltip visibility on hover */
-#changeBackgroundBtn:hover::after {
+#changeBackgroundBtn::after {
+    content: "Customise Wallpaper";
+}
+
+#add-sticky-note-btn::after {
+    content: "Add Sticky Note";
+}
+
+#changeBackgroundBtn:hover::after,
+#add-sticky-note-btn:hover::after {
     opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Keyframe animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-60%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%);
+    }
 }
