@@ -1,163 +1,247 @@
-/* General body style */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
-  color: white;
-  min-height: 100vh;
-}
-
-/* Main content */
-#main-content {
-  text-align: center;
-  padding-top: 100px;
-  padding-bottom: 120px;
-}
-
-/* Drawer */
+/* Shortcuts Dock - Modern Frosted Glass */
 #shortcut-drawer {
   position: fixed;
-  bottom: 90px;
-  width: 50%;
-  
-  padding: 15px 20px;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90vw;
+  padding: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
   justify-content: center;
   align-items: center;
-  justify-self: anchor-center;
-  border-top: 0px solid rgba(255, 255, 255, 0.1);
   z-index: 100;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Shortcut cards */
 #shortcuts-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.25s ease;
 }
 
-/* Optional: make shortcut cards consistent in size */
+#shortcuts-container:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Shortcut Tile */
 .shortcut-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 70px;
-    height: 70px;
-    padding: 15px;
-    border-radius: 10px;
-    transition: 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    background-color: #526065;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 74px;
+  height: 76px;
+  padding: 8px 6px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
 }
 
+.shortcut-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
 
-/* Add button */
+.shortcut-card:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.shortcut-card img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.shortcut-card div {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Add Shortcut Button */
 #add-shortcut-btn {
-  
-  font-size: 24px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #4caf50;
-  color: white;
-  border: none;
+  font-size: 20px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-  transition: background 0.3s ease;
+  box-shadow: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #add-shortcut-btn:hover {
-  background: #45a045;
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(129, 140, 248, 0.6);
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.05);
 }
 
-/* Modal styles */
+#add-shortcut-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* Shortcut Modal Overlay */
 #shortcut-modal {
   position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(12px);
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: none;
+  align-items: center;
+  justify-content: center;
   z-index: 2000;
-  min-width: 260px;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+#shortcut-modal.show {
+  display: flex !important;
 }
 
 .modal-content {
+  width: 320px;
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(22, 27, 38, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
 }
 
 .modal-content input {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   outline: none;
+  font-family: inherit;
   font-size: 14px;
-  background: #444;
-  color: white;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.modal-content input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(99, 102, 241, 0.8);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.modal-content input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .modal-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 10px;
+  margin-top: 6px;
 }
 
 .modal-buttons button {
   flex: 1;
-  padding: 10px;
+  padding: 11px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #save-shortcut {
-  background-color: #2196f3;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+#save-shortcut:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.45);
 }
 
 #cancel-shortcut {
-  background-color: #e53935;
-  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* Utility */
-.hidden {
-  display: none;
+#cancel-shortcut:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
 }
 
-
-
-
+/* Context Menu */
 #custom-context-menu {
   position: absolute;
-  background: rgba(30, 30, 30, 0.95);
+  background: rgba(22, 27, 38, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   z-index: 9999;
-  min-width: 130px;
-  font-size: 14px;
-  backdrop-filter: blur(10px);
+  min-width: 140px;
+  padding: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  animation: contextMenuFade 0.15s ease-out;
 }
 
 .context-option {
-  padding: 10px 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .context-option:hover {
@@ -165,5 +249,207 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes contextMenuFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==================== THEME OVERRIDES FOR SHORTCUTS ==================== */
+
+/* Legacy Theme */
+[data-theme="legacy"] #shortcut-drawer {
+  bottom: 90px;
+  width: 50%;
+}
+
+[data-theme="legacy"] #shortcuts-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  gap: 15px;
+  padding: 15px 20px;
+}
+
+[data-theme="legacy"] .shortcut-card {
+  width: 70px;
+  height: 70px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #526065;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: none;
+}
+
+[data-theme="legacy"] .shortcut-card:hover {
+  background-color: #526065;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: none;
+}
+
+[data-theme="legacy"] .shortcut-card img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 6px;
+  filter: none;
+}
+
+[data-theme="legacy"] .shortcut-card div {
+  font-size: 13px;
+}
+
+[data-theme="legacy"] #add-shortcut-btn {
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #4caf50;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="legacy"] #add-shortcut-btn:hover {
+  background: #45a045;
+  transform: none;
+}
+
+/* Cyber Neon Theme */
+[data-theme="cyber-neon"] #shortcuts-container {
+  border: 1px solid rgba(255, 0, 127, 0.4);
+  background: rgba(8, 12, 28, 0.85);
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.2);
+}
+
+[data-theme="cyber-neon"] .shortcut-card {
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  background: rgba(14, 20, 42, 0.85);
+}
+
+[data-theme="cyber-neon"] .shortcut-card:hover {
+  border-color: #00f0ff;
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.6);
+  transform: translateY(-4px);
+}
+
+[data-theme="cyber-neon"] #add-shortcut-btn {
+  border: 1px dashed #00f0ff;
+  color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+[data-theme="cyber-neon"] #add-shortcut-btn:hover {
+  background: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.7);
+}
+
+/* Sunset Horizon Theme */
+[data-theme="sunset"] #shortcuts-container {
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  background: rgba(45, 14, 56, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="sunset"] .shortcut-card {
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  background: rgba(58, 20, 72, 0.75);
+}
+
+[data-theme="sunset"] .shortcut-card:hover {
+  border-color: #f97316;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.4);
+  transform: translateY(-3px);
+}
+
+[data-theme="sunset"] #add-shortcut-btn {
+  border: 1px dashed #fb923c;
+  color: #fb923c;
+}
+
+[data-theme="sunset"] #add-shortcut-btn:hover {
+  background: rgba(249, 115, 22, 0.2);
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.5);
+}
+
+/* Nordic Minimalist Theme */
+[data-theme="nordic"] #shortcuts-container {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(22, 32, 50, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="nordic"] .shortcut-card {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(30, 41, 59, 0.75);
+}
+
+[data-theme="nordic"] .shortcut-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+  transform: translateY(-3px);
+}
+
+[data-theme="nordic"] #add-shortcut-btn {
+  border: 1px dashed #38bdf8;
+  color: #38bdf8;
+}
+
+[data-theme="nordic"] #add-shortcut-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+}
+
+/* Emerald Zen Theme */
+[data-theme="emerald"] #shortcuts-container {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(4, 42, 33, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="emerald"] .shortcut-card {
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(6, 56, 44, 0.75);
+}
+
+[data-theme="emerald"] .shortcut-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
+  transform: translateY(-3px);
+}
+
+[data-theme="emerald"] #add-shortcut-btn {
+  border: 1px dashed #34d399;
+  color: #34d399;
+}
+
+[data-theme="emerald"] #add-shortcut-btn:hover {
+  background: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+

@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Tab</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./Components/Contests_Sidebar/contests.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
-    <link rel="stylesheet" href="./Components/Bookmarks/aesthetic-bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
     <link rel="stylesheet" href="./Components/ContextMenu/contextMenu.css">
@@ -21,12 +24,18 @@
 
     <header>
         <div id="clock-widget" class="clock-widget">
+            <div id="clock-greeting" class="clock-greeting">Good day</div>
             <div id="clock-time" class="clock-time">00:00</div>
             <div id="clock-date" class="clock-date">Mon, Jan 01</div>
         </div>
         <div class="search-container">
-            <input type="text" placeholder="Search...">
-            <button type="submit">🔍</button>
+            <span class="search-icon-wrapper">
+                <svg class="search-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="text" placeholder="Search the web or type a URL..." autocomplete="off" spellcheck="false">
+            <button type="submit" aria-label="Search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
         </div>
     </header>
 
@@ -62,28 +71,18 @@
 
 
 
-    <!-- Aesthetic Bookmark Box -->
-    <div id="aesthetic-bookmark-box" class="aesthetic-bookmark-box collapsed">
-        <div class="bookmark-box-header">
-            <h3>📚 All Bookmarks</h3>
-            <button id="bookmark-box-toggle" class="bookmark-box-toggle">+</button>
-        </div>
-        <div class="bookmark-box-content">
-            <div class="bookmark-folders">
-                <!-- Bookmark folders will be populated here -->
-            </div>
-            <div class="bookmark-items">
-                <!-- Non-bookmark-bar bookmarks will be populated here -->
-            </div>
-        </div>
-    </div>
+
 
     <!-- Hidden file input to select background image -->
     <input type="file" id="backgroundFileInput" accept="image/*" style="display: none;" />
     <!-- Sticky Notes button -->
-    <button id="add-sticky-note-btn" class="add-sticky-note-btn">📝</button>
+    <button id="add-sticky-note-btn" class="add-sticky-note-btn" aria-label="Add Sticky Note">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </button>
     <!-- Change Background button -->
-    <button id="changeBackgroundBtn"></button>
+    <button id="changeBackgroundBtn" aria-label="Change Background">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+    </button>
 
 
 
@@ -114,10 +113,44 @@
 
 
     <!-- Right Side Drawer Toggle Button -->
-    <button id="open-right-drawer">⚙️</button>
+    <button id="open-right-drawer" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
     <!-- Right Side Drawer -->
     <div id="right-drawer">
         <h3>Settings</h3>
+
+        <div class="drawer-option drawer-option-stack">
+            <div class="drawer-option-label">
+                <label>Theme Style</label>
+            </div>
+            <div class="theme-switcher" id="theme-switcher">
+                <button type="button" class="theme-pill-btn active" data-theme="glassmorphism" title="Modern Acrylic Glass">
+                    <span class="theme-indicator glass-indicator"></span>
+                    <span>Glass</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="legacy" title="Classic Original">
+                    <span class="theme-indicator legacy-indicator"></span>
+                    <span>Legacy</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="cyber-neon" title="Futuristic Cyber Neon">
+                    <span class="theme-indicator cyber-indicator"></span>
+                    <span>Cyber</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="sunset" title="Warm Sunset Glow">
+                    <span class="theme-indicator sunset-indicator"></span>
+                    <span>Sunset</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="nordic" title="Arctic Slate Minimalist">
+                    <span class="theme-indicator nordic-indicator"></span>
+                    <span>Nordic</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="emerald" title="Tranquil Emerald Zen">
+                    <span class="theme-indicator emerald-indicator"></span>
+                    <span>Emerald</span>
+                </button>
+            </div>
+        </div>
 
         <div class="drawer-option">
             <label for="toggle-contests">Show Upcoming Contests</label>
@@ -131,15 +164,6 @@
             <label for="toggle-shortcuts">Show Shortcuts</label>
             <label class="switch">
                 <input type="checkbox" id="toggle-shortcuts" class="toggle-switch" data-target="#shortcut-drawer"
-                    checked>
-                <span class="slider round"></span>
-            </label>
-        </div>
-
-        <div class="drawer-option">
-            <label for="toggle-bookmarks">Show All Bookmarks</label>
-            <label class="switch">
-                <input type="checkbox" id="toggle-bookmarks" class="toggle-switch" data-target="#aesthetic-bookmark-box"
                     checked>
                 <span class="slider round"></span>
             </label>
@@ -184,7 +208,6 @@
     <script src="./Components/Favicon/favicon.js"></script>
     <script src="./Components/Bookmarks/bookmarks.js"></script>
     <script src="./Components/Bookmarks/bookmarkMenu.js"></script>
-    <script src="./Components/Bookmarks/aesthetic-bookmarks.js"></script>
     <script src="./Components/AddShortcut/script.js"></script>
     <script src="./Components/SidePanel/script.js"></script>
     <script src="./Components/Platform/platform.js"></script>

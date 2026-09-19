@@ -15,6 +15,27 @@ document.body.appendChild(contextMenu);
 let shortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
 let editingIndex = null;
 
+function openShortcutModal(isEdit = false) {
+    if (isEdit && editingIndex !== null) {
+        const shortcut = shortcuts[editingIndex];
+        nameInput.value = shortcut.name;
+        urlInput.value = shortcut.url;
+    } else {
+        editingIndex = null;
+        nameInput.value = "";
+        urlInput.value = "";
+    }
+    modal.classList.add("show");
+    setTimeout(() => nameInput.focus(), 50);
+}
+
+function closeShortcutModal() {
+    modal.classList.remove("show");
+    editingIndex = null;
+    nameInput.value = "";
+    urlInput.value = "";
+}
+
 function renderShortcuts() {
     shortcutsContainer.innerHTML = "";
 
@@ -22,12 +43,13 @@ function renderShortcuts() {
     shortcuts.forEach(({ name, url }, index) => {
         const card = document.createElement("div");
         card.className = "shortcut-card";
+        card.title = `${name} (${url})`;
 
         const formattedURL = url.startsWith("http") ? url : `https://${url}`;
         card.innerHTML = `
-      <img alt="favicon" width="24" height="24" style="margin-bottom: 6px;" />
-      <div style="font-size: 13px;">${name}</div>
-    `;
+            <img alt="favicon" width="28" height="28" />
+            <div>${name}</div>
+        `;
 
         // Browser favicon first, then the icon of the site itself
         applyFaviconWithFallback(card.querySelector('img'), formattedURL, { size: 32 });
@@ -46,33 +68,31 @@ function renderShortcuts() {
     });
 
     // Add the "+" button
-    const addBtn = document.createElement("button");
-    addBtn.id = "add-shortcut-btn";
-    addBtn.textContent = "+";
-    addBtn.onclick = () => {
-        editingIndex = null;
-        nameInput.value = "";
-        urlInput.value = "";
-        modal.style.display = "block";
+    const addShortcutBtn = document.createElement("button");
+    addShortcutBtn.id = "add-shortcut-btn";
+    addShortcutBtn.textContent = "+";
+    addShortcutBtn.title = "Add Shortcut";
+    addShortcutBtn.onclick = () => {
+        openShortcutModal(false);
     };
 
-    shortcutsContainer.appendChild(addBtn);
+    shortcutsContainer.appendChild(addShortcutBtn);
 }
-
 
 function showContextMenu(x, y) {
     contextMenu.innerHTML = `
-    <div class="context-option" id="edit-option">📝 Edit</div>
-    <div class="context-option" id="delete-option">❌ Delete</div>
-  `;
+        <div class="context-option" id="edit-option">✏️ Edit</div>
+        <div class="context-option" id="delete-option">🗑️ Delete</div>
+    `;
     contextMenu.style.top = `${y}px`;
     contextMenu.style.left = `${x}px`;
     contextMenu.classList.remove("hidden");
 
-    // Delay attaching events so the menu isn't instantly hidden
     setTimeout(() => {
-        document.getElementById("edit-option").onclick = handleEdit;
-        document.getElementById("delete-option").onclick = handleDelete;
+        const editOpt = document.getElementById("edit-option");
+        const deleteOpt = document.getElementById("delete-option");
+        if (editOpt) editOpt.onclick = handleEdit;
+        if (deleteOpt) deleteOpt.onclick = handleDelete;
     }, 10);
 }
 
@@ -82,10 +102,7 @@ function hideContextMenu() {
 
 function handleEdit() {
     if (editingIndex !== null) {
-        const shortcut = shortcuts[editingIndex];
-        nameInput.value = shortcut.name;
-        urlInput.value = shortcut.url;
-        modal.style.display = "block";
+        openShortcutModal(true);
     }
     hideContextMenu();
 }
@@ -93,51 +110,75 @@ function handleEdit() {
 function handleDelete() {
     if (editingIndex !== null) {
         shortcuts.splice(editingIndex, 1);
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        saveAndSyncShortcuts();
         renderShortcuts();
     }
     hideContextMenu();
 }
 
 // Add button opens modal
-addBtn.onclick = () => {
-    editingIndex = null;
-    nameInput.value = "";
-    urlInput.value = "";
-    modal.style.display = "block";
-};
+if (addBtn) {
+    addBtn.onclick = () => openShortcutModal(false);
+}
 
 // Cancel button hides modal
-cancelBtn.onclick = () => {
-    modal.style.display = "none";
-    editingIndex = null;
-    nameInput.value = "";
-    urlInput.value = "";
-};
+if (cancelBtn) {
+    cancelBtn.onclick = closeShortcutModal;
+}
+
+function saveAndSyncShortcuts() {
+    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+        chrome.storage.local.set({ shortcuts: shortcuts });
+    }
+}
+
+// Close when clicking modal backdrop
+if (modal) {
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            closeShortcutModal();
+        }
+    });
+}
 
 // Save (either add new or update existing)
-saveBtn.onclick = () => {
-    const name = nameInput.value.trim();
-    const url = urlInput.value.trim();
+if (saveBtn) {
+    saveBtn.onclick = () => {
+        const name = nameInput.value.trim();
+        const url = urlInput.value.trim();
 
-    if (!name || !url) {
-        alert("Please enter both name and URL.");
-        return;
+        if (!name || !url) {
+            alert("Please enter both name and URL.");
+            return;
+        }
+
+        if (editingIndex !== null) {
+            // Update existing shortcut
+            shortcuts[editingIndex] = { name, url };
+        } else {
+            // Add new shortcut
+            shortcuts.push({ name, url });
+        }
+
+        saveAndSyncShortcuts();
+        renderShortcuts();
+        closeShortcutModal();
+    };
+}
+
+// Enter key in inputs saves shortcut
+[nameInput, urlInput].forEach(input => {
+    if (input) {
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                saveBtn.click();
+            } else if (e.key === "Escape") {
+                closeShortcutModal();
+            }
+        });
     }
-
-    if (editingIndex !== null) {
-        // Update existing shortcut
-        shortcuts[editingIndex] = { name, url };
-    } else {
-        // Add new shortcut
-        shortcuts.push({ name, url });
-    }
-
-    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-    renderShortcuts();
-    modal.style.display = "none";
-    editingIndex = null;
-};
+});
 
 // Global click hides context menu (unless clicked inside)
 document.addEventListener("click", (e) => {
@@ -146,5 +187,38 @@ document.addEventListener("click", (e) => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", renderShortcuts);
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        hideContextMenu();
+        closeShortcutModal();
+    }
+});
 
+document.addEventListener("DOMContentLoaded", () => {
+    renderShortcuts();
+
+    // Sync shortcuts with chrome.storage.local
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        if (chrome.storage.local) {
+            chrome.storage.local.get('shortcuts', (data) => {
+                if (data && Array.isArray(data.shortcuts) && data.shortcuts.length > 0) {
+                    shortcuts = data.shortcuts;
+                    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+                    renderShortcuts();
+                } else if (shortcuts.length > 0) {
+                    // Seed chrome.storage.local with existing localStorage shortcuts
+                    chrome.storage.local.set({ shortcuts: shortcuts });
+                }
+            });
+        }
+        if (chrome.storage.onChanged) {
+            chrome.storage.onChanged.addListener((changes, area) => {
+                if (area === 'local' && changes.shortcuts) {
+                    shortcuts = changes.shortcuts.newValue || [];
+                    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+                    renderShortcuts();
+                }
+            });
+        }
+    }
+});

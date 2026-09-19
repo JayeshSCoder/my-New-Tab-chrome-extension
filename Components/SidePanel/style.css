@@ -1,41 +1,60 @@
 /* Right Drawer Toggle Button */
 #open-right-drawer {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #444;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(22, 27, 38, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 1001;
-  transition: background 0.3s ease;
-}
-#open-right-drawer:hover {
-  background-color: #555;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Right Side Drawer */
+#open-right-drawer:hover {
+  background: rgba(30, 38, 54, 0.92);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+#open-right-drawer:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Right Side Drawer - Acrylic Glass Panel */
 #right-drawer {
   position: fixed;
-  top: 0;
-  right: -300px; /* Hidden by default */
-  width: 280px;
-  height: 100vh;
-  overflow-y: auto; /* Keep every option reachable on short screens */
-  scrollbar-width: none; /* Hide the scrollbar */
+  top: 16px;
+  right: -360px;
+  width: 320px;
+  height: calc(100vh - 32px);
+  margin-right: 16px;
+  overflow-y: auto;
+  scrollbar-width: none;
   -ms-overflow-style: none;
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(12px);
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
-  padding: 24px 20px;
-  border-radius: 12px 0 0 12px;
-  transition: right 0.35s ease;
+  background: rgba(18, 23, 34, 0.92);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  padding: 26px 22px;
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
 }
 
 #right-drawer.open {
@@ -43,27 +62,107 @@
 }
 
 #right-drawer h3 {
-  font-size: 18px;
-  margin-bottom: 16px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 700;
   color: #ffffff;
+  letter-spacing: 0.3px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* Theme Switcher Segmented Control */
+.theme-switcher {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 5px;
+  gap: 6px;
+}
+
+.theme-pill-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 4px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-pill-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.theme-pill-btn.active {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.theme-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.glass-indicator {
+  background: linear-gradient(135deg, #6366f1, #38bdf8);
+}
+
+.legacy-indicator {
+  background: #007bff;
+}
+
+.cyber-indicator {
+  background: linear-gradient(135deg, #00f0ff, #ff007f);
+}
+
+.sunset-indicator {
+  background: linear-gradient(135deg, #ec4899, #f97316);
+}
+
+.nordic-indicator {
+  background: linear-gradient(135deg, #38bdf8, #94a3b8);
+}
+
+.emerald-indicator {
+  background: linear-gradient(135deg, #10b981, #059669);
 }
 
 .drawer-option {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
-  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
 }
 
-/* Drawer option that stacks a label above a control */
+.drawer-option label {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Stacked drawer option */
 .drawer-option-stack {
   flex-direction: column;
   align-items: stretch;
@@ -77,19 +176,23 @@
 }
 
 .drawer-option-value {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(99, 102, 241, 0.9);
+  background: rgba(99, 102, 241, 0.15);
+  padding: 2px 8px;
+  border-radius: 6px;
   font-variant-numeric: tabular-nums;
 }
 
-/* Range slider used for the width of the bookmark bar */
+/* Range slider */
 #bookmark-bar-width {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 6px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
   outline: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -98,17 +201,18 @@
 #bookmark-bar-width::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
-  border: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ffffff;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease;
+  background: #6366f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 #bookmark-bar-width::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
+  transform: scale(1.18);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.8);
 }
 
 #right-drawer::-webkit-scrollbar {
@@ -117,29 +221,33 @@
   display: none;
 }
 
-/* Modern Toggle Switch */
+/* Modern iOS-Style Toggle Switch */
 .switch {
   position: relative;
   display: inline-block;
   width: 44px;
   height: 24px;
+  flex-shrink: 0;
 }
+
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
+
 .slider {
   position: absolute;
   cursor: pointer;
-  background-color: #ccc;
+  background-color: rgba(255, 255, 255, 0.14);
   border-radius: 34px;
-  transition: 0.4s;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
 }
+
 .slider:before {
   position: absolute;
   content: "";
@@ -147,99 +255,195 @@
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 50%;
-  transition: 0.4s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 input:checked + .slider {
-  background-color: #4caf50;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
 }
+
 input:checked + .slider:before {
   transform: translateX(20px);
 }
+
 .slider.round {
   border-radius: 34px;
 }
+
 .slider.round:before {
   border-radius: 50%;
 }
 
-/* Refresh Favicons Icon Button */
+/* Icon Buttons in Drawer */
 .refresh-icon-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
   color: #ffffff;
-  width: 40px;
-  height: 24px;
+  width: 36px;
+  height: 28px;
   cursor: pointer;
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .refresh-icon-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.06);
 }
 
 .refresh-icon-button:active {
   transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.2);
 }
 
-.refresh-icon-button.loading {
-  animation: spin 1s linear infinite;
+/* ==================== THEME OVERRIDES FOR DRAWER ==================== */
+
+/* Legacy Theme */
+[data-theme="legacy"] #right-drawer {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 12px 0 0 12px;
+  margin-right: 0;
+  height: 100vh;
+  top: 0;
+  border: none;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Remove old refresh button styles */
-.refresh-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+[data-theme="legacy"] input:checked + .slider {
+  background: #4caf50;
+  box-shadow: none;
+}
+
+[data-theme="legacy"] .theme-pill-btn.active {
+  background: #007bff;
   color: #ffffff;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  width: 100%;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
-.refresh-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+[data-theme="legacy"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #ffffff;
+  border: none;
 }
 
-.refresh-button:active {
-  transform: translateY(0);
-  background: rgba(255, 255, 255, 0.2);
+/* Cyber Neon Theme */
+[data-theme="cyber-neon"] #right-drawer {
+  background: rgba(7, 10, 24, 0.96);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  box-shadow: -12px 0 40px rgba(0, 240, 255, 0.18);
 }
 
-.refresh-icon {
-  font-size: 16px;
-  transition: transform 0.3s ease;
+[data-theme="cyber-neon"] .theme-pill-btn.active {
+  background: rgba(0, 240, 255, 0.2);
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  color: #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
 }
 
-.refresh-button:hover .refresh-icon {
-  transform: rotate(180deg);
+[data-theme="cyber-neon"] input:checked + .slider {
+  background: linear-gradient(135deg, #00f0ff, #0077ff);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
 }
 
-.refresh-button.loading .refresh-icon {
-  animation: spin 1s linear infinite;
+[data-theme="cyber-neon"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #00f0ff;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px #00f0ff;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+[data-theme="cyber-neon"] .drawer-option-value {
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.15);
+}
+
+/* Sunset Theme */
+[data-theme="sunset"] #right-drawer {
+  background: rgba(30, 10, 40, 0.95);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  box-shadow: -12px 0 40px rgba(249, 115, 22, 0.15);
+}
+
+[data-theme="sunset"] .theme-pill-btn.active {
+  background: rgba(249, 115, 22, 0.2);
+  border: 1px solid rgba(249, 115, 22, 0.5);
+  color: #fb923c;
+}
+
+[data-theme="sunset"] input:checked + .slider {
+  background: linear-gradient(135deg, #f97316, #db2777);
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.5);
+}
+
+[data-theme="sunset"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #f97316;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px #f97316;
+}
+
+[data-theme="sunset"] .drawer-option-value {
+  color: #fb923c;
+  background: rgba(249, 115, 22, 0.15);
+}
+
+/* Nordic Theme */
+[data-theme="nordic"] #right-drawer {
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="nordic"] .theme-pill-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+}
+
+[data-theme="nordic"] input:checked + .slider {
+  background: #0284c7;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+}
+
+[data-theme="nordic"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #38bdf8;
+  border-color: #ffffff;
+}
+
+[data-theme="nordic"] .drawer-option-value {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+}
+
+/* Emerald Theme */
+[data-theme="emerald"] #right-drawer {
+  background: rgba(4, 30, 24, 0.96);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: -12px 0 40px rgba(16, 185, 129, 0.15);
+}
+
+[data-theme="emerald"] .theme-pill-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #34d399;
+}
+
+[data-theme="emerald"] input:checked + .slider {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+[data-theme="emerald"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #10b981;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px #10b981;
+}
+
+[data-theme="emerald"] .drawer-option-value {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.15);
 }
