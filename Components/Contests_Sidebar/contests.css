@@ -247,3 +247,77 @@
     border-color: rgba(0, 240, 255, 0.6);
     box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
 }
+
+/* Sunset Horizon Theme */
+[data-theme="sunset"] .sidebar {
+    background: rgba(45, 14, 56, 0.95);
+    border: 1px solid rgba(251, 146, 60, 0.35);
+    box-shadow: 0 0 25px rgba(249, 115, 22, 0.2);
+}
+
+[data-theme="sunset"] .sidebar-toggle {
+    background: linear-gradient(90deg, rgba(249, 115, 22, 0.25), rgba(236, 72, 153, 0.25));
+    color: #fb923c;
+    text-shadow: 0 0 8px rgba(249, 115, 22, 0.5);
+}
+
+[data-theme="sunset"] .contest-badge {
+    background: rgba(249, 115, 22, 0.2);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.35);
+}
+
+[data-theme="sunset"] .contest-list li:hover {
+    background: rgba(249, 115, 22, 0.15);
+    border-color: rgba(251, 146, 60, 0.5);
+    box-shadow: 0 0 16px rgba(249, 115, 22, 0.25);
+}
+
+/* Nordic Minimalist Theme */
+[data-theme="nordic"] .sidebar {
+    background: rgba(22, 32, 50, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="nordic"] .sidebar-toggle {
+    background: rgba(30, 41, 59, 0.8);
+    color: #38bdf8;
+}
+
+[data-theme="nordic"] .contest-badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="nordic"] .contest-list li:hover {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* Emerald Zen Theme */
+[data-theme="emerald"] .sidebar {
+    background: rgba(4, 42, 33, 0.95);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.2);
+}
+
+[data-theme="emerald"] .sidebar-toggle {
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.25));
+    color: #34d399;
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+[data-theme="emerald"] .contest-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="emerald"] .contest-list li:hover {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+}
+

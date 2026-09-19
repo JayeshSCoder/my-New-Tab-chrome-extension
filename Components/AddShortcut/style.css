@@ -368,3 +368,88 @@
   background: rgba(0, 240, 255, 0.25);
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.7);
 }
+
+/* Sunset Horizon Theme */
+[data-theme="sunset"] #shortcuts-container {
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  background: rgba(45, 14, 56, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="sunset"] .shortcut-card {
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  background: rgba(58, 20, 72, 0.75);
+}
+
+[data-theme="sunset"] .shortcut-card:hover {
+  border-color: #f97316;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.4);
+  transform: translateY(-3px);
+}
+
+[data-theme="sunset"] #add-shortcut-btn {
+  border: 1px dashed #fb923c;
+  color: #fb923c;
+}
+
+[data-theme="sunset"] #add-shortcut-btn:hover {
+  background: rgba(249, 115, 22, 0.2);
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.5);
+}
+
+/* Nordic Minimalist Theme */
+[data-theme="nordic"] #shortcuts-container {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(22, 32, 50, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="nordic"] .shortcut-card {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(30, 41, 59, 0.75);
+}
+
+[data-theme="nordic"] .shortcut-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+  transform: translateY(-3px);
+}
+
+[data-theme="nordic"] #add-shortcut-btn {
+  border: 1px dashed #38bdf8;
+  color: #38bdf8;
+}
+
+[data-theme="nordic"] #add-shortcut-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+}
+
+/* Emerald Zen Theme */
+[data-theme="emerald"] #shortcuts-container {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(4, 42, 33, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="emerald"] .shortcut-card {
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(6, 56, 44, 0.75);
+}
+
+[data-theme="emerald"] .shortcut-card:hover {
+  border-color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
+  transform: translateY(-3px);
+}
+
+[data-theme="emerald"] #add-shortcut-btn {
+  border: 1px dashed #34d399;
+  color: #34d399;
+}
+
+[data-theme="emerald"] #add-shortcut-btn:hover {
+  background: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+
