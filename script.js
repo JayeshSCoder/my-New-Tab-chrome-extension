@@ -115,12 +115,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!backgroundElement) return;
 
     const applyBg = (imageUrl) => {
-        if (imageUrl) {
-            backgroundElement.style.backgroundImage = `url(${imageUrl})`;
-            backgroundElement.style.backgroundSize = 'cover';
-            backgroundElement.style.backgroundPosition = 'center';
-            backgroundElement.classList.add('has-custom-bg');
+        if (!imageUrl) {
+            backgroundElement.style.backgroundImage = '';
+            backgroundElement.classList.remove('has-custom-bg');
+            return;
         }
+
+        if (imageUrl.startsWith('linear-gradient') || imageUrl.startsWith('radial-gradient')) {
+            backgroundElement.style.backgroundImage = imageUrl;
+        } else {
+            backgroundElement.style.backgroundImage = `url(${imageUrl})`;
+        }
+        backgroundElement.style.backgroundSize = 'cover';
+        backgroundElement.style.backgroundPosition = 'center';
+        backgroundElement.classList.add('has-custom-bg');
     };
 
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
@@ -131,6 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 applyBg(localStorage.getItem('backgroundImage'));
             }
         });
+
+        // Listen for live background updates from popup
+        if (chrome.storage.onChanged) {
+            chrome.storage.onChanged.addListener((changes, area) => {
+                if (area === 'local' && 'backgroundImage' in changes) {
+                    applyBg(changes.backgroundImage.newValue);
+                }
+            });
+        }
     } else {
         applyBg(localStorage.getItem('backgroundImage'));
     }

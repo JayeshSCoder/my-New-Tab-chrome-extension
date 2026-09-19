@@ -110,7 +110,7 @@ function handleEdit() {
 function handleDelete() {
     if (editingIndex !== null) {
         shortcuts.splice(editingIndex, 1);
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        saveAndSyncShortcuts();
         renderShortcuts();
     }
     hideContextMenu();
@@ -124,6 +124,13 @@ if (addBtn) {
 // Cancel button hides modal
 if (cancelBtn) {
     cancelBtn.onclick = closeShortcutModal;
+}
+
+function saveAndSyncShortcuts() {
+    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+        chrome.storage.local.set({ shortcuts: shortcuts });
+    }
 }
 
 // Close when clicking modal backdrop
@@ -154,7 +161,7 @@ if (saveBtn) {
             shortcuts.push({ name, url });
         }
 
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        saveAndSyncShortcuts();
         renderShortcuts();
         closeShortcutModal();
     };
@@ -187,4 +194,31 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", renderShortcuts);
+document.addEventListener("DOMContentLoaded", () => {
+    renderShortcuts();
+
+    // Sync shortcuts with chrome.storage.local
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        if (chrome.storage.local) {
+            chrome.storage.local.get('shortcuts', (data) => {
+                if (data && Array.isArray(data.shortcuts) && data.shortcuts.length > 0) {
+                    shortcuts = data.shortcuts;
+                    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+                    renderShortcuts();
+                } else if (shortcuts.length > 0) {
+                    // Seed chrome.storage.local with existing localStorage shortcuts
+                    chrome.storage.local.set({ shortcuts: shortcuts });
+                }
+            });
+        }
+        if (chrome.storage.onChanged) {
+            chrome.storage.onChanged.addListener((changes, area) => {
+                if (area === 'local' && changes.shortcuts) {
+                    shortcuts = changes.shortcuts.newValue || [];
+                    localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+                    renderShortcuts();
+                }
+            });
+        }
+    }
+});

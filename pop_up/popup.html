@@ -4,30 +4,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My New Tab</title>
+    <title>My New Tab Dashboard</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
     <div class="popup-card">
+        <!-- Header -->
         <div class="popup-header">
             <div class="popup-icon">⚡</div>
             <div class="popup-title-group">
                 <h2>My New Tab</h2>
-                <span class="version-badge">v1.0</span>
+                <span class="version-badge">Dashboard Companion</span>
             </div>
         </div>
-        <p class="popup-desc">Your aesthetic, productivity-focused new tab dashboard.</p>
-        <div class="popup-actions">
+
+        <!-- Section 1: Add Current Tab to Shortcuts -->
+        <div class="section-card">
+            <div class="section-title">
+                <span class="section-icon">🔗</span>
+                <span>Quick Shortcut Capture</span>
+            </div>
+            
+            <div id="tab-preview-box" class="tab-preview-box">
+                <div class="tab-favicon-wrapper">
+                    <img id="current-tab-favicon" class="tab-favicon" src="" alt="icon" style="display: none;">
+                    <span id="tab-fallback-icon" class="tab-fallback-icon">🌐</span>
+                </div>
+                <div class="tab-info">
+                    <div id="current-tab-title" class="tab-title">Loading current tab...</div>
+                    <div id="current-tab-url" class="tab-url">...</div>
+                </div>
+            </div>
+
+            <button id="add-tab-shortcut-btn" class="action-btn" disabled>
+                <span class="btn-icon">➕</span>
+                <span id="add-btn-text">Add Tab to Shortcuts</span>
+            </button>
+            <div id="shortcut-toast" class="toast-message"></div>
+        </div>
+
+        <!-- Section 2: Curated Wallpaper Gallery -->
+        <div class="section-card">
+            <div class="section-header-flex">
+                <div class="section-title">
+                    <span class="section-icon">🎨</span>
+                    <span>Wallpaper Gallery</span>
+                </div>
+                <button id="reset-wallpaper-btn" class="text-btn" title="Restore theme default">Reset</button>
+            </div>
+
+            <div class="wallpaper-grid">
+                <button class="wallpaper-swatch" data-name="Cosmic Aurora" data-gradient="radial-gradient(ellipse 90% 60% at 50% -15%, rgba(99, 102, 241, 0.35), transparent 70%), radial-gradient(ellipse 70% 50% at 85% 95%, rgba(139, 92, 246, 0.3), transparent 70%), radial-gradient(ellipse 60% 50% at 15% 90%, rgba(56, 189, 248, 0.25), transparent 70%), #0b0f19" title="Cosmic Aurora">
+                    <span class="swatch-preview cosmic-preview"></span>
+                    <span class="swatch-label">Cosmic</span>
+                </button>
+
+                <button class="wallpaper-swatch" data-name="Sunset Horizon" data-gradient="linear-gradient(135deg, #3b0764, #701a75 40%, #9a3412 85%, #ea580c)" title="Sunset Horizon">
+                    <span class="swatch-preview sunset-preview"></span>
+                    <span class="swatch-label">Sunset</span>
+                </button>
+
+                <button class="wallpaper-swatch" data-name="Cyber Matrix" data-gradient="radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.25) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.25) 0%, transparent 50%), linear-gradient(180deg, #050711 0%, #0d1228 100%)" title="Cyber Matrix">
+                    <span class="swatch-preview cyber-preview"></span>
+                    <span class="swatch-label">Cyber</span>
+                </button>
+
+                <button class="wallpaper-swatch" data-name="Nordic Frost" data-gradient="linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%)" title="Nordic Frost">
+                    <span class="swatch-preview nordic-preview"></span>
+                    <span class="swatch-label">Frost</span>
+                </button>
+
+                <button class="wallpaper-swatch" data-name="Emerald Zen" data-gradient="linear-gradient(135deg, #022c22 0%, #064e3b 50%, #047857 100%)" title="Emerald Zen">
+                    <span class="swatch-preview emerald-preview"></span>
+                    <span class="swatch-label">Emerald</span>
+                </button>
+
+                <button class="wallpaper-swatch" data-name="Deep Obsidian" data-gradient="linear-gradient(180deg, #09090b 0%, #18181b 60%, #27272a 100%)" title="Deep Obsidian">
+                    <span class="swatch-preview obsidian-preview"></span>
+                    <span class="swatch-label">Obsidian</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 3: Open New Tab -->
+        <div class="popup-footer">
             <button id="open-new-tab-btn" class="primary-btn">
                 <span>Open New Tab</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
         </div>
     </div>
+
     <script src="popup.js"></script>
 </body>
 
