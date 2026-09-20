@@ -79,36 +79,8 @@ setInterval(updateClockWidget, 1000);
 
 
 /*
-    Change Background
+    Change Background is managed by Components/WallpaperModal/wallpaper-modal.js
 */
-document.addEventListener('DOMContentLoaded', () => {
-    const changeBackgroundBtn = document.getElementById('changeBackgroundBtn');
-    const backgroundFileInput = document.getElementById('backgroundFileInput');
-
-    // Open file input when "Change Background" button is clicked
-    changeBackgroundBtn.addEventListener('click', () => {
-        backgroundFileInput.click();
-    });
-
-    // Handle file selection and store as background image
-    backgroundFileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const imageUrl = e.target.result;
-
-                // Save the image URL in Chrome storage with localStorage fallback
-                if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-                    chrome.storage.local.set({ backgroundImage: imageUrl });
-                } else {
-                    localStorage.setItem('backgroundImage', imageUrl);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-});
 
 document.addEventListener('DOMContentLoaded', () => {
     const backgroundElement = document.querySelector('.background');

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
     <link rel="stylesheet" href="./Components/ContextMenu/contextMenu.css">
     <link rel="stylesheet" href="./Components/StickyNotes/sticky-notes.css">
+    <link rel="stylesheet" href="./Components/WallpaperModal/wallpaper-modal.css">
 
 </head>
 
@@ -104,6 +105,93 @@
             <div class="modal-buttons">
                 <button id="save-shortcut">Save</button>
                 <button id="cancel-shortcut">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wallpaper Gallery Modal -->
+    <div id="wallpaper-modal-backdrop" class="wallpaper-modal-backdrop hidden" aria-hidden="true">
+        <div id="wallpaper-modal" class="wallpaper-modal" role="dialog" aria-labelledby="wallpaper-modal-title">
+            <!-- Modal Header -->
+            <div class="wm-header">
+                <div class="wm-title-group">
+                    <div class="wm-title-icon">🎨</div>
+                    <div>
+                        <h2 id="wallpaper-modal-title" class="wm-title">Wallpaper Gallery</h2>
+                        <p class="wm-subtitle">Discover open-source wallpapers powered by Openverse Creative Commons or upload from device</p>
+                    </div>
+                </div>
+                <div class="wm-header-actions">
+                    <button type="button" id="wm-upload-btn" class="wm-btn wm-btn-secondary" title="Choose image from file explorer">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <span>Choose File</span>
+                    </button>
+                    <button type="button" id="wm-reset-btn" class="wm-btn wm-btn-ghost" title="Reset to active theme background">
+                        <span>Reset Default</span>
+                    </button>
+                    <button type="button" id="wm-close-btn" class="wm-close-btn" aria-label="Close modal">✕</button>
+                </div>
+            </div>
+
+            <!-- Recent Wallpapers Section (Max 5) -->
+            <div class="wm-recent-section" id="wm-recent-section">
+                <div class="wm-section-header">
+                    <span class="wm-section-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Recent Wallpapers <span class="wm-badge">Max 5</span>
+                    </span>
+                    <span class="wm-recent-hint">Click any to apply</span>
+                </div>
+                <div class="wm-recent-strip" id="wm-recent-strip">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="wm-controls">
+                <div class="wm-search-box">
+                    <svg class="wm-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="wm-search-input" placeholder="Search open-source wallpapers (e.g., Nature, Space, Cyberpunk, Mountains)..." autocomplete="off" spellcheck="false">
+                    <button type="button" id="wm-search-clear-btn" class="wm-clear-btn hidden" aria-label="Clear search">✕</button>
+                    <button type="button" id="wm-search-submit-btn" class="wm-search-btn">Search</button>
+                </div>
+
+                <!-- Quick Category Tags -->
+                <div class="wm-tags-scroller">
+                    <button type="button" class="wm-tag active" data-query="wallpaper landscape nature">Nature</button>
+                    <button type="button" class="wm-tag" data-query="space galaxy stars wallpaper">Space</button>
+                    <button type="button" class="wm-tag" data-query="cyberpunk neon futuristic city">Cyberpunk</button>
+                    <button type="button" class="wm-tag" data-query="minimal dark gradient wallpaper">Minimal</button>
+                    <button type="button" class="wm-tag" data-query="mountains alpine sunrise landscape">Mountains</button>
+                    <button type="button" class="wm-tag" data-query="architecture modern cityscape building">Architecture</button>
+                    <button type="button" class="wm-tag" data-query="abstract colorful gradient geometry">Abstract</button>
+                    <button type="button" class="wm-tag" data-query="ocean waves coastal sunset">Ocean</button>
+                </div>
+            </div>
+
+            <!-- Main Scrollable Wallpapers Grid Container -->
+            <div class="wm-body" id="wm-body">
+                <div class="wm-grid" id="wm-grid">
+                    <!-- Cards populated dynamically -->
+                </div>
+
+                <!-- Empty / Error state placeholder -->
+                <div id="wm-status-message" class="wm-status-message hidden"></div>
+
+                <!-- Pagination Controls -->
+                <div class="wm-pagination" id="wm-pagination">
+                    <button type="button" id="wm-prev-page-btn" class="wm-page-btn" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <span>Previous</span>
+                    </button>
+                    <div class="wm-page-info">
+                        Page <span id="wm-current-page">1</span> of <span id="wm-total-pages">1</span>
+                    </div>
+                    <button type="button" id="wm-next-page-btn" class="wm-page-btn">
+                        <span>Next</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -213,6 +301,7 @@
     <script src="./Components/Platform/platform.js"></script>
     <script src="./Components/ContextMenu/contextMenu.js"></script>
     <script src="./Components/StickyNotes/sticky-notes.js"></script>
+    <script src="./Components/WallpaperModal/wallpaper-modal.js"></script>
 </body>
 
 </html>
