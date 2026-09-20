@@ -6,8 +6,6 @@ const tabFallbackIconEl = document.getElementById('tab-fallback-icon');
 const addShortcutBtn = document.getElementById('add-tab-shortcut-btn');
 const addBtnText = document.getElementById('add-btn-text');
 const shortcutToast = document.getElementById('shortcut-toast');
-const resetWallpaperBtn = document.getElementById('reset-wallpaper-btn');
-const wallpaperSwatches = document.querySelectorAll('.wallpaper-swatch');
 const openNewTabBtn = document.getElementById('open-new-tab-btn');
 
 let activeTab = null;
@@ -121,59 +119,6 @@ if (addShortcutBtn) {
     });
 }
 
-// Wallpaper Gallery handling
-function initWallpaperGallery() {
-    const applyWallpaper = (gradient, name) => {
-        if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-            chrome.storage.local.set({ backgroundImage: gradient });
-        }
-        localStorage.setItem('backgroundImage', gradient);
-    };
-
-    // Highlight current active wallpaper
-    const checkCurrentWallpaper = (currentBg) => {
-        wallpaperSwatches.forEach(swatch => {
-            const swatchGrad = swatch.dataset.gradient;
-            if (currentBg && currentBg === swatchGrad) {
-                swatch.classList.add('active');
-            } else {
-                swatch.classList.remove('active');
-            }
-        });
-    };
-
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-        chrome.storage.local.get('backgroundImage', (data) => {
-            const bg = (data && data.backgroundImage) || localStorage.getItem('backgroundImage');
-            checkCurrentWallpaper(bg);
-        });
-    } else {
-        checkCurrentWallpaper(localStorage.getItem('backgroundImage'));
-    }
-
-    wallpaperSwatches.forEach(swatch => {
-        swatch.addEventListener('click', () => {
-            const gradient = swatch.dataset.gradient;
-            const name = swatch.dataset.name;
-
-            wallpaperSwatches.forEach(s => s.classList.remove('active'));
-            swatch.classList.add('active');
-
-            applyWallpaper(gradient, name);
-        });
-    });
-
-    if (resetWallpaperBtn) {
-        resetWallpaperBtn.addEventListener('click', () => {
-            wallpaperSwatches.forEach(s => s.classList.remove('active'));
-            if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-                chrome.storage.local.remove('backgroundImage');
-            }
-            localStorage.removeItem('backgroundImage');
-        });
-    }
-}
-
 // Open New Tab
 if (openNewTabBtn) {
     openNewTabBtn.addEventListener('click', () => {
@@ -187,5 +132,4 @@ if (openNewTabBtn) {
 
 document.addEventListener('DOMContentLoaded', () => {
     inspectCurrentTab();
-    initWallpaperGallery();
 });
