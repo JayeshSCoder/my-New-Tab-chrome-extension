@@ -55,6 +55,8 @@ body, html {
     background-color: #0b0f19;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     z-index: -1;
     transition: background-image 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
 }

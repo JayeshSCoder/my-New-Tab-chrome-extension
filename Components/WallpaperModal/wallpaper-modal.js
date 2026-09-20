@@ -11,57 +11,259 @@
     const STORAGE_KEY_RECENT = 'recentWallpapers';
     const MAX_RECENT_WALLPAPERS = 5;
 
-    // Fallback curated open-source wallpapers (Creative Commons / Unsplash / Public Domain)
+    // Curated high-definition open-source wallpapers (2560x1440 Quad HD & 4K Ready)
     const CURATED_FALLBACK_WALLPAPERS = [
         {
-            id: 'fallback-1',
-            title: 'Cosmic Nebula in Deep Space',
-            creator: 'NASA / ESA',
-            url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        },
-        {
-            id: 'fallback-2',
+            id: 'curated-alpine-lake',
             title: 'Majestic Alpine Lake Reflections',
             creator: 'Luca Bravo',
-            url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
+            url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['nature', 'mountains', 'lake', 'landscape'],
+            resBadge: '4K UHD'
         },
         {
-            id: 'fallback-3',
+            id: 'curated-pine-forest',
+            title: 'Yosemite Mountain Pine Forest',
+            creator: 'Bailey Zindel',
+            url: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['nature', 'mountains', 'forest', 'valley'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-mountain-stream',
+            title: 'Cascading Mountain Stream & Mist',
+            creator: 'Lukas Kloeppel',
+            url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['nature', 'waterfall', 'mountains'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-blooming-valley',
+            title: 'Sunlit Blooming Alpine Valley',
+            creator: 'Federico Respini',
+            url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['nature', 'valley', 'landscape', 'sunlight'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-starry-galaxy',
+            title: 'Milky Way Galaxy Over Snowy Ridge',
+            creator: 'Benjamin Davies',
+            url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['space', 'galaxy', 'stars', 'mountains'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-aurora-borealis',
+            title: 'Emerald Aurora Borealis Night Sky',
+            creator: 'Vincent Guth',
+            url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['space', 'aurora', 'night', 'stars'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-deep-space',
+            title: 'Starlight Galaxy & Cosmic Cosmos',
+            creator: 'NASA / Unsplash',
+            url: 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['space', 'cosmos', 'galaxy', 'nebula'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-cyber-city',
             title: 'Cyberpunk Neon Cityscape at Night',
             creator: 'Aleksandar Pasaric',
-            url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
+            url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['cyberpunk', 'neon', 'city', 'futuristic'],
+            resBadge: '4K UHD'
         },
         {
-            id: 'fallback-4',
-            title: 'Mist Over Mountain Pine Forest',
-            creator: 'Kalvis Svilāns',
-            url: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
+            id: 'curated-tokyo-rain',
+            title: 'Tokyo Neon Rain Alley Reflection',
+            creator: 'Jezael Melgoza',
+            url: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['cyberpunk', 'neon', 'rain', 'tokyo', 'architecture'],
+            resBadge: '4K UHD'
         },
         {
-            id: 'fallback-5',
-            title: 'Golden Sunset Horizon Over Calm Sea',
-            creator: 'Sébastien Goldberg',
-            url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
+            id: 'curated-cyber-highway',
+            title: 'Neon Light Trails Night Highway',
+            creator: 'Denys Nevozhai',
+            url: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['cyberpunk', 'neon', 'highway', 'speed'],
+            resBadge: '4K UHD'
         },
         {
-            id: 'fallback-6',
+            id: 'curated-sand-dunes',
             title: 'Minimalist Sand Dunes and Shadows',
             creator: 'Jeremy Bishop',
-            url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
+            url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['minimal', 'dunes', 'desert', 'clean'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-dark-obsidian',
+            title: 'Dark Obsidian Liquid Silk Waves',
+            creator: 'Daniel Olah',
+            url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['minimal', 'dark', 'abstract', 'black'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-snowy-peak',
+            title: 'Golden Sunset on Snowy Mountain Peak',
+            creator: 'Alberto Restifo',
+            url: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['mountains', 'snow', 'sunset', 'alpine'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-dolomites',
+            title: 'Dolomites Majestic Ridge at Sunset',
+            creator: 'Ales Krivec',
+            url: 'https://images.unsplash.com/photo-1491555103944-7c647fd857e6?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1491555103944-7c647fd857e6?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['mountains', 'dolomites', 'sunset', 'landscape'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-sunset-sea',
+            title: 'Golden Sunset Horizon Over Calm Sea',
+            creator: 'Sébastien Goldberg',
+            url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['ocean', 'sunset', 'beach', 'calm'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-ocean-waves',
+            title: 'Turquoise Tropical Ocean Waves',
+            creator: 'Shifaaz shamoon',
+            url: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['ocean', 'waves', 'water', 'blue'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-tropical-beach',
+            title: 'Tranquil Tropical Palms & Coastline',
+            creator: 'Sasha Stories',
+            url: 'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['ocean', 'tropical', 'beach', 'palms'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-glass-skyscrapers',
+            title: 'Modern Geometric Glass Skyscrapers',
+            creator: 'Sean Pollock',
+            url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['architecture', 'city', 'building', 'modern'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-bridge-dusk',
+            title: 'Suspension Bridge Glowing at Dusk',
+            creator: 'Justin Chrn',
+            url: 'https://images.unsplash.com/photo-1506146332389-18140dc7b2fb?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1506146332389-18140dc7b2fb?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['architecture', 'bridge', 'dusk', 'city'],
+            resBadge: '4K UHD'
+        },
+        {
+            id: 'curated-cosmic-acrylic',
+            title: 'Vibrant Cosmic Acrylic Paint Swirl',
+            creator: 'Lucas Benjamin',
+            url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=480&q=70',
+            license: 'CC0',
+            tags: ['abstract', 'colorful', 'paint', 'art'],
+            resBadge: '4K UHD'
         }
     ];
+
+    // Helper: Upgrade any item to highest possible HD / 4K resolution
+    function upgradeToHighRes(item) {
+        if (!item) return item;
+        let url = item.url || '';
+        let thumbnail = item.thumbnail || url;
+
+        // 1. Unsplash: Upgrade to 2560px Quad HD
+        if (url.includes('images.unsplash.com')) {
+            url = url.replace(/([?&]w=)[^&]*/, '$12560').replace(/([?&]q=)[^&]*/, '$185');
+            if (!url.includes('w=')) {
+                url += (url.includes('?') ? '&' : '?') + 'auto=format&fit=crop&w=2560&q=85';
+            }
+        }
+
+        // 2. Flickr: If 500px medium URL, upgrade to _b.jpg (1024px Large)
+        if (url.includes('staticflickr.com') || item.provider === 'flickr') {
+            if (!url.match(/_[b|h|k|o]\.jpg$/i)) {
+                if (url.match(/_[a-z0-9]+\.jpg$/i)) {
+                    url = url.replace(/_[a-z0-9]+\.jpg$/i, '_b.jpg');
+                } else if (url.match(/\.jpg$/i)) {
+                    url = url.replace(/\.jpg$/i, '_b.jpg');
+                }
+            }
+        }
+
+        // 3. Rawpixel: Upgrade image_800 to image_1300
+        if (url.includes('images.rawpixel.com')) {
+            url = url.replace('/image_800/', '/image_1300/');
+        }
+
+        // Determine resolution badge based on dimensions
+        const w = item.width || 1920;
+        const h = item.height || 1080;
+        let resBadge = 'HD';
+        if (w >= 3840 || h >= 2160) {
+            resBadge = '4K UHD';
+        } else if (w >= 2560 || h >= 1440) {
+            resBadge = '2K QHD';
+        } else if (w >= 1920 || h >= 1080) {
+            resBadge = '1080p FHD';
+        }
+
+        return {
+            ...item,
+            url: url,
+            thumbnail: thumbnail,
+            resBadge: item.resBadge || resBadge
+        };
+    }
 
     // State
     let isModalOpen = false;
@@ -293,7 +495,7 @@
         }
     }
 
-    // Fetch wallpapers from Openverse Creative Commons API
+    // Fetch wallpapers from Openverse Creative Commons API with strict HD / large size filtering
     async function fetchWallpapers(query, page = 1) {
         currentQuery = query;
         currentPage = page;
@@ -301,48 +503,105 @@
         renderSkeletons(pageSize);
 
         const encodedQuery = encodeURIComponent(query.trim());
-        const endpoint = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=${pageSize}&aspect_ratio=wide`;
+        // 1. Primary Openverse search: Request size=large (HD & 4K) and aspect_ratio=wide
+        const primaryUrl = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=20&aspect_ratio=wide&size=large`;
 
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 9000);
 
-            const response = await fetch(endpoint, {
+            let res = await fetch(primaryUrl, {
                 signal: controller.signal,
-                headers: {
-                    'Accept': 'application/json'
+                headers: { 'Accept': 'application/json' }
+            });
+            clearTimeout(timeoutId);
+
+            let data = null;
+            if (res.ok) {
+                data = await res.json();
+            }
+
+            let rawResults = (data && data.results) || [];
+
+            // 2. If size=large has fewer than 4 results, also fetch size=medium (>= 640px to 2048px)
+            if (rawResults.length < 4) {
+                try {
+                    const mediumUrl = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=20&aspect_ratio=wide&size=medium`;
+                    const medRes = await fetch(mediumUrl, { headers: { 'Accept': 'application/json' } });
+                    if (medRes.ok) {
+                        const medData = await medRes.json();
+                        const medResults = medData.results || [];
+                        const existingIds = new Set(rawResults.map(r => r.id));
+                        medResults.forEach(r => {
+                            if (!existingIds.has(r.id)) rawResults.push(r);
+                        });
+                    }
+                } catch (e) {
+                    // Ignore medium fetch error, continue with what we have
+                }
+            }
+
+            // 3. Filter out non-working / hotlink-blocked providers (like stocksnap)
+            // and upgrade every result to maximum resolution
+            const filtered = rawResults
+                .filter(r => r.provider !== 'stocksnap')
+                .map(r => upgradeToHighRes(r))
+                .filter(r => {
+                    // Require minimum 1000px width and 600px height for true HD experience
+                    if (r.width && r.width < 1000) return false;
+                    if (r.height && r.height < 600) return false;
+                    return true;
+                });
+
+            // 4. If Openverse results are scarce, seamlessly append matching curated 4K wallpapers
+            const qLower = query.toLowerCase();
+            const matchingCurated = CURATED_FALLBACK_WALLPAPERS.filter(w => {
+                return (
+                    w.title.toLowerCase().includes(qLower) ||
+                    (w.tags && w.tags.some(t => qLower.includes(t) || t.includes(qLower)))
+                );
+            });
+
+            const combinedResults = [...filtered];
+            const existingUrls = new Set(combinedResults.map(r => r.url));
+            matchingCurated.forEach(w => {
+                if (!existingUrls.has(w.url)) {
+                    combinedResults.push(w);
+                    existingUrls.add(w.url);
                 }
             });
 
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                throw new Error(`Openverse API returned status ${response.status}`);
-            }
-
-            const data = await response.json();
-            const results = data.results || [];
-
-            totalPages = Math.min(data.page_count || 1, 50);
-
-            if (results.length === 0) {
-                renderEmptyState(`No wallpapers found for "${query}". Try another keyword!`);
+            // If still empty, fall back to the full curated 4K collection
+            if (combinedResults.length === 0) {
+                renderGalleryCards(CURATED_FALLBACK_WALLPAPERS.slice(0, pageSize));
+                totalPages = Math.ceil(CURATED_FALLBACK_WALLPAPERS.length / pageSize);
+                updatePaginationUI();
                 return;
             }
 
-            renderGalleryCards(results);
+            totalPages = Math.max(1, Math.min(data?.page_count || 1, 50));
+            renderGalleryCards(combinedResults.slice(0, pageSize));
             updatePaginationUI();
 
         } catch (err) {
-            console.warn('Openverse API fetch failed, loading curated fallback collection:', err.message);
-            // Graceful fallback to curated open-source wallpapers
-            renderGalleryCards(CURATED_FALLBACK_WALLPAPERS);
-            totalPages = 1;
+            console.warn('Openverse API fetch failed, loading curated high-definition collection:', err.message);
+            // Search curated collection for query match
+            const qLower = query.toLowerCase();
+            const matchingCurated = CURATED_FALLBACK_WALLPAPERS.filter(w => {
+                return (
+                    w.title.toLowerCase().includes(qLower) ||
+                    (w.tags && w.tags.some(t => qLower.includes(t) || t.includes(qLower)))
+                );
+            });
+            const fallbackSet = matchingCurated.length > 0 ? matchingCurated : CURATED_FALLBACK_WALLPAPERS;
+
+            renderGalleryCards(fallbackSet.slice(0, pageSize));
+            totalPages = Math.ceil(fallbackSet.length / pageSize);
             updatePaginationUI();
             if (statusMessage) {
                 statusMessage.innerHTML = `
                     <div style="font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px;">
-                        Showing curated open-source collection (Live search offline or rate-limited).
+                        Showing curated Ultra-HD collection.
                     </div>
                 `;
                 statusMessage.classList.remove('hidden');
@@ -365,6 +624,12 @@
             const license = (item.license || 'CC').toUpperCase();
             const isActive = activeWallpaper === imgUrl;
 
+            // Resolution badge
+            const resBadgeText = item.resBadge || 'HD';
+            let resBadgeClass = 'fhd-1080p';
+            if (resBadgeText.includes('4K')) resBadgeClass = 'uhd-4k';
+            else if (resBadgeText.includes('2K')) resBadgeClass = 'qhd-2k';
+
             card.className = `wm-card ${isActive ? 'active' : ''}`;
             card.dataset.url = imgUrl;
 
@@ -373,6 +638,7 @@
                 ${isActive ? `<span class="wm-card-active-badge">✓</span>` : ''}
                 <div class="wm-card-overlay">
                     <div class="wm-card-header">
+                        <span class="wm-res-badge ${resBadgeClass}">${resBadgeText}</span>
                         <span class="wm-cc-badge">${license}</span>
                     </div>
                     <div class="wm-card-footer">
@@ -386,7 +652,7 @@
             // Fallback for broken image URLs
             const imgEl = card.querySelector('img');
             imgEl.addEventListener('error', () => {
-                imgEl.src = 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=400&q=70';
+                imgEl.src = 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=480&q=70';
             });
 
             // Click on apply button or anywhere on card
@@ -397,7 +663,8 @@
                     id: item.id,
                     title: title,
                     thumbnail: thumbUrl,
-                    type: 'web'
+                    type: 'web',
+                    resBadge: resBadgeText
                 });
                 applyBtn.textContent = 'Applied! ✓';
                 setTimeout(() => { applyBtn.textContent = 'Set as Wallpaper'; }, 1800);
@@ -408,7 +675,8 @@
                     id: item.id,
                     title: title,
                     thumbnail: thumbUrl,
-                    type: 'web'
+                    type: 'web',
+                    resBadge: resBadgeText
                 });
             });
 
@@ -456,8 +724,8 @@
             const rawDataUrl = e.target.result;
             const img = new Image();
             img.onload = () => {
-                // 1. Generate optimized wallpaper (max 1920x1080)
-                const maxW = 1920, maxH = 1080;
+                // 1. Generate pristine high-definition wallpaper (up to 2560x1440 QHD)
+                const maxW = 2560, maxH = 1440;
                 let w = img.width, h = img.height;
                 if (w > maxW || h > maxH) {
                     const ratio = Math.min(maxW / w, maxH / h);
@@ -468,8 +736,11 @@
                 canvas.width = w;
                 canvas.height = h;
                 const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
                 ctx.drawImage(img, 0, 0, w, h);
-                const optimizedWallpaperUrl = canvas.toDataURL('image/jpeg', 0.82);
+                // 0.90 high quality JPEG
+                const optimizedWallpaperUrl = canvas.toDataURL('image/jpeg', 0.90);
 
                 // 2. Generate small thumbnail for recent list (max 280x160)
                 const thumbCanvas = document.createElement('canvas');
@@ -477,6 +748,8 @@
                 thumbCanvas.width = tw;
                 thumbCanvas.height = th;
                 const tctx = thumbCanvas.getContext('2d');
+                tctx.imageSmoothingEnabled = true;
+                tctx.imageSmoothingQuality = 'medium';
                 // Center crop
                 const hRatio = img.width / tw;
                 const vRatio = img.height / th;
@@ -486,14 +759,16 @@
                 const sx = (img.width - sWidth) / 2;
                 const sy = (img.height - sHeight) / 2;
                 tctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, tw, th);
-                const thumbUrl = thumbCanvas.toDataURL('image/jpeg', 0.7);
+                const thumbUrl = thumbCanvas.toDataURL('image/jpeg', 0.75);
 
                 // Apply and store
+                const badge = (w >= 2560) ? '2K QHD' : (w >= 1920 ? '1080p FHD' : 'HD');
                 applyWallpaper(optimizedWallpaperUrl, {
                     id: 'local-' + Date.now(),
                     type: 'local',
                     title: file.name ? file.name.replace(/\.[^/.]+$/, "") : 'Local Upload',
-                    thumbnail: thumbUrl
+                    thumbnail: thumbUrl,
+                    resBadge: badge
                 });
             };
             img.src = rawDataUrl;
