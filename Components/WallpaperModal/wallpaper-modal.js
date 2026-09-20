@@ -37,10 +37,10 @@
             id: 'curated-mountain-stream',
             title: 'Cascading Mountain Stream & Mist',
             creator: 'Lukas Kloeppel',
-            url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=2560&q=85',
-            thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=480&q=70',
+            url: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=2560&q=85',
+            thumbnail: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=480&q=70',
             license: 'CC0',
-            tags: ['nature', 'waterfall', 'mountains'],
+            tags: ['nature', 'waterfall', 'mountains', 'river', 'stream'],
             resBadge: '4K UHD'
         },
         {
@@ -221,12 +221,18 @@
         let url = item.url || '';
         let thumbnail = item.thumbnail || url;
 
+        // CRITICAL FIX: Discard Openverse's internal proxy /thumb/ URLs because they frequently 404
+        if (thumbnail.includes('api.openverse.org')) {
+            thumbnail = url;
+        }
+
         // 1. Unsplash: Upgrade to 2560px Quad HD
         if (url.includes('images.unsplash.com')) {
             url = url.replace(/([?&]w=)[^&]*/, '$12560').replace(/([?&]q=)[^&]*/, '$185');
             if (!url.includes('w=')) {
                 url += (url.includes('?') ? '&' : '?') + 'auto=format&fit=crop&w=2560&q=85';
             }
+            thumbnail = url.replace(/([?&]w=)[^&]*/, '$1480').replace(/([?&]q=)[^&]*/, '$170');
         }
 
         // 2. Flickr: If 500px medium URL, upgrade to _b.jpg (1024px Large)
@@ -238,11 +244,18 @@
                     url = url.replace(/\.jpg$/i, '_b.jpg');
                 }
             }
+            thumbnail = url.replace(/_[b|h|k|o]\.jpg$/i, '_m.jpg');
         }
 
         // 3. Rawpixel: Upgrade image_800 to image_1300
         if (url.includes('images.rawpixel.com')) {
             url = url.replace('/image_800/', '/image_1300/');
+            thumbnail = url;
+        }
+
+        // 4. Wikimedia: Direct image URL
+        if (url.includes('upload.wikimedia.org')) {
+            thumbnail = url;
         }
 
         // Determine resolution badge based on dimensions
@@ -495,118 +508,66 @@
         }
     }
 
-    // Fetch wallpapers from Openverse Creative Commons API with strict HD / large size filtering
+    // Fetch wallpapers with reliable HD filtering and category matching
     async function fetchWallpapers(query, page = 1) {
         currentQuery = query;
         currentPage = page;
 
         renderSkeletons(pageSize);
 
-        const encodedQuery = encodeURIComponent(query.trim());
-        // 1. Primary Openverse search: Request size=large (HD & 4K) and aspect_ratio=wide
-        const primaryUrl = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=20&aspect_ratio=wide&size=large`;
+        // 1. Get matching items from our verified high-definition collection
+        const qTokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+        const localMatches = CURATED_FALLBACK_WALLPAPERS.filter(item => {
+            const itemText = (item.title + ' ' + (item.tags || []).join(' ')).toLowerCase();
+            return qTokens.some(tok => itemText.includes(tok));
+        });
 
+        // 2. Query Openverse API for extra community discoveries (filtering out providers that 429/403)
+        let liveItems = [];
         try {
+            const encodedQuery = encodeURIComponent(query.trim());
+            const primaryUrl = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=20&aspect_ratio=wide&size=large`;
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 9000);
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
 
-            let res = await fetch(primaryUrl, {
+            const res = await fetch(primaryUrl, {
                 signal: controller.signal,
                 headers: { 'Accept': 'application/json' }
             });
             clearTimeout(timeoutId);
 
-            let data = null;
             if (res.ok) {
-                data = await res.json();
+                const data = await res.json();
+                const rawResults = data.results || [];
+                // Exclude providers with strict bot blocks/429s in browsers (stocksnap, wikimedia)
+                liveItems = rawResults
+                    .filter(r => r.provider !== 'stocksnap' && r.provider !== 'wikimedia')
+                    .map(r => upgradeToHighRes(r))
+                    .filter(r => (r.width && r.width >= 1000) && (r.height && r.height >= 600));
             }
-
-            let rawResults = (data && data.results) || [];
-
-            // 2. If size=large has fewer than 4 results, also fetch size=medium (>= 640px to 2048px)
-            if (rawResults.length < 4) {
-                try {
-                    const mediumUrl = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=20&aspect_ratio=wide&size=medium`;
-                    const medRes = await fetch(mediumUrl, { headers: { 'Accept': 'application/json' } });
-                    if (medRes.ok) {
-                        const medData = await medRes.json();
-                        const medResults = medData.results || [];
-                        const existingIds = new Set(rawResults.map(r => r.id));
-                        medResults.forEach(r => {
-                            if (!existingIds.has(r.id)) rawResults.push(r);
-                        });
-                    }
-                } catch (e) {
-                    // Ignore medium fetch error, continue with what we have
-                }
-            }
-
-            // 3. Filter out non-working / hotlink-blocked providers (like stocksnap)
-            // and upgrade every result to maximum resolution
-            const filtered = rawResults
-                .filter(r => r.provider !== 'stocksnap')
-                .map(r => upgradeToHighRes(r))
-                .filter(r => {
-                    // Require minimum 1000px width and 600px height for true HD experience
-                    if (r.width && r.width < 1000) return false;
-                    if (r.height && r.height < 600) return false;
-                    return true;
-                });
-
-            // 4. If Openverse results are scarce, seamlessly append matching curated 4K wallpapers
-            const qLower = query.toLowerCase();
-            const matchingCurated = CURATED_FALLBACK_WALLPAPERS.filter(w => {
-                return (
-                    w.title.toLowerCase().includes(qLower) ||
-                    (w.tags && w.tags.some(t => qLower.includes(t) || t.includes(qLower)))
-                );
-            });
-
-            const combinedResults = [...filtered];
-            const existingUrls = new Set(combinedResults.map(r => r.url));
-            matchingCurated.forEach(w => {
-                if (!existingUrls.has(w.url)) {
-                    combinedResults.push(w);
-                    existingUrls.add(w.url);
-                }
-            });
-
-            // If still empty, fall back to the full curated 4K collection
-            if (combinedResults.length === 0) {
-                renderGalleryCards(CURATED_FALLBACK_WALLPAPERS.slice(0, pageSize));
-                totalPages = Math.ceil(CURATED_FALLBACK_WALLPAPERS.length / pageSize);
-                updatePaginationUI();
-                return;
-            }
-
-            totalPages = Math.max(1, Math.min(data?.page_count || 1, 50));
-            renderGalleryCards(combinedResults.slice(0, pageSize));
-            updatePaginationUI();
-
-        } catch (err) {
-            console.warn('Openverse API fetch failed, loading curated high-definition collection:', err.message);
-            // Search curated collection for query match
-            const qLower = query.toLowerCase();
-            const matchingCurated = CURATED_FALLBACK_WALLPAPERS.filter(w => {
-                return (
-                    w.title.toLowerCase().includes(qLower) ||
-                    (w.tags && w.tags.some(t => qLower.includes(t) || t.includes(qLower)))
-                );
-            });
-            const fallbackSet = matchingCurated.length > 0 ? matchingCurated : CURATED_FALLBACK_WALLPAPERS;
-
-            renderGalleryCards(fallbackSet.slice(0, pageSize));
-            totalPages = Math.ceil(fallbackSet.length / pageSize);
-            updatePaginationUI();
-            if (statusMessage) {
-                statusMessage.innerHTML = `
-                    <div style="font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px;">
-                        Showing curated Ultra-HD collection.
-                    </div>
-                `;
-                statusMessage.classList.remove('hidden');
-            }
+        } catch (e) {
+            console.warn('Openverse live fetch skipped:', e.message);
         }
+
+        // 3. Combine: Prioritize verified local matches, then add live community results without duplicates
+        const combined = [...localMatches];
+        const existingUrls = new Set(combined.map(item => item.url));
+        liveItems.forEach(item => {
+            if (!existingUrls.has(item.url)) {
+                combined.push(item);
+                existingUrls.add(item.url);
+            }
+        });
+
+        // If no match found for specific query, fall back to the curated 4K collection
+        const finalPool = combined.length > 0 ? combined : CURATED_FALLBACK_WALLPAPERS;
+
+        totalPages = Math.max(1, Math.ceil(finalPool.length / pageSize));
+        const startIndex = (page - 1) * pageSize;
+        const pageItems = finalPool.slice(startIndex, startIndex + pageSize);
+
+        renderGalleryCards(pageItems);
+        updatePaginationUI();
     }
 
     // Render Wallpapers Grid Cards
@@ -619,8 +580,8 @@
             const card = document.createElement('div');
             const imgUrl = item.url;
             const thumbUrl = item.thumbnail || item.url;
-            const title = item.title || 'Creative Commons Wallpaper';
-            const creator = item.creator || 'Openverse Contributor';
+            const title = item.title || 'High Definition Wallpaper';
+            const creator = item.creator || 'Community Photographer';
             const license = (item.license || 'CC').toUpperCase();
             const isActive = activeWallpaper === imgUrl;
 
@@ -649,10 +610,16 @@
                 </div>
             `;
 
-            // Fallback for broken image URLs
+            // Resilient error handling: Never replace with a space image fallback!
+            // If the thumbnail fails to load, try full imgUrl.
+            // If even imgUrl fails, gracefully remove the broken card from the grid.
             const imgEl = card.querySelector('img');
             imgEl.addEventListener('error', () => {
-                imgEl.src = 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=480&q=70';
+                if (imgEl.src !== imgUrl && imgUrl) {
+                    imgEl.src = imgUrl;
+                } else {
+                    card.remove();
+                }
             });
 
             // Click on apply button or anywhere on card
