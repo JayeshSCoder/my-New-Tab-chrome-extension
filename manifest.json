@@ -11,6 +11,9 @@
     "favicon",
     "clipboardWrite"
   ],
+  "host_permissions": [
+    "https://*/*"
+  ],
   
   "background": {
     "service_worker": "background.js"

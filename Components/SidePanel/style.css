@@ -447,3 +447,40 @@ input:checked + .slider:before {
   color: #34d399;
   background: rgba(16, 185, 129, 0.15);
 }
+
+/* Drawer Credits Footer */
+.drawer-credits {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.drawer-credits a {
+  color: #818cf8;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.drawer-credits a:hover {
+  color: #a5b4fc;
+  text-decoration: underline;
+}
+
+.drawer-credits-author {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.drawer-credits-version {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+
