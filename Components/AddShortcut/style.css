@@ -22,17 +22,17 @@
   gap: 12px;
   padding: 10px 16px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.25s ease;
 }
 
 #shortcuts-container:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(18, 28, 52, 0.82);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Shortcut Tile */
@@ -45,23 +45,52 @@
   height: 76px;
   padding: 8px 6px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
 }
 
 .shortcut-card:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
 }
 
 .shortcut-card:active {
   transform: translateY(0) scale(0.97);
+}
+
+/* Enhanced Visibility on Custom Wallpapers */
+body.has-custom-bg #shortcuts-container,
+body:has(.background.has-custom-bg) #shortcuts-container {
+  background: rgba(10, 15, 30, 0.84) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.has-custom-bg .shortcut-card,
+body:has(.background.has-custom-bg) .shortcut-card {
+  background: rgba(20, 28, 52, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.has-custom-bg .shortcut-card:hover,
+body:has(.background.has-custom-bg) .shortcut-card:hover {
+  background: rgba(28, 40, 72, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.38) !important;
+}
+
+body.has-custom-bg .shortcut-card div,
+body:has(.background.has-custom-bg) .shortcut-card div {
+  color: #f8fafc !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 .shortcut-card img {

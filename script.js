@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!imageUrl) {
             backgroundElement.style.backgroundImage = '';
             backgroundElement.classList.remove('has-custom-bg');
+            document.body.classList.remove('has-custom-bg');
             return;
         }
 
@@ -101,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundElement.style.backgroundSize = 'cover';
         backgroundElement.style.backgroundPosition = 'center';
         backgroundElement.classList.add('has-custom-bg');
+        document.body.classList.add('has-custom-bg');
     };
 
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {

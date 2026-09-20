@@ -190,6 +190,7 @@
             bgElement.style.backgroundSize = 'cover';
             bgElement.style.backgroundPosition = 'center';
             bgElement.classList.add('has-custom-bg');
+            document.body.classList.add('has-custom-bg');
         }
 
         // Add to recent list (limit 5)
@@ -218,6 +219,7 @@
         if (bgElement) {
             bgElement.style.backgroundImage = '';
             bgElement.classList.remove('has-custom-bg');
+            document.body.classList.remove('has-custom-bg');
         }
 
         renderRecentWallpapers();
