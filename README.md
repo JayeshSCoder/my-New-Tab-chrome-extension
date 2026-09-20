@@ -23,7 +23,7 @@
 
 ### 🎨 Open-Source Wallpaper Gallery Modal
 - **Zero Startup Network Overhead**: To guarantee instant new tab load times, no network requests are sent on browser startup. Wallpapers are fetched strictly when clicking the **Change Wallpaper** button.
-- **Openverse Creative Commons Search**: Full keyword search (e.g., *Nature*, *Space*, *Cyberpunk*, *Mountains*, *Minimal*) powered by the official open-source [Openverse API](https://openverse.org/).
+- **Openverse Creative Commons Search**: Full keyword search (e.g., *Nature*, *Space*, *Cyberpunk*, *Mountains*, *Minimal*) via the official open-source [Openverse API](https://openverse.org/).
 - **Quick Category Tags**: 1-click exploration chips for Nature, Space, Cyberpunk, Minimal, Mountains, Architecture, Abstract, and Ocean.
 - **Batched Pagination**: Loads wallpapers in lightweight sets of 12 images with responsive previous/next navigation.
 - **Local File Explorer Upload**: Upload custom images from your computer with client-side offscreen canvas compression (max 1920x1080 at 0.82 JPEG quality) to prevent storage quota limits (`QUOTA_EXCEEDED_ERR`).
@@ -113,8 +113,8 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 ## ❤️ Credits & Acknowledgments
 
 - **Creator & Maintainer**: [Jayesh](https://github.com/JayeshSCoder)
-- **Wallpapers**: Powered by [Openverse](https://openverse.org/) and Creative Commons community photographers.
-- **Contest Data**: Powered by [Kontests API](https://kontests.net/).
+- **Wallpapers**: [Openverse](https://openverse.org/) Creative Commons community photographers.
+- **Contest Data**: [Kontests API](https://kontests.net/).
 - **Typography**: [Google Fonts](https://fonts.google.com/) (*Outfit* by Rodrigo Fuenzalida; *Plus Jakarta Sans* by Tokotype).
 
 ---
