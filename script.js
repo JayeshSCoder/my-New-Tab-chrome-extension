@@ -75,6 +75,15 @@ function updateClockWidget() {
 updateClockWidget();
 setInterval(updateClockWidget, 1000);
 
+// Remove preload transition blocker after the initial paint is stable
+window.addEventListener('DOMContentLoaded', () => {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            document.documentElement.classList.remove('preload');
+        });
+    });
+});
+
 
 
 

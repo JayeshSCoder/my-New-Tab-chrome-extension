@@ -15,6 +15,11 @@ document.body.appendChild(contextMenu);
 let shortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
 let editingIndex = null;
 
+// Immediate render during parsing so cards are present on first frame
+if (shortcutsContainer && shortcuts.length > 0) {
+    renderShortcuts();
+}
+
 function openShortcutModal(isEdit = false) {
     if (isEdit && editingIndex !== null) {
         const shortcut = shortcuts[editingIndex];
