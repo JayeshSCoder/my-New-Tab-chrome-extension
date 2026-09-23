@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyBg = (imageUrl) => {
         if (!imageUrl) {
             backgroundElement.style.backgroundImage = '';
+            backgroundElement.style.backgroundColor = '';
             backgroundElement.classList.remove('has-custom-bg');
             document.body.classList.remove('has-custom-bg');
             return;
@@ -96,8 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (imageUrl.startsWith('linear-gradient') || imageUrl.startsWith('radial-gradient')) {
             backgroundElement.style.backgroundImage = imageUrl;
+            backgroundElement.style.backgroundColor = '';
+        } else if (imageUrl.startsWith('#') || imageUrl.startsWith('rgb')) {
+            // Solid color
+            backgroundElement.style.backgroundImage = 'none';
+            backgroundElement.style.backgroundColor = imageUrl;
         } else {
             backgroundElement.style.backgroundImage = `url(${imageUrl})`;
+            backgroundElement.style.backgroundColor = '';
         }
         backgroundElement.style.backgroundSize = 'cover';
         backgroundElement.style.backgroundPosition = 'center';
