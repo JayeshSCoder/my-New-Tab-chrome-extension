@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-f97316?style=for-the-badge)
 
-**A sleek, modern, distraction-free Chrome & Chromium New Tab extension featuring luminous frosted glassmorphism, 6 custom themes, open-source wallpaper discovery, coding contest alerts, resizable bookmark management, and quick shortcut capture.**
+**A sleek, modern, distraction-free Chrome & Chromium New Tab extension featuring luminous frosted glassmorphism, 6 custom themes, solid colors and gradient wallpapers, resizable bookmark management, and quick shortcut capture.**
 
 [Install Instructions](#-installation-guide) • [Features](#-features) • [Themes](#-6-distinct-themes) • [Credits](#-credits--acknowledgments)
 
@@ -21,13 +21,13 @@
 - **Translucent Frosted Acrylic Cards**: Specular top reflections, custom glass borders, and deep background diffusion (`backdrop-filter: blur(28px) saturate(180%)`).
 - **Crystal-Clear Visibility**: Carefully weighted white typography and soft depth shadows ensure the clock, search bar, and shortcuts remain crisp and legible over any wallpaper (bright skies, snow, dark scenes, or colorful art) without feeling dark or opaque.
 
-### 🎨 Open-Source Wallpaper Gallery Modal
-- **Zero Startup Network Overhead**: To guarantee instant new tab load times, no network requests are sent on browser startup. Wallpapers are fetched strictly when clicking the **Change Wallpaper** button.
-- **Openverse Creative Commons Search**: Full keyword search (e.g., *Nature*, *Space*, *Cyberpunk*, *Mountains*, *Minimal*) via the official open-source [Openverse API](https://openverse.org/).
-- **Quick Category Tags**: 1-click exploration chips for Nature, Space, Cyberpunk, Minimal, Mountains, Architecture, Abstract, and Ocean.
-- **Batched Pagination**: Loads wallpapers in lightweight sets of 12 images with responsive previous/next navigation.
+### 🎨 Wallpaper & Color Customization Modal
+- **Zero Startup Network Overhead**: Instant new tab load times with zero external network wallpaper calls.
+- **Curated Solid Colors**: Quick-select minimalist solid colors (Obsidian, Midnight Blue, Slate Charcoal, Emerald, etc.).
+- **Curated Gradients**: Smooth dual-tone gradient presets (Sunset Glow, Ocean Breeze, Cosmic Nebula, etc.).
+- **Custom Color Picker**: Choose any custom hex color with native color picker and live application.
 - **Local File Explorer Upload**: Upload custom images from your computer with client-side offscreen canvas compression (max 1920x1080 at 0.82 JPEG quality) to prevent storage quota limits (`QUOTA_EXCEEDED_ERR`).
-- **Strict Recent 5 History**: Stores only the last 5 set wallpapers (both Openverse downloads and local uploads) in a quick-access shelf for instant 1-click re-application.
+- **Strict Recent 5 History**: Stores only the last 5 set wallpapers and colors in a quick-access shelf for instant 1-click re-application.
 - **Theme Reset**: Instant restore to the active theme's default ambient background gradient.
 
 ### 🎭 6 Distinct Themes
@@ -39,9 +39,6 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 5. ❄️ **Nordic Minimalist**: Clean arctic slate palette with cool glacier blue accents and minimalist containers.
 6. 🌿 **Emerald Zen**: Tranquil deep botanical pine background with glowing emerald borders and mint clock digits.
 
-### 🏆 Competitive Coding Contests Sidebar
-- Real-time updates from [Kontests API](https://kontests.net/) tracking upcoming hackathons and coding rounds on **Codeforces**, **LeetCode**, **CodeChef**, **AtCoder**, **HackerRank**, and **HackerEarth**.
-- Filter by platform, view contest countdowns, and jump directly to contest pages.
 
 ### 📑 Resizable Left Bookmarks Bar
 - Smooth sliding sidebar displaying your browser bookmarks hierarchy.
@@ -81,8 +78,6 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 - **Core**: HTML5, Vanilla JavaScript (ES6+), Manifest V3
 - **Styling**: Vanilla CSS (Custom Properties, Flexbox, Grid, Backdrop Filters)
 - **APIs**:
-  - [Openverse API](https://api.openverse.org/): Open-source Creative Commons search
-  - [Kontests API](https://kontests.net/): Live competitive programming contest schedules
   - [Chrome Extension APIs](https://developer.chrome.com/docs/extensions/reference/): `storage`, `tabs`, `bookmarks`, `favicon`, `clipboardWrite`
   - [Google Fonts](https://fonts.google.com/): *Outfit* & *Plus Jakarta Sans*
 
@@ -90,7 +85,6 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 ├── Components/
 │   ├── AddShortcut/          # Bottom shortcuts dock & add modal
 │   ├── Bookmarks/            # Left sliding resizable bookmarks bar
-│   ├── Contests_Sidebar/     # Coding contest tracker & platform filters
 │   ├── ContextMenu/          # Right-click context menu
 │   ├── Favicon/              # Favicon fetching helper
 │   ├── Platform/             # Platform detection utilities
@@ -113,8 +107,6 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 ## ❤️ Credits & Acknowledgments
 
 - **Creator & Maintainer**: [Jayesh](https://github.com/JayeshSCoder)
-- **Wallpapers**: [Openverse](https://openverse.org/) Creative Commons community photographers.
-- **Contest Data**: [Kontests API](https://kontests.net/).
 - **Typography**: [Google Fonts](https://fonts.google.com/) (*Outfit* by Rodrigo Fuenzalida; *Plus Jakarta Sans* by Tokotype).
 
 ---
