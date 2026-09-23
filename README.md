@@ -40,10 +40,14 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 6. 🟨 **Neo-Brutalist**: Radical shape transformation with 0px sharp corners, thick 3px solid borders, hard 3D offset drop-shadows, sticker greeting tags, and high-contrast retro aesthetic.
 
 
-### 📑 Resizable Left Bookmarks Bar
-- Smooth sliding sidebar displaying your browser bookmarks hierarchy.
-- **Customizable Width Slider**: Adjust width anywhere from `60px` to `520px` in real time.
-- Right-click context menu to copy URLs, open in new tab, or delete bookmarks.
+### 📑 Adaptive Multi-Edge Bookmarks Bar
+- **Theme-Adaptive Positioning & Layouts**:
+  - **Left Edge Shelf**: In **Glass**, **Windows 11 Fluent**, and **Legacy** themes.
+  - **Top Dynamic Safari Shelf**: In **macOS** theme, dropping down from top center with traffic light dots and grid favorites layout.
+  - **Right Edge Workstation & Locker Panel**: In **Vertical Rail** and **Neo-Brutalist** themes (eliminating overlap with the left shortcuts rail).
+- **Interactive Edge Peek Tab**: Visible glowing tab (`🔖`) peeking from the edge for 1-click or hover reveal.
+- **Customizable Width Slider**: Adjust width anywhere from `60px` to `520px` in real time with directional drag resizing.
+- Right-click context menu to copy URLs, open in new tab/incognito, or edit/delete bookmarks.
 
 ### 🔗 Shortcuts Dock & Quick Capture Companion
 - **Bottom Shortcuts Dock**: Clean circular/card shortcuts with auto-fetched favicons.
