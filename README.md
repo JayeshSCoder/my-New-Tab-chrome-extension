@@ -30,20 +30,24 @@
 - **Strict Recent 5 History**: Stores only the last 5 set wallpapers and colors in a quick-access shelf for instant 1-click re-application.
 - **Theme Reset**: Instant restore to the active theme's default ambient background gradient.
 
-### 🎭 6 Distinct Themes
-Switch instantly between 6 handcrafted design languages under the **Settings (⚙️)** drawer:
-1. 💎 **Glassmorphism (Default)**: Modern acrylic frosted glass with glowing highlights and ambient cosmic mesh.
+### 🎭 6 Distinct Themes (Shapes, Layouts & Paradigms)
+Switch instantly between 6 handcrafted design languages under the **Settings (⚙️)** drawer — altering shapes, dock positioning, search bars, and aesthetics:
+1. 💎 **Glassmorphism (Default)**: Modern acrylic frosted glass with glowing highlights, floating dock, and ambient cosmic mesh.
 2. 🏛️ **Legacy (Classic)**: Exact replica of the original classic look (solid white search bar, Arial typography, `#007BFF` header, and classic gray shortcut tiles).
-3. ⚡ **Cyber Neon**: Futuristic cyberpunk theme with deep obsidian background, neon cyan and magenta laser glows.
-4. 🌅 **Sunset Horizon**: Warm twilight ambient gradient (plum to amber) with glowing orange clock digits and sunset accents.
-5. ❄️ **Nordic Minimalist**: Clean arctic slate palette with cool glacier blue accents and minimalist containers.
-6. 🌿 **Emerald Zen**: Tranquil deep botanical pine background with glowing emerald borders and mint clock digits.
+3. 🍎 **macOS Sonoma Dock**: Floating Cupertino squircle dock with zoom-up magnification bounce, Spotlight search bar, and iOS-style Notification Center clock widget.
+4. 🪟 **Windows 11 Fluent**: Grounded centered taskbar dock along the bottom edge with active indicator lines, Windows 11 search box with bottom highlight, and Mica styling.
+5. ⚡ **Vertical Workstation Rail**: Shortcuts relocated to a left-side vertical dock/rail with hover tooltip labels, ultra-wide command palette, and horizontal dashboard clock.
+6. 🟨 **Neo-Brutalist**: Radical shape transformation with 0px sharp corners, thick 3px solid borders, hard 3D offset drop-shadows, sticker greeting tags, and high-contrast retro aesthetic.
 
 
-### 📑 Resizable Left Bookmarks Bar
-- Smooth sliding sidebar displaying your browser bookmarks hierarchy.
-- **Customizable Width Slider**: Adjust width anywhere from `60px` to `520px` in real time.
-- Right-click context menu to copy URLs, open in new tab, or delete bookmarks.
+### 📑 Adaptive Multi-Edge Bookmarks Bar
+- **Theme-Adaptive Positioning & Layouts**:
+  - **Left Edge Shelf**: In **Glass**, **Windows 11 Fluent**, and **Legacy** themes.
+  - **Top Dynamic Safari Shelf**: In **macOS** theme, dropping down from top center with traffic light dots and grid favorites layout.
+  - **Right Edge Workstation & Locker Panel**: In **Vertical Rail** and **Neo-Brutalist** themes (eliminating overlap with the left shortcuts rail).
+- **Interactive Edge Peek Tab**: Visible glowing tab (`🔖`) peeking from the edge for 1-click or hover reveal.
+- **Customizable Width Slider**: Adjust width anywhere from `60px` to `520px` in real time with directional drag resizing.
+- Right-click context menu to copy URLs, open in new tab/incognito, or edit/delete bookmarks.
 
 ### 🔗 Shortcuts Dock & Quick Capture Companion
 - **Bottom Shortcuts Dock**: Clean circular/card shortcuts with auto-fetched favicons.

@@ -129,20 +129,20 @@
   background: #007bff;
 }
 
-.cyber-indicator {
-  background: linear-gradient(135deg, #00f0ff, #ff007f);
+.macos-indicator {
+  background: linear-gradient(135deg, #007aff, #5856d6);
 }
 
-.sunset-indicator {
-  background: linear-gradient(135deg, #ec4899, #f97316);
+.windows-indicator {
+  background: #0078d4;
 }
 
-.nordic-indicator {
-  background: linear-gradient(135deg, #38bdf8, #94a3b8);
+.vertical-indicator {
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
 }
 
-.emerald-indicator {
-  background: linear-gradient(135deg, #10b981, #059669);
+.brutalist-indicator {
+  background: linear-gradient(135deg, #ffd000, #ff007f);
 }
 
 .drawer-option {
@@ -339,113 +339,149 @@ input:checked + .slider:before {
   box-shadow: -12px 0 40px rgba(0, 240, 255, 0.18);
 }
 
-[data-theme="cyber-neon"] .theme-pill-btn.active {
-  background: rgba(0, 240, 255, 0.2);
-  border: 1px solid rgba(0, 240, 255, 0.6);
-  color: #00f0ff;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+/* macOS Dock Theme */
+[data-theme="macos-dock"] #right-drawer {
+  background: rgba(36, 40, 50, 0.88);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.35);
 }
 
-[data-theme="cyber-neon"] input:checked + .slider {
-  background: linear-gradient(135deg, #00f0ff, #0077ff);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+[data-theme="macos-dock"] .theme-pill-btn.active {
+  background: rgba(0, 122, 255, 0.22);
+  border: 1px solid rgba(0, 122, 255, 0.6);
+  color: #60a5fa;
+  border-radius: 12px;
 }
 
-[data-theme="cyber-neon"] #bookmark-bar-width::-webkit-slider-thumb {
-  background: #00f0ff;
-  border-color: #ffffff;
-  box-shadow: 0 0 12px #00f0ff;
+[data-theme="macos-dock"] input:checked + .slider {
+  background: #007aff;
+  box-shadow: 0 0 10px rgba(0, 122, 255, 0.4);
 }
 
-[data-theme="cyber-neon"] .drawer-option-value {
-  color: #00f0ff;
-  background: rgba(0, 240, 255, 0.15);
-}
-
-/* Sunset Theme */
-[data-theme="sunset"] #right-drawer {
-  background: rgba(30, 10, 40, 0.95);
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  box-shadow: -12px 0 40px rgba(249, 115, 22, 0.15);
-}
-
-[data-theme="sunset"] .theme-pill-btn.active {
-  background: rgba(249, 115, 22, 0.2);
-  border: 1px solid rgba(249, 115, 22, 0.5);
-  color: #fb923c;
-}
-
-[data-theme="sunset"] input:checked + .slider {
-  background: linear-gradient(135deg, #f97316, #db2777);
-  box-shadow: 0 0 12px rgba(249, 115, 22, 0.5);
-}
-
-[data-theme="sunset"] #bookmark-bar-width::-webkit-slider-thumb {
-  background: #f97316;
-  border-color: #ffffff;
-  box-shadow: 0 0 10px #f97316;
-}
-
-[data-theme="sunset"] .drawer-option-value {
-  color: #fb923c;
-  background: rgba(249, 115, 22, 0.15);
-}
-
-/* Nordic Theme */
-[data-theme="nordic"] #right-drawer {
-  background: rgba(15, 23, 42, 0.96);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="nordic"] .theme-pill-btn.active {
-  background: rgba(56, 189, 248, 0.2);
-  border: 1px solid rgba(56, 189, 248, 0.5);
-  color: #38bdf8;
-}
-
-[data-theme="nordic"] input:checked + .slider {
-  background: #0284c7;
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
-}
-
-[data-theme="nordic"] #bookmark-bar-width::-webkit-slider-thumb {
-  background: #38bdf8;
+[data-theme="macos-dock"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #007aff;
   border-color: #ffffff;
 }
 
-[data-theme="nordic"] .drawer-option-value {
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.15);
+[data-theme="macos-dock"] .drawer-option-value {
+  color: #60a5fa;
+  background: rgba(0, 122, 255, 0.15);
+  border-radius: 8px;
 }
 
-/* Emerald Theme */
-[data-theme="emerald"] #right-drawer {
-  background: rgba(4, 30, 24, 0.96);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: -12px 0 40px rgba(16, 185, 129, 0.15);
+/* Windows 11 Fluent Theme */
+[data-theme="windows-fluent"] #right-drawer {
+  background: rgba(32, 32, 32, 0.92);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px 0 0 12px;
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.45);
 }
 
-[data-theme="emerald"] .theme-pill-btn.active {
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  color: #34d399;
+[data-theme="windows-fluent"] .theme-pill-btn {
+  border-radius: 4px;
 }
 
-[data-theme="emerald"] input:checked + .slider {
-  background: linear-gradient(135deg, #10b981, #059669);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+[data-theme="windows-fluent"] .theme-pill-btn.active {
+  background: rgba(0, 120, 212, 0.25);
+  border: 1px solid #0078d4;
+  color: #60cdff;
+  border-radius: 4px;
 }
 
-[data-theme="emerald"] #bookmark-bar-width::-webkit-slider-thumb {
-  background: #10b981;
-  border-color: #ffffff;
-  box-shadow: 0 0 10px #10b981;
+[data-theme="windows-fluent"] input:checked + .slider {
+  background: #0078d4;
 }
 
-[data-theme="emerald"] .drawer-option-value {
-  color: #34d399;
-  background: rgba(16, 185, 129, 0.15);
+[data-theme="windows-fluent"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #0078d4;
+  border-radius: 4px;
+}
+
+[data-theme="windows-fluent"] .drawer-option-value {
+  color: #60cdff;
+  background: rgba(0, 120, 212, 0.18);
+  border-radius: 4px;
+}
+
+/* Vertical Dock / Workstation Theme */
+[data-theme="vertical-dock"] #right-drawer {
+  background: rgba(15, 20, 32, 0.94);
+  border-left: 1px solid rgba(99, 102, 241, 0.25);
+  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="vertical-dock"] .theme-pill-btn.active {
+  background: rgba(99, 102, 241, 0.25);
+  border: 1px solid #6366f1;
+  color: #a5b4fc;
+}
+
+[data-theme="vertical-dock"] input:checked + .slider {
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+}
+
+[data-theme="vertical-dock"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #6366f1;
+}
+
+[data-theme="vertical-dock"] .drawer-option-value {
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.18);
+}
+
+/* Neo-Brutalist Theme */
+[data-theme="neo-brutalist"] #right-drawer {
+  background: #0a0a0a;
+  border-left: 3px solid #ffffff;
+  border-radius: 0;
+  box-shadow: -8px 0 0px #ffd000;
+}
+
+[data-theme="neo-brutalist"] .theme-pill-btn {
+  border-radius: 0;
+  border: 1.5px solid transparent;
+}
+
+[data-theme="neo-brutalist"] .theme-pill-btn.active {
+  background: #ffd000;
+  color: #000000;
+  border: 1.5px solid #ffffff;
+  border-radius: 0;
+  font-weight: 800;
+}
+
+[data-theme="neo-brutalist"] .slider {
+  border-radius: 0;
+  border: 2px solid #ffffff;
+}
+
+[data-theme="neo-brutalist"] .slider:before {
+  border-radius: 0;
+}
+
+[data-theme="neo-brutalist"] input:checked + .slider {
+  background: #ff007f;
+}
+
+[data-theme="neo-brutalist"] #bookmark-bar-width {
+  border-radius: 0;
+}
+
+[data-theme="neo-brutalist"] #bookmark-bar-width::-webkit-slider-thumb {
+  border-radius: 0;
+  background: #ffd000;
+  border: 2px solid #ffffff;
+}
+
+[data-theme="neo-brutalist"] .drawer-option-value {
+  color: #ffd000;
+  background: #1e1e1e;
+  border: 1px solid #ffffff;
+  border-radius: 0;
 }
 
 /* Drawer Credits Footer */

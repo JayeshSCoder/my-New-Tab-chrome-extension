@@ -166,16 +166,49 @@ if (sidebar) {
     initBookmarkBar();
 }
 
+// Helper to determine placement based on current theme
+function getBookmarkPlacement() {
+    const theme = document.documentElement.getAttribute('data-theme') || 'glassmorphism';
+    if (theme === 'macos-dock') return 'top';
+    if (theme === 'vertical-dock' || theme === 'neo-brutalist') return 'right';
+    return 'left';
+}
+
 function initBookmarkBar() {
     // Restore the saved width before the bar becomes visible
     applyBookmarkBarWidth(getSavedBookmarkBarWidth());
 
-    // Show sidebar when mouse is near the left edge
+    // Show sidebar when mouse is near the active triggering edge
     document.addEventListener('mousemove', (event) => {
-        if (event.clientX <= EDGE_TRIGGER_ZONE) { // Detects mouse near the left edge
-            showBookmarkBar();
+        const placement = getBookmarkPlacement();
+        if (placement === 'left') {
+            if (event.clientX <= EDGE_TRIGGER_ZONE) {
+                showBookmarkBar();
+            }
+        } else if (placement === 'right') {
+            if ((window.innerWidth - event.clientX) <= EDGE_TRIGGER_ZONE) {
+                showBookmarkBar();
+            }
+        } else if (placement === 'top') {
+            if (event.clientY <= EDGE_TRIGGER_ZONE) {
+                showBookmarkBar();
+            }
         }
     });
+
+    // Handle interactive peek tab
+    const peekTab = document.getElementById('bookmarkPeekTab');
+    if (peekTab) {
+        peekTab.addEventListener('mouseenter', showBookmarkBar);
+        peekTab.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (sidebar.classList.contains('show')) {
+                hideBookmarkBar();
+            } else {
+                showBookmarkBar();
+            }
+        });
+    }
 
     // Keep the sidebar open while the mouse is over it
     sidebar.addEventListener('mouseenter', showBookmarkBar);
@@ -183,7 +216,6 @@ function initBookmarkBar() {
     // Hide sidebar when mouse leaves sidebar area
     sidebar.addEventListener('mouseleave', () => {
         // Stay open while the options list or the editor is in use from the bar
-        // (both classes are set by Components/Bookmarks/bookmarkMenu.js)
         const busy = document.body.classList.contains('bookmark-menu-open') ||
             document.body.classList.contains('bookmark-editor-open');
 
@@ -275,7 +307,14 @@ function setupBookmarkBarResize() {
         if (!isResizing) {
             return;
         }
-        applyBookmarkBarWidth(startWidth + (event.clientX - startX));
+        const placement = getBookmarkPlacement();
+        if (placement === 'right') {
+            // Dragging leftward increases width for a right-docked bar
+            applyBookmarkBarWidth(startWidth + (startX - event.clientX));
+        } else {
+            // Left-docked or top
+            applyBookmarkBarWidth(startWidth + (event.clientX - startX));
+        }
     };
 
     const stopResizing = (event) => {

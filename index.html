@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="preload">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Tab</title>
+    <script>
+        // Critical: Synchronously set theme and pre-apply saved styles before any CSS or DOM renders.
+        // This completely eliminates FOUC (Flash of Unstyled Content) and transition jumps during startup.
+        (function() {
+            try {
+                const theme = localStorage.getItem('app-theme') || 'glassmorphism';
+                document.documentElement.setAttribute('data-theme', theme);
+
+                // Early background hydration
+                const bg = localStorage.getItem('backgroundImage');
+                if (bg) {
+                    let rule = '';
+                    if (bg.startsWith('linear-gradient') || bg.startsWith('radial-gradient')) {
+                        rule = `background-image: ${bg} !important; background-color: transparent !important;`;
+                    } else if (bg.startsWith('#') || bg.startsWith('rgb')) {
+                        rule = `background-image: none !important; background-color: ${bg} !important;`;
+                    } else {
+                        rule = `background-image: url("${bg}") !important; background-size: cover !important; background-position: center !important;`;
+                    }
+                    const style = document.createElement('style');
+                    style.id = 'early-bg-style';
+                    style.textContent = `.background { ${rule} } body { ${rule} }`;
+                    document.head.appendChild(style);
+                }
+
+                // Early bookmark bar width
+                const bw = localStorage.getItem('bookmark-bar-width');
+                if (bw) {
+                    document.documentElement.style.setProperty('--bookmark-bar-width', bw + 'px');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,9 +58,28 @@
     <header>
         <div id="clock-widget" class="clock-widget">
             <div id="clock-greeting" class="clock-greeting">Good day</div>
-            <div id="clock-time" class="clock-time">00:00</div>
-            <div id="clock-date" class="clock-date">Mon, Jan 01</div>
+            <div id="clock-time" class="clock-time">--:--</div>
+            <div id="clock-date" class="clock-date">Loading...</div>
         </div>
+        <script>
+            // Synchronously render real current time during parsing
+            (function() {
+                try {
+                    const now = new Date();
+                    const hours = now.getHours();
+                    let g = "Good morning";
+                    if (hours >= 12 && hours < 17) g = "Good afternoon";
+                    else if (hours >= 17 && hours < 22) g = "Good evening";
+                    else if (hours >= 22 || hours < 5) g = "Good night";
+                    const greetingEl = document.getElementById('clock-greeting');
+                    const timeEl = document.getElementById('clock-time');
+                    const dateEl = document.getElementById('clock-date');
+                    if (greetingEl) greetingEl.textContent = g;
+                    if (timeEl) timeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                    if (dateEl) dateEl.textContent = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+                } catch(e) {}
+            })();
+        </script>
         <div class="search-container">
             <span class="search-icon-wrapper">
                 <svg class="search-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -51,6 +103,23 @@
 
 
     <div class="bookmark-sidebar">
+        <!-- Interactive edge peek tab -->
+        <div class="bookmark-peek-tab" id="bookmarkPeekTab" title="Toggle Bookmarks">
+            <span class="bookmark-peek-icon">🔖</span>
+            <span class="bookmark-peek-label">Bookmarks</span>
+        </div>
+        <!-- Distinctive theme header -->
+        <div class="bookmark-header">
+            <div class="bookmark-header-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+            </div>
+            <div class="bookmark-header-title">
+                <span class="bookmark-title-icon">🔖</span>
+                <span class="bookmark-title-text">Bookmarks</span>
+            </div>
+        </div>
         <div class="bookmark-sidebar-scroll">
             <ul class="bookmark-list"></ul>
         </div>
@@ -214,21 +283,21 @@
                     <span class="theme-indicator legacy-indicator"></span>
                     <span>Legacy</span>
                 </button>
-                <button type="button" class="theme-pill-btn" data-theme="cyber-neon" title="Futuristic Cyber Neon">
-                    <span class="theme-indicator cyber-indicator"></span>
-                    <span>Cyber</span>
+                <button type="button" class="theme-pill-btn" data-theme="macos-dock" title="macOS Floating Dock & Spotlight">
+                    <span class="theme-indicator macos-indicator"></span>
+                    <span>macOS</span>
                 </button>
-                <button type="button" class="theme-pill-btn" data-theme="sunset" title="Warm Sunset Glow">
-                    <span class="theme-indicator sunset-indicator"></span>
-                    <span>Sunset</span>
+                <button type="button" class="theme-pill-btn" data-theme="windows-fluent" title="Windows 11 Fluent Taskbar">
+                    <span class="theme-indicator windows-indicator"></span>
+                    <span>Windows</span>
                 </button>
-                <button type="button" class="theme-pill-btn" data-theme="nordic" title="Arctic Slate Minimalist">
-                    <span class="theme-indicator nordic-indicator"></span>
-                    <span>Nordic</span>
+                <button type="button" class="theme-pill-btn" data-theme="vertical-dock" title="Workstation Left Rail Dock">
+                    <span class="theme-indicator vertical-indicator"></span>
+                    <span>Vertical</span>
                 </button>
-                <button type="button" class="theme-pill-btn" data-theme="emerald" title="Tranquil Emerald Zen">
-                    <span class="theme-indicator emerald-indicator"></span>
-                    <span>Emerald</span>
+                <button type="button" class="theme-pill-btn" data-theme="neo-brutalist" title="Retro Neo-Brutalist Sharp">
+                    <span class="theme-indicator brutalist-indicator"></span>
+                    <span>Brutalist</span>
                 </button>
             </div>
         </div>
