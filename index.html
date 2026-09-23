@@ -117,8 +117,8 @@
                 <div class="wm-title-group">
                     <div class="wm-title-icon">🎨</div>
                     <div>
-                        <h2 id="wallpaper-modal-title" class="wm-title">Wallpaper Gallery</h2>
-                        <p class="wm-subtitle">Discover curated wallpapers or upload from your device</p>
+                        <h2 id="wallpaper-modal-title" class="wm-title">Background Picker</h2>
+                        <p class="wm-subtitle">Choose a solid color, gradient, or upload from your device</p>
                     </div>
                 </div>
                 <div class="wm-header-actions">
@@ -138,7 +138,7 @@
                 <div class="wm-section-header">
                     <span class="wm-section-title">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        Recent Wallpapers <span class="wm-badge">Max 5</span>
+                        Recent Backgrounds <span class="wm-badge">Max 5</span>
                     </span>
                     <span class="wm-recent-hint">Click any to apply</span>
                 </div>
@@ -147,50 +147,52 @@
                 </div>
             </div>
 
-            <!-- Search & Filter Controls -->
-            <div class="wm-controls">
-                <div class="wm-search-box">
-                    <svg class="wm-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="wm-search-input" placeholder="Search open-source wallpapers (e.g., Nature, Space, Cyberpunk, Mountains)..." autocomplete="off" spellcheck="false">
-                    <button type="button" id="wm-search-clear-btn" class="wm-clear-btn hidden" aria-label="Clear search">✕</button>
-                    <button type="button" id="wm-search-submit-btn" class="wm-search-btn">Search</button>
-                </div>
-
-                <!-- Quick Category Tags -->
-                <div class="wm-tags-scroller">
-                    <button type="button" class="wm-tag active" data-query="wallpaper landscape nature">Nature</button>
-                    <button type="button" class="wm-tag" data-query="space galaxy stars wallpaper">Space</button>
-                    <button type="button" class="wm-tag" data-query="cyberpunk neon futuristic city">Cyberpunk</button>
-                    <button type="button" class="wm-tag" data-query="minimal dark gradient wallpaper">Minimal</button>
-                    <button type="button" class="wm-tag" data-query="mountains alpine sunrise landscape">Mountains</button>
-                    <button type="button" class="wm-tag" data-query="architecture modern cityscape building">Architecture</button>
-                    <button type="button" class="wm-tag" data-query="abstract colorful gradient geometry">Abstract</button>
-                    <button type="button" class="wm-tag" data-query="ocean waves coastal sunset">Ocean</button>
-                </div>
-            </div>
-
-            <!-- Main Scrollable Wallpapers Grid Container -->
+            <!-- Main Scrollable Body -->
             <div class="wm-body" id="wm-body">
-                <div class="wm-grid" id="wm-grid">
-                    <!-- Cards populated dynamically -->
+                <!-- Solid Colors Grid -->
+                <div class="wm-color-section">
+                    <div class="wm-section-header">
+                        <span class="wm-section-title">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                            Solid Colors
+                        </span>
+                    </div>
+                    <div class="wm-color-grid" id="wm-color-grid">
+                        <!-- Color swatches populated dynamically -->
+                    </div>
                 </div>
 
-                <!-- Empty / Error state placeholder -->
-                <div id="wm-status-message" class="wm-status-message hidden"></div>
-
-                <!-- Pagination Controls -->
-                <div class="wm-pagination" id="wm-pagination">
-                    <button type="button" id="wm-prev-page-btn" class="wm-page-btn" disabled>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                        <span>Previous</span>
-                    </button>
-                    <div class="wm-page-info">
-                        Page <span id="wm-current-page">1</span> of <span id="wm-total-pages">1</span>
+                <!-- Gradient Presets -->
+                <div class="wm-color-section">
+                    <div class="wm-section-header">
+                        <span class="wm-section-title">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20"></path></svg>
+                            Gradient Presets
+                        </span>
                     </div>
-                    <button type="button" id="wm-next-page-btn" class="wm-page-btn">
-                        <span>Next</span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </button>
+                    <div class="wm-color-grid" id="wm-gradient-grid">
+                        <!-- Gradient swatches populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Custom Color Picker -->
+                <div class="wm-color-section">
+                    <div class="wm-section-header">
+                        <span class="wm-section-title">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                            Custom Color
+                        </span>
+                    </div>
+                    <div class="wm-custom-picker-row">
+                        <div class="wm-picker-wrapper">
+                            <input type="color" id="wm-color-picker" value="#1e293b" title="Pick your favourite color">
+                            <span class="wm-picker-label" id="wm-picker-hex-label">#1e293b</span>
+                        </div>
+                        <button type="button" id="wm-apply-custom-color-btn" class="wm-btn wm-btn-secondary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Apply Color
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

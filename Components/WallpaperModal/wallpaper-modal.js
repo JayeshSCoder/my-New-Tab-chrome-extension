@@ -1,8 +1,9 @@
 /**
- * Wallpaper Gallery Modal Component
- * Integrates Openverse Creative Commons open-source wallpaper search & custom explorer upload
- * Enforces a strict 5-item recent wallpapers limit to preserve storage quota.
- * Does NOT call network on tab launch; only fetches when modal is opened.
+ * Background Picker Modal Component
+ * Solid colors, gradient presets, and custom color picker for background selection.
+ * Supports local file upload from explorer.
+ * Enforces a strict 5-item recent backgrounds limit to preserve storage quota.
+ * Does NOT call network on tab launch or at any time (fully offline).
  */
 
 (function () {
@@ -11,74 +12,39 @@
     const STORAGE_KEY_RECENT = 'recentWallpapers';
     const MAX_RECENT_WALLPAPERS = 5;
 
-    // Fallback curated open-source wallpapers (Creative Commons / Unsplash / Public Domain)
-    const CURATED_FALLBACK_WALLPAPERS = [
-        {
-            id: 'fallback-1',
-            title: 'Cosmic Nebula in Deep Space',
-            creator: 'NASA / ESA',
-            url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        },
-        {
-            id: 'fallback-2',
-            title: 'Majestic Alpine Lake Reflections',
-            creator: 'Luca Bravo',
-            url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        },
-        {
-            id: 'fallback-3',
-            title: 'Cyberpunk Neon Cityscape at Night',
-            creator: 'Aleksandar Pasaric',
-            url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        },
-        {
-            id: 'fallback-4',
-            title: 'Mist Over Mountain Pine Forest',
-            creator: 'Kalvis Svilāns',
-            url: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        },
-        {
-            id: 'fallback-5',
-            title: 'Golden Sunset Horizon Over Calm Sea',
-            creator: 'Sébastien Goldberg',
-            url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        },
-        {
-            id: 'fallback-6',
-            title: 'Minimalist Sand Dunes and Shadows',
-            creator: 'Jeremy Bishop',
-            url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1920&q=80',
-            thumbnail: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=400&q=70',
-            license: 'CC0'
-        }
+    // Curated solid color presets
+    const PRESET_COLORS = [
+        { id: 'obsidian',         name: 'Obsidian',         hex: '#0a0a0a' },
+        { id: 'midnight-blue',    name: 'Midnight Blue',    hex: '#0f172a' },
+        { id: 'slate-charcoal',   name: 'Slate Charcoal',   hex: '#1e293b' },
+        { id: 'graphite',         name: 'Graphite',         hex: '#374151' },
+        { id: 'deep-purple',      name: 'Deep Purple',      hex: '#2e1065' },
+        { id: 'forest-green',     name: 'Forest Green',     hex: '#14532d' },
+        { id: 'wine-red',         name: 'Wine Red',         hex: '#7f1d1d' },
+        { id: 'ocean-teal',       name: 'Ocean Teal',       hex: '#134e4a' },
+    ];
+
+    // Curated gradient presets
+    const PRESET_GRADIENTS = [
+        { id: 'grad-sunset',      name: 'Sunset Glow',      value: 'linear-gradient(135deg, #f97316, #db2777, #7c3aed)' },
+        { id: 'grad-ocean',       name: 'Deep Ocean',        value: 'linear-gradient(135deg, #0c4a6e, #164e63, #134e4a)' },
+        { id: 'grad-aurora',      name: 'Aurora Borealis',   value: 'linear-gradient(135deg, #065f46, #0e7490, #6d28d9)' },
+        { id: 'grad-nebula',      name: 'Cosmic Nebula',     value: 'linear-gradient(135deg, #1e1b4b, #7c3aed, #db2777)' },
+        { id: 'grad-midnight',    name: 'Midnight Sky',      value: 'linear-gradient(180deg, #0f172a, #1e293b, #334155)' },
+        { id: 'grad-cyber',       name: 'Cyber Neon',        value: 'linear-gradient(135deg, #0f172a, #00f0ff, #ff007f)' },
     ];
 
     // State
     let isModalOpen = false;
-    let hasLoadedGallery = false;
-    let currentQuery = 'wallpaper landscape nature';
-    let currentPage = 1;
-    let totalPages = 1;
-    let pageSize = 12;
     let activeWallpaper = '';
     let recentWallpapers = [];
 
     // DOM Elements
     let backdrop, modal, closeBtn, uploadBtn, resetBtn, fileInput;
-    let searchInput, searchBtn, clearSearchBtn, tagsContainer;
-    let gridContainer, statusMessage, bodyContainer;
-    let prevPageBtn, nextPageBtn, currentPageEl, totalPagesEl;
+    let colorGridEl, gradientGridEl;
+    let colorPickerInput, pickerHexLabel, applyCustomColorBtn;
     let recentStripEl;
+    let bodyContainer;
 
     function initElements() {
         backdrop = document.getElementById('wallpaper-modal-backdrop');
@@ -88,21 +54,15 @@
         resetBtn = document.getElementById('wm-reset-btn');
         fileInput = document.getElementById('backgroundFileInput');
 
-        searchInput = document.getElementById('wm-search-input');
-        searchBtn = document.getElementById('wm-search-submit-btn');
-        clearSearchBtn = document.getElementById('wm-search-clear-btn');
-        tagsContainer = document.querySelector('.wm-tags-scroller');
+        colorGridEl = document.getElementById('wm-color-grid');
+        gradientGridEl = document.getElementById('wm-gradient-grid');
 
-        gridContainer = document.getElementById('wm-grid');
-        statusMessage = document.getElementById('wm-status-message');
-        bodyContainer = document.getElementById('wm-body');
-
-        prevPageBtn = document.getElementById('wm-prev-page-btn');
-        nextPageBtn = document.getElementById('wm-next-page-btn');
-        currentPageEl = document.getElementById('wm-current-page');
-        totalPagesEl = document.getElementById('wm-total-pages');
+        colorPickerInput = document.getElementById('wm-color-picker');
+        pickerHexLabel = document.getElementById('wm-picker-hex-label');
+        applyCustomColorBtn = document.getElementById('wm-apply-custom-color-btn');
 
         recentStripEl = document.getElementById('wm-recent-strip');
+        bodyContainer = document.getElementById('wm-body');
     }
 
     // Load active wallpaper & recent wallpapers from storage
@@ -153,17 +113,17 @@
         // Put newest first
         recentWallpapers.unshift({
             id: item.id || 'wp-' + Date.now(),
-            type: item.type || 'web',
+            type: item.type || 'color',
             url: item.url,
             thumbnail: item.thumbnail || item.url,
-            title: item.title || 'Wallpaper',
+            title: item.title || 'Background',
             timestamp: Date.now()
         });
 
         saveRecentWallpapers();
     }
 
-    // Apply wallpaper to tab
+    // Apply wallpaper/color to tab
     function applyWallpaper(imageUrl, metadata = {}) {
         if (!imageUrl) return;
 
@@ -184,8 +144,15 @@
         if (bgElement) {
             if (imageUrl.startsWith('linear-gradient') || imageUrl.startsWith('radial-gradient')) {
                 bgElement.style.backgroundImage = imageUrl;
+                bgElement.style.backgroundColor = '';
+            } else if (imageUrl.startsWith('#') || imageUrl.startsWith('rgb')) {
+                // Solid color
+                bgElement.style.backgroundImage = 'none';
+                bgElement.style.backgroundColor = imageUrl;
             } else {
+                // Image URL (local upload)
                 bgElement.style.backgroundImage = `url(${imageUrl})`;
+                bgElement.style.backgroundColor = '';
             }
             bgElement.style.backgroundSize = 'cover';
             bgElement.style.backgroundPosition = 'center';
@@ -196,14 +163,14 @@
         // Add to recent list (limit 5)
         addToRecentWallpapers({
             id: metadata.id,
-            type: metadata.type || (imageUrl.startsWith('data:') ? 'local' : 'web'),
+            type: metadata.type || 'color',
             url: imageUrl,
             thumbnail: metadata.thumbnail || imageUrl,
-            title: metadata.title || 'Custom Wallpaper'
+            title: metadata.title || 'Custom Background'
         });
 
-        // Update active checkmarks in grid
-        highlightActiveCards();
+        // Update active indicators
+        highlightActiveSwatches();
     }
 
     // Reset wallpaper to theme default
@@ -218,21 +185,22 @@
         const bgElement = document.querySelector('.background');
         if (bgElement) {
             bgElement.style.backgroundImage = '';
+            bgElement.style.backgroundColor = '';
             bgElement.classList.remove('has-custom-bg');
             document.body.classList.remove('has-custom-bg');
         }
 
         renderRecentWallpapers();
-        highlightActiveCards();
+        highlightActiveSwatches();
     }
 
-    // Render Recent Wallpapers (Last 5)
+    // Render Recent Backgrounds (Last 5)
     function renderRecentWallpapers() {
         if (!recentStripEl) return;
         recentStripEl.innerHTML = '';
 
         if (recentWallpapers.length === 0) {
-            recentStripEl.innerHTML = `<div class="wm-recent-empty">No recent wallpapers yet. Select one below or upload from your computer!</div>`;
+            recentStripEl.innerHTML = `<div class="wm-recent-empty">No recent backgrounds yet. Select a color below or upload an image!</div>`;
             return;
         }
 
@@ -242,11 +210,30 @@
             card.className = `wm-recent-card ${isActive ? 'active' : ''}`;
             card.title = `${item.title} (Click to apply)`;
 
-            card.innerHTML = `
-                <img src="${item.thumbnail}" alt="${item.title}" loading="lazy" />
-                <span class="wm-recent-tag">${item.title}</span>
-                ${isActive ? `<span class="wm-recent-active-indicator" title="Active Wallpaper">✓</span>` : ''}
-            `;
+            // Determine how to render the thumbnail
+            const url = item.url || item.thumbnail;
+            if (url.startsWith('#') || url.startsWith('rgb')) {
+                // Solid color
+                card.style.backgroundColor = url;
+                card.innerHTML = `
+                    <span class="wm-recent-tag">${item.title}</span>
+                    ${isActive ? `<span class="wm-recent-active-indicator" title="Active Background">✓</span>` : ''}
+                `;
+            } else if (url.startsWith('linear-gradient') || url.startsWith('radial-gradient')) {
+                // Gradient
+                card.style.backgroundImage = url;
+                card.innerHTML = `
+                    <span class="wm-recent-tag">${item.title}</span>
+                    ${isActive ? `<span class="wm-recent-active-indicator" title="Active Background">✓</span>` : ''}
+                `;
+            } else {
+                // Image (local upload)
+                card.innerHTML = `
+                    <img src="${item.thumbnail}" alt="${item.title}" loading="lazy" />
+                    <span class="wm-recent-tag">${item.title}</span>
+                    ${isActive ? `<span class="wm-recent-active-indicator" title="Active Background">✓</span>` : ''}
+                `;
+            }
 
             card.addEventListener('click', () => {
                 applyWallpaper(item.url, item);
@@ -256,195 +243,81 @@
         });
     }
 
-    // Highlight active card in gallery grid
-    function highlightActiveCards() {
-        const cards = document.querySelectorAll('.wm-card');
-        cards.forEach(card => {
-            const cardUrl = card.dataset.url;
-            const isActive = activeWallpaper && activeWallpaper === cardUrl;
-            card.classList.toggle('active', !!isActive);
-
-            let badge = card.querySelector('.wm-card-active-badge');
-            if (isActive) {
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.className = 'wm-card-active-badge';
-                    badge.innerHTML = '✓';
-                    card.appendChild(badge);
-                }
-            } else if (badge) {
-                badge.remove();
-            }
+    // Highlight active swatch in color/gradient grids
+    function highlightActiveSwatches() {
+        const allSwatches = document.querySelectorAll('.wm-color-swatch');
+        allSwatches.forEach(swatch => {
+            const swatchValue = swatch.dataset.value;
+            const isActive = activeWallpaper && activeWallpaper === swatchValue;
+            swatch.classList.toggle('active', !!isActive);
         });
 
         renderRecentWallpapers();
     }
 
-    // Render Skeleton Loading Placeholders
-    function renderSkeletons(count = 12) {
-        if (!gridContainer) return;
-        gridContainer.innerHTML = '';
-        if (statusMessage) statusMessage.classList.add('hidden');
+    // Render solid color swatches into grid
+    function renderColorGrid() {
+        if (!colorGridEl) return;
+        colorGridEl.innerHTML = '';
 
-        for (let i = 0; i < count; i++) {
-            const skeleton = document.createElement('div');
-            skeleton.className = 'wm-skeleton-card';
-            gridContainer.appendChild(skeleton);
-        }
-    }
+        PRESET_COLORS.forEach(color => {
+            const swatch = document.createElement('div');
+            const isActive = activeWallpaper === color.hex;
+            swatch.className = `wm-color-swatch ${isActive ? 'active' : ''}`;
+            swatch.dataset.value = color.hex;
+            swatch.title = `${color.name} (${color.hex})`;
 
-    // Fetch wallpapers from Openverse Creative Commons API
-    async function fetchWallpapers(query, page = 1) {
-        currentQuery = query;
-        currentPage = page;
-
-        renderSkeletons(pageSize);
-
-        const encodedQuery = encodeURIComponent(query.trim());
-        const endpoint = `https://api.openverse.org/v1/images/?q=${encodedQuery}&page=${page}&page_size=${pageSize}&aspect_ratio=wide`;
-
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 9000);
-
-            const response = await fetch(endpoint, {
-                signal: controller.signal,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                throw new Error(`Openverse API returned status ${response.status}`);
-            }
-
-            const data = await response.json();
-            const results = data.results || [];
-
-            totalPages = Math.min(data.page_count || 1, 50);
-
-            if (results.length === 0) {
-                renderEmptyState(`No wallpapers found for "${query}". Try another keyword!`);
-                return;
-            }
-
-            renderGalleryCards(results);
-            updatePaginationUI();
-
-        } catch (err) {
-            console.warn('Openverse API fetch failed, loading curated fallback collection:', err.message);
-            // Graceful fallback to curated open-source wallpapers
-            renderGalleryCards(CURATED_FALLBACK_WALLPAPERS);
-            totalPages = 1;
-            updatePaginationUI();
-            if (statusMessage) {
-                statusMessage.innerHTML = `
-                    <div style="font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px;">
-                        Showing curated open-source collection (Live search offline or rate-limited).
-                    </div>
-                `;
-                statusMessage.classList.remove('hidden');
-            }
-        }
-    }
-
-    // Render Wallpapers Grid Cards
-    function renderGalleryCards(items) {
-        if (!gridContainer) return;
-        gridContainer.innerHTML = '';
-        if (statusMessage) statusMessage.classList.add('hidden');
-
-        items.forEach(item => {
-            const card = document.createElement('div');
-            const imgUrl = item.url;
-            const thumbUrl = item.thumbnail || item.url;
-            const title = item.title || 'Creative Commons Wallpaper';
-            const creator = item.creator || 'Openverse Contributor';
-            const license = (item.license || 'CC').toUpperCase();
-            const isActive = activeWallpaper === imgUrl;
-
-            card.className = `wm-card ${isActive ? 'active' : ''}`;
-            card.dataset.url = imgUrl;
-
-            card.innerHTML = `
-                <img src="${thumbUrl}" alt="${title}" loading="lazy" />
-                ${isActive ? `<span class="wm-card-active-badge">✓</span>` : ''}
-                <div class="wm-card-overlay">
-                    <div class="wm-card-header">
-                        <span class="wm-cc-badge">${license}</span>
-                    </div>
-                    <div class="wm-card-footer">
-                        <div class="wm-card-title" title="${title}">${title}</div>
-                        <div class="wm-card-creator">By ${creator}</div>
-                        <button type="button" class="wm-apply-btn">Set as Wallpaper</button>
-                    </div>
+            swatch.innerHTML = `
+                <div class="wm-swatch-fill" style="background-color: ${color.hex};">
+                    ${isActive ? '<span class="wm-swatch-check">✓</span>' : ''}
                 </div>
+                <span class="wm-swatch-name">${color.name}</span>
+                <span class="wm-swatch-hex">${color.hex}</span>
             `;
 
-            // Fallback for broken image URLs
-            const imgEl = card.querySelector('img');
-            imgEl.addEventListener('error', () => {
-                imgEl.src = 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=400&q=70';
-            });
-
-            // Click on apply button or anywhere on card
-            const applyBtn = card.querySelector('.wm-apply-btn');
-            applyBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                applyWallpaper(imgUrl, {
-                    id: item.id,
-                    title: title,
-                    thumbnail: thumbUrl,
-                    type: 'web'
-                });
-                applyBtn.textContent = 'Applied! ✓';
-                setTimeout(() => { applyBtn.textContent = 'Set as Wallpaper'; }, 1800);
-            });
-
-            card.addEventListener('click', () => {
-                applyWallpaper(imgUrl, {
-                    id: item.id,
-                    title: title,
-                    thumbnail: thumbUrl,
-                    type: 'web'
+            swatch.addEventListener('click', () => {
+                applyWallpaper(color.hex, {
+                    id: color.id,
+                    type: 'color',
+                    title: color.name,
+                    thumbnail: color.hex
                 });
             });
 
-            gridContainer.appendChild(card);
+            colorGridEl.appendChild(swatch);
         });
     }
 
-    // Render Empty State
-    function renderEmptyState(message) {
-        if (!gridContainer) return;
-        gridContainer.innerHTML = '';
-        if (statusMessage) {
-            statusMessage.innerHTML = `
-                <div class="wm-status-icon">🔍</div>
-                <div>${message}</div>
-                <button class="wm-retry-btn" id="wm-empty-reset-btn">Browse Nature Wallpapers</button>
+    // Render gradient preset swatches into grid
+    function renderGradientGrid() {
+        if (!gradientGridEl) return;
+        gradientGridEl.innerHTML = '';
+
+        PRESET_GRADIENTS.forEach(grad => {
+            const swatch = document.createElement('div');
+            const isActive = activeWallpaper === grad.value;
+            swatch.className = `wm-color-swatch wm-gradient-swatch ${isActive ? 'active' : ''}`;
+            swatch.dataset.value = grad.value;
+            swatch.title = `${grad.name}`;
+
+            swatch.innerHTML = `
+                <div class="wm-swatch-fill" style="background: ${grad.value};">
+                    ${isActive ? '<span class="wm-swatch-check">✓</span>' : ''}
+                </div>
+                <span class="wm-swatch-name">${grad.name}</span>
             `;
-            statusMessage.classList.remove('hidden');
 
-            const resetSearchBtn = document.getElementById('wm-empty-reset-btn');
-            if (resetSearchBtn) {
-                resetSearchBtn.addEventListener('click', () => {
-                    if (searchInput) searchInput.value = '';
-                    fetchWallpapers('wallpaper landscape nature', 1);
+            swatch.addEventListener('click', () => {
+                applyWallpaper(grad.value, {
+                    id: grad.id,
+                    type: 'gradient',
+                    title: grad.name,
+                    thumbnail: grad.value
                 });
-            }
-        }
-    }
+            });
 
-    // Update Pagination UI
-    function updatePaginationUI() {
-        if (currentPageEl) currentPageEl.textContent = currentPage;
-        if (totalPagesEl) totalPagesEl.textContent = totalPages;
-
-        if (prevPageBtn) prevPageBtn.disabled = currentPage <= 1;
-        if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages;
+            gradientGridEl.appendChild(swatch);
+        });
     }
 
     // Handle Local File Upload with offscreen compression to respect quota
@@ -468,8 +341,10 @@
                 canvas.width = w;
                 canvas.height = h;
                 const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
                 ctx.drawImage(img, 0, 0, w, h);
-                const optimizedWallpaperUrl = canvas.toDataURL('image/jpeg', 0.82);
+                const optimizedWallpaperUrl = canvas.toDataURL('image/jpeg', 0.85);
 
                 // 2. Generate small thumbnail for recent list (max 280x160)
                 const thumbCanvas = document.createElement('canvas');
@@ -515,14 +390,8 @@
         }
 
         renderRecentWallpapers();
-
-        // ONLY fetch when opened, not on extension open
-        if (!hasLoadedGallery) {
-            hasLoadedGallery = true;
-            fetchWallpapers(currentQuery, 1);
-        } else {
-            highlightActiveCards();
-        }
+        renderColorGrid();
+        renderGradientGrid();
     }
 
     // Close Modal
@@ -589,69 +458,31 @@
             resetBtn.addEventListener('click', resetWallpaper);
         }
 
-        // Search bar events
-        if (searchBtn && searchInput) {
-            const doSearch = () => {
-                const q = searchInput.value.trim();
-                if (q) {
-                    // Unselect tag chips
-                    document.querySelectorAll('.wm-tag').forEach(t => t.classList.remove('active'));
-                    fetchWallpapers(q, 1);
-                }
-            };
-
-            searchBtn.addEventListener('click', doSearch);
-            searchInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') doSearch();
-            });
-
-            searchInput.addEventListener('input', () => {
-                if (clearSearchBtn) {
-                    clearSearchBtn.classList.toggle('hidden', !searchInput.value);
+        // Custom color picker
+        if (colorPickerInput) {
+            colorPickerInput.addEventListener('input', () => {
+                if (pickerHexLabel) {
+                    pickerHexLabel.textContent = colorPickerInput.value;
                 }
             });
         }
 
-        if (clearSearchBtn && searchInput) {
-            clearSearchBtn.addEventListener('click', () => {
-                searchInput.value = '';
-                clearSearchBtn.classList.add('hidden');
-                searchInput.focus();
-            });
-        }
-
-        // Quick Tag Chips
-        if (tagsContainer) {
-            tagsContainer.addEventListener('click', (e) => {
-                const tag = e.target.closest('.wm-tag');
-                if (!tag) return;
-
-                document.querySelectorAll('.wm-tag').forEach(t => t.classList.remove('active'));
-                tag.classList.add('active');
-
-                const query = tag.dataset.query || tag.textContent;
-                if (searchInput) searchInput.value = tag.textContent;
-                if (clearSearchBtn) clearSearchBtn.classList.remove('hidden');
-
-                fetchWallpapers(query, 1);
-            });
-        }
-
-        // Pagination buttons
-        if (prevPageBtn) {
-            prevPageBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    fetchWallpapers(currentQuery, currentPage - 1);
-                    if (bodyContainer) bodyContainer.scrollTop = 0;
-                }
-            });
-        }
-
-        if (nextPageBtn) {
-            nextPageBtn.addEventListener('click', () => {
-                if (currentPage < totalPages) {
-                    fetchWallpapers(currentQuery, currentPage + 1);
-                    if (bodyContainer) bodyContainer.scrollTop = 0;
+        if (applyCustomColorBtn && colorPickerInput) {
+            applyCustomColorBtn.addEventListener('click', () => {
+                const hex = colorPickerInput.value;
+                applyWallpaper(hex, {
+                    id: 'custom-' + hex.replace('#', ''),
+                    type: 'color',
+                    title: 'Custom ' + hex.toUpperCase(),
+                    thumbnail: hex
+                });
+                // Brief visual feedback
+                const originalText = applyCustomColorBtn.querySelector('svg').nextSibling;
+                const textNodes = Array.from(applyCustomColorBtn.childNodes).filter(n => n.nodeType === 3);
+                if (textNodes.length > 0) {
+                    const origText = textNodes[textNodes.length - 1].textContent;
+                    textNodes[textNodes.length - 1].textContent = ' Applied! ✓';
+                    setTimeout(() => { textNodes[textNodes.length - 1].textContent = origText; }, 1500);
                 }
             });
         }
