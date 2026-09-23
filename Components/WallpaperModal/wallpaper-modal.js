@@ -14,24 +14,14 @@
 
     // Curated solid color presets
     const PRESET_COLORS = [
+        { id: 'obsidian',         name: 'Obsidian',         hex: '#0a0a0a' },
         { id: 'midnight-blue',    name: 'Midnight Blue',    hex: '#0f172a' },
-        { id: 'deep-navy',        name: 'Deep Navy',        hex: '#1e1b4b' },
         { id: 'slate-charcoal',   name: 'Slate Charcoal',   hex: '#1e293b' },
         { id: 'graphite',         name: 'Graphite',         hex: '#374151' },
-        { id: 'storm-grey',       name: 'Storm Grey',       hex: '#4b5563' },
-        { id: 'warm-stone',       name: 'Warm Stone',       hex: '#78716c' },
-        { id: 'obsidian',         name: 'Obsidian',         hex: '#0a0a0a' },
         { id: 'deep-purple',      name: 'Deep Purple',      hex: '#2e1065' },
-        { id: 'royal-indigo',     name: 'Royal Indigo',     hex: '#312e81' },
         { id: 'forest-green',     name: 'Forest Green',     hex: '#14532d' },
-        { id: 'ocean-teal',       name: 'Ocean Teal',       hex: '#134e4a' },
-        { id: 'pine-dark',        name: 'Pine Dark',        hex: '#064e3b' },
         { id: 'wine-red',         name: 'Wine Red',         hex: '#7f1d1d' },
-        { id: 'terracotta',       name: 'Terracotta',       hex: '#9a3412' },
-        { id: 'warm-amber',       name: 'Warm Amber',       hex: '#78350f' },
-        { id: 'soft-lavender',    name: 'Soft Lavender',    hex: '#4c1d95' },
-        { id: 'rose-dust',        name: 'Rose Dust',        hex: '#9f1239' },
-        { id: 'arctic-white',     name: 'Arctic White',     hex: '#f1f5f9' },
+        { id: 'ocean-teal',       name: 'Ocean Teal',       hex: '#134e4a' },
     ];
 
     // Curated gradient presets
@@ -41,13 +31,7 @@
         { id: 'grad-aurora',      name: 'Aurora Borealis',   value: 'linear-gradient(135deg, #065f46, #0e7490, #6d28d9)' },
         { id: 'grad-nebula',      name: 'Cosmic Nebula',     value: 'linear-gradient(135deg, #1e1b4b, #7c3aed, #db2777)' },
         { id: 'grad-midnight',    name: 'Midnight Sky',      value: 'linear-gradient(180deg, #0f172a, #1e293b, #334155)' },
-        { id: 'grad-ember',       name: 'Warm Ember',        value: 'linear-gradient(135deg, #7f1d1d, #9a3412, #78350f)' },
         { id: 'grad-cyber',       name: 'Cyber Neon',        value: 'linear-gradient(135deg, #0f172a, #00f0ff, #ff007f)' },
-        { id: 'grad-forest',      name: 'Enchanted Forest',  value: 'linear-gradient(135deg, #052e16, #14532d, #166534)' },
-        { id: 'grad-lavender',    name: 'Lavender Dreams',   value: 'linear-gradient(135deg, #4c1d95, #6d28d9, #a855f7)' },
-        { id: 'grad-steel',       name: 'Brushed Steel',     value: 'linear-gradient(135deg, #1e293b, #475569, #94a3b8)' },
-        { id: 'grad-rose',        name: 'Rose Gold',         value: 'linear-gradient(135deg, #9f1239, #be185d, #f472b6)' },
-        { id: 'grad-arctic',      name: 'Arctic Ice',        value: 'linear-gradient(135deg, #0c4a6e, #38bdf8, #e0f2fe)' },
     ];
 
     // State
