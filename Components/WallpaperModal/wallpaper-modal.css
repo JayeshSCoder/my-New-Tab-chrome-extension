@@ -505,129 +505,163 @@
     box-shadow: 0 0 12px rgba(0, 123, 255, 0.4);
 }
 
-/* Cyber Neon Theme */
-[data-theme="cyber-neon"] .wallpaper-modal {
-    background: rgba(6, 10, 24, 0.94);
-    border: 1px solid rgba(0, 240, 255, 0.4);
-    box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);
+/* macOS Dock Theme */
+[data-theme="macos-dock"] .wallpaper-modal {
+    background: rgba(30, 34, 46, 0.88);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 24px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme="cyber-neon"] .wm-title-icon {
-    background: linear-gradient(135deg, #00f0ff, #ff007f);
+[data-theme="macos-dock"] .wm-title-icon {
+    background: linear-gradient(135deg, #007aff, #5856d6);
+    border-radius: 12px;
 }
 
-[data-theme="cyber-neon"] .wm-btn-secondary {
-    background: rgba(0, 240, 255, 0.15);
-    border-color: rgba(0, 240, 255, 0.4);
-    color: #00f0ff;
+[data-theme="macos-dock"] .wm-btn-secondary {
+    background: rgba(0, 122, 255, 0.15);
+    border-color: rgba(0, 122, 255, 0.4);
+    color: #60a5fa;
+    border-radius: 12px;
 }
 
-[data-theme="cyber-neon"] .wm-btn-secondary:hover {
-    background: rgba(0, 240, 255, 0.3);
-    border-color: #00f0ff;
+[data-theme="macos-dock"] .wm-btn-secondary:hover {
+    background: rgba(0, 122, 255, 0.28);
+    border-color: #007aff;
 }
 
-[data-theme="cyber-neon"] .wm-color-swatch.active {
-    border-color: #00f0ff;
-    background: rgba(0, 240, 255, 0.1);
+[data-theme="macos-dock"] .wm-color-swatch.active {
+    border-color: #007aff;
+    background: rgba(0, 122, 255, 0.15);
 }
 
-[data-theme="cyber-neon"] .wm-color-swatch.active .wm-swatch-fill {
-    border-color: #00f0ff;
-    box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+[data-theme="macos-dock"] .wm-color-swatch.active .wm-swatch-fill {
+    border-color: #007aff;
+    box-shadow: 0 0 12px rgba(0, 122, 255, 0.5);
 }
 
-/* Sunset Theme */
-[data-theme="sunset"] .wallpaper-modal {
-    background: rgba(30, 10, 42, 0.94);
-    border: 1px solid rgba(251, 146, 60, 0.35);
-    box-shadow: 0 0 35px rgba(249, 115, 22, 0.2);
+/* Windows 11 Fluent Theme */
+[data-theme="windows-fluent"] .wallpaper-modal {
+    background: rgba(32, 32, 32, 0.94);
+    backdrop-filter: blur(35px);
+    -webkit-backdrop-filter: blur(35px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
 }
 
-[data-theme="sunset"] .wm-title-icon {
-    background: linear-gradient(135deg, #f97316, #db2777);
+[data-theme="windows-fluent"] .wm-title-icon {
+    background: #0078d4;
+    border-radius: 6px;
 }
 
-[data-theme="sunset"] .wm-btn-secondary {
-    background: rgba(249, 115, 22, 0.18);
-    border-color: rgba(249, 115, 22, 0.4);
-    color: #fb923c;
+[data-theme="windows-fluent"] .wm-btn-secondary {
+    background: rgba(0, 120, 212, 0.15);
+    border-color: rgba(0, 120, 212, 0.4);
+    color: #60cdff;
+    border-radius: 4px;
 }
 
-[data-theme="sunset"] .wm-btn-secondary:hover {
-    background: rgba(249, 115, 22, 0.32);
-    border-color: #f97316;
+[data-theme="windows-fluent"] .wm-btn-secondary:hover {
+    background: rgba(0, 120, 212, 0.3);
+    border-color: #0078d4;
 }
 
-[data-theme="sunset"] .wm-color-swatch.active {
-    border-color: #f97316;
-    background: rgba(249, 115, 22, 0.1);
+[data-theme="windows-fluent"] .wm-color-swatch.active {
+    border-color: #0078d4;
+    border-radius: 6px;
 }
 
-[data-theme="sunset"] .wm-color-swatch.active .wm-swatch-fill {
-    border-color: #f97316;
-    box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+[data-theme="windows-fluent"] .wm-color-swatch.active .wm-swatch-fill {
+    border-color: #0078d4;
+    border-radius: 4px;
 }
 
-/* Nordic Theme */
-[data-theme="nordic"] .wallpaper-modal {
-    background: rgba(15, 23, 42, 0.96);
-    border: 1px solid rgba(148, 163, 184, 0.25);
+/* Vertical Dock / Workstation Theme */
+[data-theme="vertical-dock"] .wallpaper-modal {
+    background: rgba(15, 20, 32, 0.94);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
 }
 
-[data-theme="nordic"] .wm-title-icon {
-    background: linear-gradient(135deg, #0284c7, #38bdf8);
+[data-theme="vertical-dock"] .wm-title-icon {
+    background: linear-gradient(135deg, #6366f1, #06b6d4);
+    border-radius: 10px;
 }
 
-[data-theme="nordic"] .wm-btn-secondary {
-    background: rgba(2, 132, 199, 0.18);
-    border-color: rgba(2, 132, 199, 0.4);
-    color: #38bdf8;
+[data-theme="vertical-dock"] .wm-btn-secondary {
+    background: rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #a5b4fc;
+    border-radius: 10px;
 }
 
-[data-theme="nordic"] .wm-btn-secondary:hover {
-    background: rgba(2, 132, 199, 0.32);
-    border-color: #0284c7;
+[data-theme="vertical-dock"] .wm-btn-secondary:hover {
+    background: rgba(99, 102, 241, 0.3);
+    border-color: #6366f1;
 }
 
-[data-theme="nordic"] .wm-color-swatch.active {
-    border-color: #38bdf8;
-    background: rgba(56, 189, 248, 0.1);
+[data-theme="vertical-dock"] .wm-color-swatch.active {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.15);
 }
 
-[data-theme="nordic"] .wm-color-swatch.active .wm-swatch-fill {
-    border-color: #38bdf8;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+/* Neo-Brutalist Theme */
+[data-theme="neo-brutalist"] .wallpaper-modal {
+    background: #0d0d0d !important;
+    border: 3px solid #ffffff !important;
+    border-radius: 0px !important;
+    box-shadow: 10px 10px 0px #ffd000 !important;
 }
 
-/* Emerald Theme */
-[data-theme="emerald"] .wallpaper-modal {
-    background: rgba(4, 32, 25, 0.95);
-    border: 1px solid rgba(16, 185, 129, 0.35);
-    box-shadow: 0 0 35px rgba(16, 185, 129, 0.2);
+[data-theme="neo-brutalist"] .wm-title-icon {
+    background: #ffd000 !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 0px !important;
 }
 
-[data-theme="emerald"] .wm-title-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
+[data-theme="neo-brutalist"] .wm-btn-secondary {
+    background: #1a1a1a !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 0px !important;
+    color: #ffffff !important;
+    font-family: monospace;
 }
 
-[data-theme="emerald"] .wm-btn-secondary {
-    background: rgba(16, 185, 129, 0.18);
-    border-color: rgba(16, 185, 129, 0.4);
-    color: #34d399;
+[data-theme="neo-brutalist"] .wm-btn-secondary:hover {
+    background: #ffd000 !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
 }
 
-[data-theme="emerald"] .wm-btn-secondary:hover {
-    background: rgba(16, 185, 129, 0.32);
-    border-color: #10b981;
+[data-theme="neo-brutalist"] .wm-color-swatch {
+    border-radius: 0px !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
 }
 
-[data-theme="emerald"] .wm-color-swatch.active {
-    border-color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
+[data-theme="neo-brutalist"] .wm-color-swatch.active {
+    border-color: #ffd000 !important;
+    box-shadow: 3px 3px 0px #ffd000 !important;
 }
 
-[data-theme="emerald"] .wm-color-swatch.active .wm-swatch-fill {
-    border-color: #10b981;
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+[data-theme="neo-brutalist"] .wm-swatch-fill {
+    border-radius: 0px !important;
+}
+
+[data-theme="neo-brutalist"] .wm-input-color-hex {
+    border-radius: 0px !important;
+    border: 2px solid #ffffff !important;
+    font-family: monospace;
+}
+
+[data-theme="neo-brutalist"] .wm-custom-color-btn {
+    border-radius: 0px !important;
+    border: 2px solid #ffffff !important;
+    background: #ffd000 !important;
+    color: #000000 !important;
+    font-weight: 800;
 }
