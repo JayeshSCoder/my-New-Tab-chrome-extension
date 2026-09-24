@@ -420,6 +420,10 @@ body.terminal-maximized header {
     border-radius: 6px;
     font-family: 'JetBrains Mono', Consolas, monospace;
     font-size: 11.5px;
+    max-height: 88px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #1e3a29 transparent;
     animation: termSlideDown 0.15s ease-out;
 }
 
@@ -435,7 +439,7 @@ body.terminal-maximized header {
 }
 
 .term-suggestion-chip {
-    padding: 3px 8px;
+    padding: 3px 9px;
     background: rgba(34, 197, 94, 0.08);
     border: 1px solid rgba(34, 197, 94, 0.2);
     border-radius: 4px;
@@ -448,19 +452,25 @@ body.terminal-maximized header {
     user-select: none;
 }
 
-.term-suggestion-chip:hover,
-.term-suggestion-chip.active {
-    background: #22c55e;
-    color: #06090d;
-    border-color: #22c55e;
-    font-weight: 600;
+.term-suggestion-chip:hover {
+    background: rgba(0, 255, 102, 0.2);
+    border-color: #00ff66;
+    color: #ffffff;
     transform: translateY(-1px);
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
 }
 
-.term-suggestion-chip .chip-glyph {
-    opacity: 0.6;
-    font-size: 10px;
+.term-suggestion-chip.active {
+    background: #00ff66 !important;
+    color: #06090d !important;
+    border-color: #00ff66 !important;
+    font-weight: 700 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(0, 255, 102, 0.6) !important;
+}
+
+.term-suggestion-chip.active .chip-glyph {
+    opacity: 1 !important;
+    color: #06090d !important;
 }
 
 .term-suggestion-hint {

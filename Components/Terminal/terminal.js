@@ -284,16 +284,17 @@
 
     // Keyboard Handler
     function handleKeyDown(e) {
-        // Tab Completion
+        // Tab Completion: cycle forward with Tab, backward with Shift+Tab
         if (e.key === "Tab") {
             e.preventDefault();
-            handleTabComplete();
+            handleTabComplete(e.shiftKey);
             return;
         }
 
         // Enter to execute command
         if (e.key === "Enter") {
             e.preventDefault();
+            resetTabCycle();
             hideSuggestions();
             const raw = termInput.value.trim();
             if (!raw) return;
@@ -311,6 +312,7 @@
         // Arrow Up / Down for command history
         if (e.key === "ArrowUp") {
             e.preventDefault();
+            resetTabCycle();
             if (historyIndex === commandHistory.length) {
                 draftInput = termInput.value;
             }
@@ -324,6 +326,7 @@
 
         if (e.key === "ArrowDown") {
             e.preventDefault();
+            resetTabCycle();
             if (historyIndex < commandHistory.length - 1) {
                 historyIndex++;
                 termInput.value = commandHistory[historyIndex];
@@ -338,12 +341,15 @@
 
         // Escape to dismiss suggestions
         if (e.key === "Escape") {
+            resetTabCycle();
             hideSuggestions();
             return;
         }
     }
 
     function handleInputChange() {
+        // Typing or deleting text resets tab cycle so next Tab starts fresh
+        resetTabCycle();
         if (termSuggestions && termSuggestions.style.display !== "none") {
             hideSuggestions();
         }
@@ -508,6 +514,27 @@
                 break;
 
             default:
+                // Check if the command directly matches a configured shortcut name
+                const allShortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
+                const matchedShortcut = allShortcuts.find(s => 
+                    s.name.toLowerCase() === cmd || 
+                    s.name.toLowerCase() === raw.trim().toLowerCase()
+                );
+                if (matchedShortcut) {
+                    const targetUrl = matchedShortcut.url.startsWith("http") ? matchedShortcut.url : `https://${matchedShortcut.url}`;
+                    appendOutputToLog(currentEntry, `[LAUNCH] Opening shortcut: ${matchedShortcut.name} (${targetUrl})`, "term-line-success");
+                    setTimeout(() => window.location.href = targetUrl, 250);
+                    break;
+                }
+
+                // Check if the command directly matches a known common web target (e.g. github, gitlab, etc.)
+                if (typeof COMMON_WEB_TARGETS !== "undefined" && COMMON_WEB_TARGETS[cmd]) {
+                    const targetUrl = COMMON_WEB_TARGETS[cmd];
+                    appendOutputToLog(currentEntry, `[LAUNCH] Opening web target: ${cmd} (${targetUrl})`, "term-line-success");
+                    setTimeout(() => window.location.href = targetUrl, 250);
+                    break;
+                }
+
                 // IMPORTANT: Do NOT open Google search for arbitrary text!
                 // Report command not found and instruct user to use 'search <text>'
                 appendOutputToLog(
@@ -1000,121 +1027,221 @@
     }
 
     // ==========================================
-    // TAB AUTOCOMPLETE & SMART SUGGESTIONS ENGINE
+    // TAB AUTOCOMPLETE & CYCLING ENGINE
     // ==========================================
-    function handleTabComplete() {
-        const val = termInput.value;
-        const trimmed = val.trim();
+    const DEFAULT_CLI_TARGETS = [
+        "github", "gitlab", "gitbucket", "gatlib", "guthib",
+        "google", "gmail", "gist", "stackoverflow", "youtube", "reddit", "twitter", "chatgpt"
+    ];
 
-        // Case 1: Empty input -> Show all main commands
-        if (!trimmed) {
-            const allCmdNames = ROOT_COMMANDS.map(c => c.name);
-            showSuggestions(allCmdNames, "");
+    const COMMON_WEB_TARGETS = {
+        "github": "https://github.com",
+        "gitlab": "https://gitlab.com",
+        "gitbucket": "https://gitbucket.github.io",
+        "gatlib": "https://github.com",
+        "guthib": "https://github.com",
+        "google": "https://google.com",
+        "gmail": "https://mail.google.com",
+        "gist": "https://gist.github.com",
+        "stackoverflow": "https://stackoverflow.com",
+        "youtube": "https://youtube.com",
+        "reddit": "https://reddit.com",
+        "twitter": "https://x.com",
+        "chatgpt": "https://chatgpt.com"
+    };
+
+    let tabCycleState = {
+        active: false,
+        prefixBeforeWord: "",
+        searchPrefix: "",
+        candidates: [],
+        currentIndex: -1
+    };
+
+    function resetTabCycle() {
+        tabCycleState.active = false;
+        tabCycleState.prefixBeforeWord = "";
+        tabCycleState.searchPrefix = "";
+        tabCycleState.candidates = [];
+        tabCycleState.currentIndex = -1;
+    }
+
+    function getShortcutNames() {
+        try {
+            const shortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
+            return shortcuts.map(s => (s.name || "").trim()).filter(Boolean);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function getBookmarkNames() {
+        const names = [];
+        const linkEls = document.querySelectorAll(".bookmark-list a, #bookmarks-list a");
+        linkEls.forEach(el => {
+            const text = (el.textContent || "").trim();
+            if (text && !names.includes(text)) {
+                names.push(text);
+            }
+        });
+        return names;
+    }
+
+    function getRootCandidates(searchPrefix) {
+        const commands = ROOT_COMMANDS.map(c => c.name);
+        const shortcuts = getShortcutNames();
+        const bookmarks = getBookmarkNames();
+
+        const pool = [];
+        const addUnique = (arr) => {
+            arr.forEach(item => {
+                if (item && !pool.some(p => p.toLowerCase() === item.toLowerCase())) {
+                    pool.push(item);
+                }
+            });
+        };
+
+        addUnique(commands);
+        addUnique(shortcuts);
+        addUnique(DEFAULT_CLI_TARGETS);
+        addUnique(bookmarks);
+
+        if (!searchPrefix) {
+            return commands;
+        }
+
+        const query = searchPrefix.toLowerCase();
+        // 1. Matches that start with the query (alphabetically sorted)
+        const starts = pool.filter(item => item.toLowerCase().startsWith(query));
+        if (starts.length > 0) {
+            return starts.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+        }
+
+        // 2. Matches that contain the query
+        const contains = pool.filter(item => item.toLowerCase().includes(query));
+        return contains.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    }
+
+    function handleTabComplete(isReverse = false) {
+        // If already actively cycling, just advance to the next candidate!
+        if (tabCycleState.active && tabCycleState.candidates.length > 0) {
+            cycleToNextCandidate(isReverse);
             return;
         }
+
+        // Fresh Tab press: determine context and candidates
+        const rawVal = termInput.value;
+        const val = rawVal.trimStart();
+        const leadingWhitespace = rawVal.slice(0, rawVal.length - val.length);
+
+        let prefixBeforeWord = leadingWhitespace;
+        let searchPrefix = "";
+        let candidates = [];
 
         const parts = val.split(" ");
         const firstWord = parts[0].toLowerCase();
 
-        // Case 2: User is typing root command
-        if (parts.length === 1) {
-            const matches = ROOT_COMMANDS.filter(c => c.name.startsWith(firstWord)).map(c => c.name);
-            if (matches.length === 0) {
-                hideSuggestions();
-                return;
-            }
+        if (parts.length > 1) {
+            const subArg = parts.slice(1).join(" ");
+            const subArgLower = subArg.toLowerCase();
 
-            if (matches.length === 1) {
-                termInput.value = matches[0] + " ";
-                hideSuggestions();
-                return;
+            if (firstWord === "theme") {
+                prefixBeforeWord += `${parts[0]} `;
+                searchPrefix = subArg;
+                candidates = THEME_OPTIONS.filter(t => t.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+            } else if (firstWord === "settings" || firstWord === "config" || firstWord === "cfg") {
+                prefixBeforeWord += `${parts[0]} `;
+                searchPrefix = subArg;
+                const options = ["shortcuts on", "shortcuts off", "notes on", "notes off", "width", "open", "close"];
+                candidates = options.filter(o => o.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+            } else if (firstWord === "sc" || firstWord === "shortcuts") {
+                if (subArgLower.startsWith("open ") || subArgLower === "open") {
+                    const openPrefixMatch = subArg.match(/^open\s*/i);
+                    const openPrefix = openPrefixMatch ? openPrefixMatch[0] : "open ";
+                    prefixBeforeWord += `${parts[0]} ${openPrefix}`;
+                    searchPrefix = subArg.slice(openPrefix.length);
+                    const scPool = [...getShortcutNames(), ...DEFAULT_CLI_TARGETS];
+                    candidates = scPool.filter(n => n.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+                } else {
+                    prefixBeforeWord += `${parts[0]} `;
+                    searchPrefix = subArg;
+                    const subCmds = ["ls", "open", "add"];
+                    candidates = subCmds.filter(s => s.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+                }
+            } else if (firstWord === "bm" || firstWord === "bookmarks") {
+                if (subArgLower.startsWith("open ") || subArgLower === "open") {
+                    const openPrefixMatch = subArg.match(/^open\s*/i);
+                    const openPrefix = openPrefixMatch ? openPrefixMatch[0] : "open ";
+                    prefixBeforeWord += `${parts[0]} ${openPrefix}`;
+                    searchPrefix = subArg.slice(openPrefix.length);
+                    const bmPool = getBookmarkNames();
+                    candidates = bmPool.filter(n => n.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+                } else {
+                    prefixBeforeWord += `${parts[0]} `;
+                    searchPrefix = subArg;
+                    const subCmds = ["ls", "open", "toggle", "show", "hide"];
+                    candidates = subCmds.filter(s => s.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+                }
+            } else if (firstWord === "wallpaper" || firstWord === "bg" || firstWord === "wp") {
+                prefixBeforeWord += `${parts[0]} `;
+                searchPrefix = subArg;
+                const presets = ["picker", "reset", "#0a0a0a", "#0f172a", "#1e293b", "#14532d", "#7f1d1d"];
+                candidates = presets.filter(p => p.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+            } else if (firstWord === "search" || firstWord === "google") {
+                prefixBeforeWord += `${parts[0]} `;
+                searchPrefix = subArg;
+                const allNames = [...getShortcutNames(), ...DEFAULT_CLI_TARGETS, ...getBookmarkNames()];
+                candidates = allNames.filter(n => n.toLowerCase().startsWith(searchPrefix.toLowerCase()));
+            } else {
+                prefixBeforeWord += `${parts.slice(0, -1).join(" ")} `;
+                searchPrefix = parts[parts.length - 1];
+                candidates = getRootCandidates(searchPrefix);
             }
+        } else {
+            // Root prompt / first word
+            prefixBeforeWord = leadingWhitespace;
+            searchPrefix = val;
+            candidates = getRootCandidates(searchPrefix);
+        }
 
-            const prefix = findCommonPrefix(matches);
-            if (prefix.length > firstWord.length) {
-                termInput.value = prefix;
-            }
-            showSuggestions(matches, prefix);
+        if (candidates.length === 0) {
+            hideSuggestions();
             return;
         }
 
-        // Case 3: Subarguments
-        const subArg = parts.slice(1).join(" ").toLowerCase();
+        // Initialize cycling state
+        tabCycleState.active = true;
+        tabCycleState.prefixBeforeWord = prefixBeforeWord;
+        tabCycleState.searchPrefix = searchPrefix;
+        tabCycleState.candidates = candidates;
+        tabCycleState.currentIndex = isReverse ? candidates.length - 1 : 0;
 
-        if (firstWord === "theme") {
-            const matches = THEME_OPTIONS.filter(t => t.startsWith(subArg));
-            if (matches.length === 1) {
-                termInput.value = `theme ${matches[0]}`;
-                hideSuggestions();
-                return;
-            }
-            showSuggestions(matches.length > 0 ? matches : THEME_OPTIONS, "theme ", true);
-            return;
-        }
+        // Apply first candidate to input
+        const selected = candidates[tabCycleState.currentIndex];
+        termInput.value = `${prefixBeforeWord}${selected}`;
+        termInput.setSelectionRange(termInput.value.length, termInput.value.length);
 
-        if (firstWord === "settings" || firstWord === "config") {
-            const settingSubCmds = ["shortcuts on", "shortcuts off", "notes on", "notes off", "width", "open", "close"];
-            const matching = settingSubCmds.filter(s => s.startsWith(subArg));
-            if (matching.length === 1) {
-                termInput.value = `${firstWord} ${matching[0]}`;
-                hideSuggestions();
-                return;
-            }
-            showSuggestions(matching.length > 0 ? matching : settingSubCmds, `${firstWord} `, true);
-            return;
-        }
-
-        if (firstWord === "sc" || firstWord === "shortcuts") {
-            const shortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
-            const subCmds = ["ls", "open", "add"];
-            if (!subArg) {
-                showSuggestions(subCmds, `${firstWord} `);
-                return;
-            }
-            if (subArg.startsWith("open ")) {
-                const query = subArg.replace("open ", "");
-                const names = shortcuts.map(s => s.name.toLowerCase()).filter(n => n.startsWith(query));
-                showSuggestions(names, `${firstWord} open `, true);
-                return;
-            }
-            const matchingSub = subCmds.filter(s => s.startsWith(subArg));
-            if (matchingSub.length === 1) {
-                termInput.value = `${firstWord} ${matchingSub[0]} `;
-                hideSuggestions();
-                return;
-            }
-            showSuggestions(matchingSub.length > 0 ? matchingSub : subCmds, `${firstWord} `);
-            return;
-        }
-
-        if (firstWord === "bm" || firstWord === "bookmarks") {
-            const subCmds = ["ls", "open", "toggle", "show", "hide"];
-            const matchingSub = subCmds.filter(s => s.startsWith(subArg));
-            if (matchingSub.length === 1) {
-                termInput.value = `${firstWord} ${matchingSub[0]} `;
-                hideSuggestions();
-                return;
-            }
-            showSuggestions(matchingSub.length > 0 ? matchingSub : subCmds, `${firstWord} `);
-            return;
-        }
-
-        if (firstWord === "wallpaper" || firstWord === "bg") {
-            const presets = ["picker", "reset", "#0a0a0a", "#0f172a", "#1e293b", "#14532d", "#7f1d1d"];
-            const matching = presets.filter(p => p.startsWith(subArg));
-            if (matching.length === 1) {
-                termInput.value = `${firstWord} ${matching[0]}`;
-                hideSuggestions();
-                return;
-            }
-            showSuggestions(matching.length > 0 ? matching : presets, `${firstWord} `);
-            return;
-        }
-
-        hideSuggestions();
+        // Show suggestions tray with active index highlighted
+        showSuggestions(candidates, prefixBeforeWord, tabCycleState.currentIndex);
     }
 
-    function showSuggestions(list, prefixToInsert = "", isSubarg = false) {
+    function cycleToNextCandidate(isReverse = false) {
+        if (!tabCycleState.candidates.length) return;
+
+        if (isReverse) {
+            tabCycleState.currentIndex = (tabCycleState.currentIndex - 1 + tabCycleState.candidates.length) % tabCycleState.candidates.length;
+        } else {
+            tabCycleState.currentIndex = (tabCycleState.currentIndex + 1) % tabCycleState.candidates.length;
+        }
+
+        const selected = tabCycleState.candidates[tabCycleState.currentIndex];
+        termInput.value = `${tabCycleState.prefixBeforeWord}${selected}`;
+        termInput.setSelectionRange(termInput.value.length, termInput.value.length);
+
+        updateActiveSuggestionChip(tabCycleState.currentIndex);
+    }
+
+    function showSuggestions(list, prefixToInsert = "", activeIndex = 0) {
         if (!termSuggestions || list.length === 0) {
             hideSuggestions();
             return;
@@ -1123,21 +1250,18 @@
         currentSuggestions = list;
         termSuggestions.innerHTML = "";
 
-        list.forEach((item) => {
+        list.forEach((item, idx) => {
             const chip = document.createElement("div");
-            chip.className = "term-suggestion-chip";
+            chip.className = "term-suggestion-chip" + (idx === activeIndex ? " active" : "");
             chip.innerHTML = `<span class="chip-glyph">❯</span><span>${escapeHtml(item)}</span>`;
 
             chip.addEventListener("click", () => {
-                if (isSubarg) {
-                    termInput.value = `${prefixToInsert}${item}`;
-                } else if (prefixToInsert) {
-                    termInput.value = `${prefixToInsert}${item} `;
-                } else {
-                    termInput.value = `${item} `;
-                }
-                hideSuggestions();
+                tabCycleState.active = true;
+                tabCycleState.currentIndex = idx;
+                termInput.value = `${tabCycleState.prefixBeforeWord || prefixToInsert}${item}`;
+                updateActiveSuggestionChip(idx);
                 termInput.focus();
+                termInput.setSelectionRange(termInput.value.length, termInput.value.length);
             });
 
             termSuggestions.appendChild(chip);
@@ -1145,10 +1269,25 @@
 
         const hint = document.createElement("div");
         hint.className = "term-suggestion-hint";
-        hint.textContent = "[TAB] complete • [ESC] dismiss";
+        hint.textContent = "[TAB] next • [SHIFT+TAB] prev • [ENTER] run";
         termSuggestions.appendChild(hint);
 
         termSuggestions.style.display = "flex";
+
+        updateActiveSuggestionChip(activeIndex);
+    }
+
+    function updateActiveSuggestionChip(activeIndex) {
+        if (!termSuggestions) return;
+        const chips = termSuggestions.querySelectorAll(".term-suggestion-chip");
+        chips.forEach((c, idx) => {
+            if (idx === activeIndex) {
+                c.classList.add("active");
+                c.scrollIntoView({ block: "nearest", inline: "nearest" });
+            } else {
+                c.classList.remove("active");
+            }
+        });
     }
 
     function hideSuggestions() {
