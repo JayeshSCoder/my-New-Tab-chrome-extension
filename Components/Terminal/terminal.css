@@ -23,7 +23,7 @@
     display: flex;
 }
 
-/* MAXIMIZED / FULL-SCREEN MODE (Default in Terminal Theme) */
+/* MAXIMIZED / FULL-SCREEN MODE */
 .terminal-window.maximized,
 [data-theme="terminal"] .terminal-window.maximized {
     position: fixed !important;
@@ -38,33 +38,68 @@
     transform: none !important;
     border-radius: 10px !important;
     box-shadow: 0 0 45px rgba(0, 255, 102, 0.12), 0 0 0 1px #22c55e !important;
+    z-index: 9999 !important;
 }
 
-/* RESTORED / FLOATING WINDOW MODE */
-.terminal-window:not(.maximized),
-[data-theme="terminal"] .terminal-window:not(.maximized) {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: min(920px, 92vw) !important;
-    max-width: 920px !important;
-    height: 440px !important;
-    margin: 0 !important;
-    border-radius: 12px !important;
-}
-
-/* MINIMIZED MODE */
-.terminal-window.minimized {
-    height: 42px !important;
-    bottom: 20px !important;
+/* RESTORED / FLOATING WINDOW MODE (Sits cleanly below clock) */
+.terminal-window:not(.maximized):not(.minimized),
+[data-theme="terminal"] .terminal-window:not(.maximized):not(.minimized) {
+    position: relative !important;
     top: auto !important;
-    left: 20px !important;
-    width: 320px !important;
+    left: auto !important;
     transform: none !important;
+    margin: 0 auto 28px auto !important;
+    width: min(940px, 94vw) !important;
+    max-width: 940px !important;
+    height: min(460px, calc(100vh - 290px)) !important;
+    min-height: 320px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 35px rgba(0, 255, 102, 0.08), 0 20px 50px rgba(0, 0, 0, 0.85) !important;
+    z-index: 20 !important;
 }
+
+/* MINIMIZED MODE (Sits compactly below clock) */
+.terminal-window.minimized,
+[data-theme="terminal"] .terminal-window.minimized {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin: 16px auto 28px auto !important;
+    width: min(740px, 90vw) !important;
+    max-width: 740px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    border-radius: 10px !important;
+    z-index: 20 !important;
+    cursor: pointer !important;
+    border-color: #22c55e !important;
+    box-shadow: 0 0 25px rgba(0, 255, 102, 0.12), 0 8px 24px rgba(0, 0, 0, 0.7) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.terminal-window.minimized:hover {
+    box-shadow: 0 0 35px rgba(0, 255, 102, 0.25), 0 10px 28px rgba(0, 0, 0, 0.85) !important;
+    border-color: #4ade80 !important;
+    transform: translateY(-2px) !important;
+}
+
 .terminal-window.minimized .terminal-body {
     display: none !important;
+}
+
+.terminal-window.minimized .term-badge.term-mode {
+    background: rgba(34, 197, 94, 0.15) !important;
+    color: #4ade80 !important;
+    border-color: rgba(34, 197, 94, 0.4) !important;
+    animation: termBadgePulse 2s infinite ease-in-out;
+}
+
+@keyframes termBadgePulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; filter: drop-shadow(0 0 4px #22c55e); }
 }
 
 /* HIDE SHORTCUTS, BOOKMARKS, AND ACTION BUTTONS WHEN MAXIMIZED */

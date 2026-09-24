@@ -89,6 +89,26 @@ document.addEventListener("DOMContentLoaded", () => {
     controller.addEventListener("change", syncVisibility);
     syncVisibility();
   });
+
+  // User name input in drawer
+  const userNameInput = document.getElementById("user-name-input");
+  if (userNameInput) {
+    const savedName = localStorage.getItem("user-name") || "user";
+    userNameInput.value = savedName;
+
+    userNameInput.addEventListener("input", (e) => {
+      const newName = e.target.value.trim() || "user";
+      localStorage.setItem("user-name", newName);
+      window.dispatchEvent(new CustomEvent("userchange", { detail: { name: newName } }));
+    });
+  }
+
+  // Also sync input if username changed via terminal CLI command
+  window.addEventListener("userchange", (e) => {
+    if (userNameInput && e.detail && e.detail.name) {
+      userNameInput.value = e.detail.name;
+    }
+  });
 });
 
 // Determine the default display style for different elements

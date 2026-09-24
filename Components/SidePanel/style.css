@@ -190,6 +190,34 @@
   font-variant-numeric: tabular-nums;
 }
 
+.drawer-input-row {
+  width: 100%;
+}
+
+.drawer-text-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.drawer-text-input:focus {
+  border-color: #6366f1;
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+.drawer-text-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
 /* Range slider */
 #bookmark-bar-width {
   -webkit-appearance: none;
@@ -578,6 +606,24 @@ input:checked + .slider:before {
 [data-theme="terminal"] .drawer-option-value {
   color: #00ff66 !important;
   font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+[data-theme="terminal"] .drawer-text-input {
+  background: #06090d !important;
+  border: 1px solid #1a3826 !important;
+  color: #00ff66 !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="terminal"] .drawer-text-input:focus {
+  border-color: #00ff66 !important;
+  background: rgba(0, 255, 102, 0.05) !important;
+  box-shadow: 0 0 10px rgba(0, 255, 102, 0.3) !important;
+}
+
+[data-theme="terminal"] .drawer-text-input::placeholder {
+  color: rgba(0, 255, 102, 0.3) !important;
 }
 
 

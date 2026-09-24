@@ -11,8 +11,9 @@
 (function () {
     // Constants
     const MAX_LOG_ENTRIES = 10;
-    const STORAGE_KEY_USER = "terminal-username";
-    const DEFAULT_USER = "jayesh";
+    const STORAGE_KEY_USER = "user-name";
+    const STORAGE_KEY_WINDOW_STATE = "terminal-window-state";
+    const DEFAULT_USER = "user";
 
     // DOM Elements
     let termWindow, termScreen, termInput, termSuggestions, termClockBadge, termModeBadge;
@@ -45,6 +46,8 @@
         { name: "theme", desc: "Switch theme or list themes", usage: "theme [name]" },
         { name: "fullscreen", desc: "Toggle fullscreen maximized mode", usage: "fullscreen" },
         { name: "restore", desc: "Restore terminal to windowed mode", usage: "restore" },
+        { name: "minimize", desc: "Minimize terminal to compact bar", usage: "minimize" },
+        { name: "min", desc: "Alias for minimize", usage: "min" },
         { name: "user", desc: "Change terminal username", usage: "user <name>" },
         { name: "clear", desc: "Clear entire terminal log buffer", usage: "clear" },
         { name: "cls", desc: "Alias for clear", usage: "cls" },
@@ -84,13 +87,16 @@
         if (!termWindow || !termInput) return;
 
         // Apply saved username
-        updateUserDisplay(currentUserName);
+        updateUserDisplay(currentUserName, true);
 
-        // Sync initial window state based on theme
+        // Sync initial window state based on theme and saved preference
         const activeTheme = document.documentElement.getAttribute("data-theme");
         if (activeTheme === "terminal") {
-            setTerminalMaximized(true);
-            setTimeout(() => termInput && termInput.focus(), 150);
+            const savedState = getSavedWindowState();
+            setTerminalWindowState(savedState);
+            if (savedState !== "minimized") {
+                setTimeout(() => termInput && termInput.focus(), 150);
+            }
         }
 
         // Window controls
@@ -102,17 +108,35 @@
         }
 
         if (btnMin) {
-            btnMin.addEventListener("click", () => {
-                termWindow.classList.toggle("minimized");
+            btnMin.addEventListener("click", (e) => {
+                e.stopPropagation();
+                toggleMinimize();
             });
         }
 
         if (btnMax) {
-            btnMax.addEventListener("click", toggleMaximize);
+            btnMax.addEventListener("click", (e) => {
+                e.stopPropagation();
+                toggleMaximize();
+            });
         }
 
         if (termModeBadge) {
-            termModeBadge.addEventListener("click", toggleMaximize);
+            termModeBadge.addEventListener("click", (e) => {
+                e.stopPropagation();
+                toggleModeBadge();
+            });
+        }
+
+        // Click on titlebar to restore when minimized
+        const termTitlebar = termWindow.querySelector(".terminal-titlebar");
+        if (termTitlebar) {
+            termTitlebar.addEventListener("click", (e) => {
+                if (termWindow.classList.contains("minimized") && !e.target.closest(".term-btn")) {
+                    setTerminalWindowState("restored");
+                    termInput && termInput.focus();
+                }
+            });
         }
 
         // Click anywhere inside terminal body to focus prompt
@@ -133,43 +157,103 @@
         updateTerminalClock();
         setInterval(updateTerminalClock, 1000);
 
-        // Listen for theme changes to automatically maximize and focus terminal
+        // Listen for theme changes to automatically apply saved terminal state and focus
         window.addEventListener("themechange", (e) => {
             if (e.detail && e.detail.theme === "terminal") {
-                setTerminalMaximized(true);
-                setTimeout(() => termInput && termInput.focus(), 100);
+                const savedState = getSavedWindowState();
+                setTerminalWindowState(savedState);
+                if (savedState !== "minimized") {
+                    setTimeout(() => termInput && termInput.focus(), 100);
+                }
             } else {
                 document.body.classList.remove("terminal-maximized");
             }
         });
+
+        // Listen for external user name changes (e.g. from Settings drawer)
+        window.addEventListener("userchange", (e) => {
+            if (e.detail && e.detail.name) {
+                updateUserDisplay(e.detail.name, true);
+            }
+        });
+    }
+
+    // Window state management
+    function getSavedWindowState() {
+        return localStorage.getItem(STORAGE_KEY_WINDOW_STATE) || "restored";
+    }
+
+    function setTerminalWindowState(state) {
+        if (!termWindow) return;
+        if (state === "maximized") {
+            termWindow.classList.add("maximized");
+            termWindow.classList.remove("minimized");
+            document.body.classList.add("terminal-maximized");
+            if (termModeBadge) {
+                termModeBadge.textContent = "FULLSCREEN";
+                termModeBadge.title = "Click to restore window";
+            }
+            if (btnMax) btnMax.title = "Restore Window";
+            if (btnMin) btnMin.title = "Minimize Window";
+            localStorage.setItem(STORAGE_KEY_WINDOW_STATE, "maximized");
+        } else if (state === "minimized") {
+            termWindow.classList.remove("maximized");
+            termWindow.classList.add("minimized");
+            document.body.classList.remove("terminal-maximized");
+            if (termModeBadge) {
+                termModeBadge.textContent = "MINIMIZED";
+                termModeBadge.title = "Click to restore window";
+            }
+            if (btnMax) btnMax.title = "Maximize to Fullscreen";
+            if (btnMin) btnMin.title = "Restore Window";
+            localStorage.setItem(STORAGE_KEY_WINDOW_STATE, "minimized");
+        } else {
+            // 'restored'
+            termWindow.classList.remove("maximized");
+            termWindow.classList.remove("minimized");
+            document.body.classList.remove("terminal-maximized");
+            if (termModeBadge) {
+                termModeBadge.textContent = "WINDOWED";
+                termModeBadge.title = "Click for fullscreen";
+            }
+            if (btnMax) btnMax.title = "Maximize to Fullscreen";
+            if (btnMin) btnMin.title = "Minimize Window";
+            localStorage.setItem(STORAGE_KEY_WINDOW_STATE, "restored");
+        }
     }
 
     // Toggle Maximize / Restore
     function toggleMaximize() {
         const isMax = termWindow.classList.contains("maximized");
-        setTerminalMaximized(!isMax);
+        setTerminalWindowState(isMax ? "restored" : "maximized");
     }
 
-    function setTerminalMaximized(enable) {
-        if (!termWindow) return;
-        if (enable) {
-            termWindow.classList.add("maximized");
-            termWindow.classList.remove("minimized");
-            document.body.classList.add("terminal-maximized");
-            if (termModeBadge) termModeBadge.textContent = "FULLSCREEN";
+    // Toggle Minimize / Restore
+    function toggleMinimize() {
+        const isMin = termWindow.classList.contains("minimized");
+        setTerminalWindowState(isMin ? "restored" : "minimized");
+    }
+
+    // Toggle Mode Badge
+    function toggleModeBadge() {
+        if (termWindow.classList.contains("maximized")) {
+            setTerminalWindowState("restored");
+        } else if (termWindow.classList.contains("minimized")) {
+            setTerminalWindowState("restored");
         } else {
-            termWindow.classList.remove("maximized");
-            termWindow.classList.remove("minimized");
-            document.body.classList.remove("terminal-maximized");
-            if (termModeBadge) termModeBadge.textContent = "WINDOWED";
+            setTerminalWindowState("maximized");
         }
     }
 
-    function updateUserDisplay(name) {
-        currentUserName = name;
-        localStorage.setItem(STORAGE_KEY_USER, name);
-        if (termUserNameEl) termUserNameEl.textContent = name;
-        if (termTitleText) termTitleText.textContent = `${name}@newtab:~ (bash / zsh)`;
+    function updateUserDisplay(name, skipEvent = false) {
+        currentUserName = name || DEFAULT_USER;
+        localStorage.setItem(STORAGE_KEY_USER, currentUserName);
+        const displayName = currentUserName.toLowerCase();
+        if (termUserNameEl) termUserNameEl.textContent = displayName;
+        if (termTitleText) termTitleText.textContent = `${displayName}@newtab:~ (bash / zsh)`;
+        if (!skipEvent) {
+            window.dispatchEvent(new CustomEvent("userchange", { detail: { name: currentUserName } }));
+        }
     }
 
     function printBanner() {
@@ -373,15 +457,21 @@
 
             case "fullscreen":
             case "maximize":
-                setTerminalMaximized(true);
+                setTerminalWindowState("maximized");
                 appendOutputToLog(currentEntry, "[OK] Terminal maximized to full screen (surrounding UI hidden).", "term-line-success");
                 break;
 
             case "restore":
             case "window":
             case "unmaximize":
-                setTerminalMaximized(false);
-                appendOutputToLog(currentEntry, "[OK] Terminal restored to centered window (shortcuts & bookmarks visible).", "term-line-success");
+                setTerminalWindowState("restored");
+                appendOutputToLog(currentEntry, "[OK] Terminal restored to window below clock (shortcuts & bookmarks visible).", "term-line-success");
+                break;
+
+            case "minimize":
+            case "min":
+                setTerminalWindowState("minimized");
+                appendOutputToLog(currentEntry, "[OK] Terminal minimized to compact dock bar below clock.", "term-line-success");
                 break;
 
             case "user":
@@ -439,7 +529,7 @@
         out += `<div class="term-line-item"><span class="term-key">settings (config)</span>      <span class="term-val">View options | settings shortcuts on|off | settings open</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">notes (note)</span>           <span class="term-val">notes (toggle) | note add &lt;text&gt; (create sticky note)</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">theme [name]</span>           <span class="term-val">theme &lt;glass|legacy|macos|windows|vertical|brutalist|terminal&gt;</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">fullscreen / restore</span> <span class="term-val">Toggle full-screen / centered windowed mode</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">fullscreen / restore / min</span> <span class="term-val">Toggle full-screen / window below clock / minimized</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">user &lt;name&gt;</span>              <span class="term-val">Customize terminal username</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">calc &lt;expression&gt;</span>      <span class="term-val">Fast arithmetic (e.g. calc (15 * 8) + 20)</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">clear (cls)</span>            <span class="term-val">Clear all terminal output</span></div>`;
