@@ -1,21 +1,31 @@
 /**
  * Terminal CLI Engine & Interactive Console Component
- * Provides authentic bash/zsh/PowerShell CLI experience with full command execution,
- * shortcuts & bookmarks access, settings, wallpaper, tab-autocomplete & interactive suggestions.
+ * Provides authentic Linux / macOS / PowerShell CLI experience:
+ * - 10-line persistent log buffer with user path prompt (cleared completely with 'clear')
+ * - Full-screen maximized by default (hiding shortcuts, bookmarks, and action buttons)
+ * - Restorable to floating window revealing all surrounding components
+ * - Explicit 'search <text>' to search Google (arbitrary text stays in terminal logs with command-not-found)
+ * - Full command control for wallpaper, settings toggles, shortcuts, bookmarks, themes, calc, and tab-autocomplete.
  */
 
 (function () {
+    // Constants
+    const MAX_LOG_ENTRIES = 10;
+    const STORAGE_KEY_USER = "terminal-username";
+    const DEFAULT_USER = "jayesh";
+
     // DOM Elements
-    let termWindow, termScreen, termInput, termSuggestions, termClockBadge;
+    let termWindow, termScreen, termInput, termSuggestions, termClockBadge, termModeBadge;
+    let termUserNameEl, termTitleText;
     let btnClose, btnMin, btnMax;
 
-    // Command History
+    // State
+    let currentUserName = localStorage.getItem(STORAGE_KEY_USER) || DEFAULT_USER;
     let commandHistory = [];
     let historyIndex = -1;
     let draftInput = "";
 
     // Autocomplete State
-    let activeSuggestionIndex = -1;
     let currentSuggestions = [];
 
     // Commands List
@@ -26,14 +36,17 @@
         { name: "sc", desc: "Short alias for shortcuts", usage: "sc [open <id|name>|add]" },
         { name: "bookmarks", desc: "List or open bookmarks", usage: "bookmarks [ls|open|toggle]" },
         { name: "bm", desc: "Short alias for bookmarks", usage: "bm [ls|open <id|name>|toggle]" },
-        { name: "wallpaper", desc: "Open wallpaper picker", usage: "wallpaper" },
-        { name: "bg", desc: "Wallpaper shortcut or set color", usage: "bg [#hex|reset]" },
-        { name: "settings", desc: "Open settings drawer", usage: "settings" },
+        { name: "wallpaper", desc: "Open wallpaper picker or set color", usage: "wallpaper [#hex|reset]" },
+        { name: "bg", desc: "Alias for wallpaper", usage: "bg [#hex|reset]" },
+        { name: "settings", desc: "Configure extension options via CLI", usage: "settings [shortcuts|notes|width|open]" },
         { name: "config", desc: "Alias for settings", usage: "config" },
         { name: "notes", desc: "Toggle sticky notes", usage: "notes" },
         { name: "note", desc: "Add quick sticky note", usage: "note add <text>" },
         { name: "theme", desc: "Switch theme or list themes", usage: "theme [name]" },
-        { name: "clear", desc: "Clear terminal screen", usage: "clear" },
+        { name: "fullscreen", desc: "Toggle fullscreen maximized mode", usage: "fullscreen" },
+        { name: "restore", desc: "Restore terminal to windowed mode", usage: "restore" },
+        { name: "user", desc: "Change terminal username", usage: "user <name>" },
+        { name: "clear", desc: "Clear entire terminal log buffer", usage: "clear" },
         { name: "cls", desc: "Alias for clear", usage: "cls" },
         { name: "date", desc: "Display current date & time", usage: "date" },
         { name: "time", desc: "Display current system time", usage: "time" },
@@ -59,12 +72,26 @@
         termInput = document.getElementById("terminal-input");
         termSuggestions = document.getElementById("terminal-suggestions");
         termClockBadge = document.getElementById("term-clock-badge");
+        termModeBadge = document.getElementById("term-mode-badge");
+
+        termUserNameEl = document.getElementById("term-user-name");
+        termTitleText = document.getElementById("terminal-title-text");
 
         btnClose = document.getElementById("term-btn-close");
         btnMin = document.getElementById("term-btn-min");
         btnMax = document.getElementById("term-btn-max");
 
         if (!termWindow || !termInput) return;
+
+        // Apply saved username
+        updateUserDisplay(currentUserName);
+
+        // Sync initial window state based on theme
+        const activeTheme = document.documentElement.getAttribute("data-theme");
+        if (activeTheme === "terminal") {
+            setTerminalMaximized(true);
+            setTimeout(() => termInput && termInput.focus(), 150);
+        }
 
         // Window controls
         if (btnClose) {
@@ -81,12 +108,14 @@
         }
 
         if (btnMax) {
-            btnMax.addEventListener("click", () => {
-                termWindow.classList.toggle("maximized");
-            });
+            btnMax.addEventListener("click", toggleMaximize);
         }
 
-        // Click anywhere inside terminal body to focus input
+        if (termModeBadge) {
+            termModeBadge.addEventListener("click", toggleMaximize);
+        }
+
+        // Click anywhere inside terminal body to focus prompt
         termWindow.addEventListener("click", (e) => {
             if (!window.getSelection().toString() && e.target !== termInput) {
                 termInput.focus();
@@ -104,21 +133,45 @@
         updateTerminalClock();
         setInterval(updateTerminalClock, 1000);
 
-        // Auto-focus if terminal theme is currently active
-        const currentTheme = document.documentElement.getAttribute("data-theme");
-        if (currentTheme === "terminal") {
-            setTimeout(() => termInput && termInput.focus(), 150);
-        }
-
-        // Listen for theme changes to auto-focus terminal
+        // Listen for theme changes to automatically maximize and focus terminal
         window.addEventListener("themechange", (e) => {
             if (e.detail && e.detail.theme === "terminal") {
+                setTerminalMaximized(true);
                 setTimeout(() => termInput && termInput.focus(), 100);
+            } else {
+                document.body.classList.remove("terminal-maximized");
             }
         });
     }
 
-    // Print welcome banner
+    // Toggle Maximize / Restore
+    function toggleMaximize() {
+        const isMax = termWindow.classList.contains("maximized");
+        setTerminalMaximized(!isMax);
+    }
+
+    function setTerminalMaximized(enable) {
+        if (!termWindow) return;
+        if (enable) {
+            termWindow.classList.add("maximized");
+            termWindow.classList.remove("minimized");
+            document.body.classList.add("terminal-maximized");
+            if (termModeBadge) termModeBadge.textContent = "FULLSCREEN";
+        } else {
+            termWindow.classList.remove("maximized");
+            termWindow.classList.remove("minimized");
+            document.body.classList.remove("terminal-maximized");
+            if (termModeBadge) termModeBadge.textContent = "WINDOWED";
+        }
+    }
+
+    function updateUserDisplay(name) {
+        currentUserName = name;
+        localStorage.setItem(STORAGE_KEY_USER, name);
+        if (termUserNameEl) termUserNameEl.textContent = name;
+        if (termTitleText) termTitleText.textContent = `${name}@newtab:~ (bash / zsh)`;
+    }
+
     function printBanner() {
         const bannerText = `  _   _                 _____     _      ____   ____  
  | \\ | | _____      __ |_   _|_ _| |__  / ___| / ___| 
@@ -127,10 +180,16 @@
  |_| \\_|\\___| \\_/\\_/     |_|\\__,_|_.__/ |____/ |____/ 
                                                        
  * Terminal OS v2.5.0 (x86_64-chrome-workspace)
- * Type 'help' for command list or press [TAB] for autocomplete.
- * Quick: 'search <query>', 'bm', 'sc', 'wallpaper', 'settings', 'theme'`;
+ * Type 'help' for command manual, or press [TAB] for autocomplete.
+ * Quick: 'search <query>', 'sc', 'bm', 'wallpaper', 'settings', 'theme'`;
 
-        printLine(bannerText, "term-line-banner");
+        const bannerEntry = document.createElement("div");
+        bannerEntry.className = "term-log-entry";
+        const div = document.createElement("div");
+        div.className = "term-line term-line-banner";
+        div.textContent = bannerText;
+        bannerEntry.appendChild(div);
+        termScreen.appendChild(bannerEntry);
     }
 
     function updateTerminalClock() {
@@ -160,10 +219,7 @@
             historyIndex = commandHistory.length;
             termInput.value = "";
 
-            // Print command line
-            printLine(`guest@newtab:~$ ${raw}`, "term-line-cmd");
-
-            // Execute
+            // Create a grouped log entry for this command
             executeCommand(raw);
             return;
         }
@@ -209,21 +265,45 @@
         }
     }
 
-    // Output formatting helpers
-    function printLine(text, className = "term-line-info") {
-        const div = document.createElement("div");
-        div.className = `term-line ${className}`;
-        div.textContent = text;
-        termScreen.appendChild(div);
+    // ==========================================
+    // LOG BUFFER & SCREEN MANAGEMENT (10 LIMIT)
+    // ==========================================
+    function createLogEntry(rawCmd) {
+        const logEntry = document.createElement("div");
+        logEntry.className = "term-log-entry";
+
+        // Prompt line
+        const cmdLine = document.createElement("div");
+        cmdLine.className = "term-line term-line-cmd";
+        cmdLine.innerHTML = `<span class="term-prompt"><span class="term-user">${escapeHtml(currentUserName)}</span><span class="term-at">@</span><span class="term-host">newtab</span>:<span class="term-path">~</span><span class="term-sym">$</span> </span><span class="term-cmd-str">${escapeHtml(rawCmd)}</span>`;
+        logEntry.appendChild(cmdLine);
+
+        termScreen.appendChild(logEntry);
+
+        // Enforce max 10 entries limit
+        trimLogEntries();
+
+        termScreen.scrollTop = termScreen.scrollHeight;
+        return logEntry;
+    }
+
+    function appendOutputToLog(logEntry, htmlContent, className = "term-line-info") {
+        if (!logEntry) return;
+        const outDiv = document.createElement("div");
+        outDiv.className = `term-line ${className}`;
+        outDiv.innerHTML = htmlContent;
+        logEntry.appendChild(outDiv);
         termScreen.scrollTop = termScreen.scrollHeight;
     }
 
-    function printRawHtml(html, className = "term-line-info") {
-        const div = document.createElement("div");
-        div.className = `term-line ${className}`;
-        div.innerHTML = html;
-        termScreen.appendChild(div);
-        termScreen.scrollTop = termScreen.scrollHeight;
+    function trimLogEntries() {
+        const entries = termScreen.querySelectorAll(".term-log-entry");
+        if (entries.length > MAX_LOG_ENTRIES) {
+            const excess = entries.length - MAX_LOG_ENTRIES;
+            for (let i = 0; i < excess; i++) {
+                entries[i].remove();
+            }
+        }
     }
 
     function clearScreen() {
@@ -239,141 +319,165 @@
         const args = parts.slice(1);
         const argString = args.join(" ").trim();
 
+        // 'clear' or 'cls' clears the entire buffer completely
+        if (cmd === "clear" || cmd === "cls") {
+            clearScreen();
+            return;
+        }
+
+        // Create log entry container
+        const currentEntry = createLogEntry(raw);
+
         switch (cmd) {
             case "help":
             case "?":
             case "man":
-                showHelp();
+                showHelp(currentEntry);
                 break;
 
-            case "clear":
-            case "cls":
-                clearScreen();
+            case "search":
+            case "google":
+                handleSearchCommand(argString, currentEntry);
+                break;
+
+            case "shortcuts":
+            case "sc":
+                handleShortcutsCommand(args, currentEntry);
+                break;
+
+            case "bookmarks":
+            case "bm":
+                handleBookmarksCommand(args, currentEntry);
+                break;
+
+            case "wallpaper":
+            case "bg":
+            case "wp":
+                handleWallpaperCommand(args, currentEntry);
+                break;
+
+            case "settings":
+            case "config":
+            case "cfg":
+                handleSettingsCommand(args, currentEntry);
+                break;
+
+            case "notes":
+            case "note":
+                handleNotesCommand(args, currentEntry);
+                break;
+
+            case "theme":
+                handleThemeCommand(args, currentEntry);
+                break;
+
+            case "fullscreen":
+            case "maximize":
+                setTerminalMaximized(true);
+                appendOutputToLog(currentEntry, "[OK] Terminal maximized to full screen (surrounding UI hidden).", "term-line-success");
+                break;
+
+            case "restore":
+            case "window":
+            case "unmaximize":
+                setTerminalMaximized(false);
+                appendOutputToLog(currentEntry, "[OK] Terminal restored to centered window (shortcuts & bookmarks visible).", "term-line-success");
+                break;
+
+            case "user":
+                if (!argString) {
+                    appendOutputToLog(currentEntry, `Current username: ${currentUserName}. Usage: user <new_name>`, "term-line-warn");
+                } else {
+                    updateUserDisplay(argString);
+                    appendOutputToLog(currentEntry, `[OK] Username updated to: ${argString}`, "term-line-success");
+                }
+                break;
+
+            case "calc":
+                evaluateMath(argString, currentEntry);
                 break;
 
             case "date":
             case "time":
                 const d = new Date();
-                printLine(`System Time: ${d.toString()}`, "term-line-success");
+                appendOutputToLog(currentEntry, `System Time: ${d.toString()}`, "term-line-success");
+                break;
+
+            case "history":
+                showHistory(currentEntry);
                 break;
 
             case "echo":
-                printLine(argString, "term-line-info");
+                appendOutputToLog(currentEntry, escapeHtml(argString), "term-line-info");
                 break;
 
             case "reload":
             case "refresh":
-                printLine("Reloading tab...", "term-line-warn");
+                appendOutputToLog(currentEntry, "Reloading tab...", "term-line-warn");
                 setTimeout(() => window.location.reload(), 300);
                 break;
 
-            case "calc":
-                evaluateMath(argString);
-                break;
-
-            case "history":
-                showHistory();
-                break;
-
-            // Shortcuts commands
-            case "shortcuts":
-            case "sc":
-                handleShortcutsCommand(args);
-                break;
-
-            // Bookmarks commands
-            case "bookmarks":
-            case "bm":
-                handleBookmarksCommand(args);
-                break;
-
-            // Wallpaper commands
-            case "wallpaper":
-            case "bg":
-            case "wp":
-                handleWallpaperCommand(args);
-                break;
-
-            // Settings commands
-            case "settings":
-            case "config":
-            case "cfg":
-                handleSettingsCommand();
-                break;
-
-            // Sticky Notes commands
-            case "notes":
-            case "note":
-                handleNotesCommand(args);
-                break;
-
-            // Theme commands
-            case "theme":
-                handleThemeCommand(args);
-                break;
-
-            // Search command
-            case "search":
-            case "find":
-            case "google":
-                performSearch(argString);
-                break;
-
             default:
-                // If not a built-in command, treat as search query or direct URL
-                performSearch(raw);
+                // IMPORTANT: Do NOT open Google search for arbitrary text!
+                // Report command not found and instruct user to use 'search <text>'
+                appendOutputToLog(
+                    currentEntry,
+                    `bash: command not found: "${cmd}". Type 'help' for commands, or 'search ${cmd}' to search Google.`,
+                    "term-line-error"
+                );
                 break;
         }
     }
 
     // Help
-    function showHelp() {
+    function showHelp(logEntry) {
         let out = `<div class="term-line-header">── TERMINAL COMMAND MANUAL ─────────────────────────────────────────</div>`;
-        out += `<div class="term-line-item"><span class="term-key">search &lt;query|url&gt;</span>    <span class="term-val">Search Google or open URL directly</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">shortcuts (sc)</span>        <span class="term-val">List shortcuts | sc open &lt;id|name&gt; | sc add &lt;name&gt; &lt;url&gt;</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">bookmarks (bm)</span>        <span class="term-val">List bookmarks | bm open &lt;id|name&gt; | bm toggle</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">wallpaper (bg)</span>        <span class="term-val">Open wallpaper picker | bg #hex to set color</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">settings (config)</span>     <span class="term-val">Open extension configuration drawer</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">notes (note)</span>          <span class="term-val">Toggle notes | note add &lt;text&gt; to create</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">theme [name]</span>          <span class="term-val">List themes or switch: glass, macos, win, brutalist, terminal</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">calc &lt;expression&gt;</span>     <span class="term-val">Evaluate math (e.g. calc (15 * 8) + 20)</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">clear (cls)</span>           <span class="term-val">Clear terminal output</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">date / time</span>           <span class="term-val">Display current timestamp</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">history / reload</span>      <span class="term-val">View past commands / Refresh page</span></div>`;
-        out += `<div class="term-line-info" style="margin-top:6px; font-style:italic;">Tip: Press [TAB] at any time for intelligent auto-completion!</div>`;
-        printRawHtml(out);
+        out += `<div class="term-line-item"><span class="term-key">search &lt;query|url&gt;</span>     <span class="term-val">Query Google or navigate directly to URL</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">shortcuts (sc)</span>         <span class="term-val">sc ls | sc open &lt;id|name&gt; | sc add &lt;name&gt; &lt;url&gt;</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">bookmarks (bm)</span>         <span class="term-val">bm ls | bm open &lt;id|name&gt; | bm toggle</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">wallpaper (bg)</span>         <span class="term-val">wallpaper (open picker) | bg #hex | bg reset</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">settings (config)</span>      <span class="term-val">View options | settings shortcuts on|off | settings open</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">notes (note)</span>           <span class="term-val">notes (toggle) | note add &lt;text&gt; (create sticky note)</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">theme [name]</span>           <span class="term-val">theme &lt;glass|legacy|macos|windows|vertical|brutalist|terminal&gt;</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">fullscreen / restore</span> <span class="term-val">Toggle full-screen / centered windowed mode</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">user &lt;name&gt;</span>              <span class="term-val">Customize terminal username</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">calc &lt;expression&gt;</span>      <span class="term-val">Fast arithmetic (e.g. calc (15 * 8) + 20)</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">clear (cls)</span>            <span class="term-val">Clear all terminal output</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">date / time / reload</span>  <span class="term-val">System timestamp / Refresh page</span></div>`;
+        out += `<div class="term-line-info" style="margin-top:6px; font-style:italic;">Tip: Press [TAB] for smart autocompletion suggestions!</div>`;
+        appendOutputToLog(logEntry, out);
     }
 
-    // Search or open URL
-    function performSearch(query) {
+    // Search command — ONLY called when explicitly typing 'search <text>'
+    function handleSearchCommand(query, logEntry) {
         if (!query) {
-            printLine("Usage: search <query or URL>", "term-line-warn");
+            appendOutputToLog(logEntry, "Usage: search <text or URL> (e.g. 'search latest AI tools' or 'search github.com')", "term-line-warn");
             return;
         }
 
         const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
         if (query.startsWith("http://") || query.startsWith("https://")) {
-            printLine(`[NAVIGATE] Opening: ${query}`, "term-line-success");
-            setTimeout(() => window.location.href = query, 200);
+            appendOutputToLog(logEntry, `[NAVIGATE] Opening: ${query}`, "term-line-success");
+            setTimeout(() => window.location.href = query, 250);
         } else if (urlPattern.test(query) && !query.includes(" ")) {
             const targetUrl = `https://${query}`;
-            printLine(`[NAVIGATE] Opening: ${targetUrl}`, "term-line-success");
-            setTimeout(() => window.location.href = targetUrl, 200);
+            appendOutputToLog(logEntry, `[NAVIGATE] Opening: ${targetUrl}`, "term-line-success");
+            setTimeout(() => window.location.href = targetUrl, 250);
         } else {
-            printLine(`[SEARCH] Querying Google for: "${query}"...`, "term-line-success");
+            appendOutputToLog(logEntry, `[SEARCH] Querying Google for: "${query}"...`, "term-line-success");
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-            setTimeout(() => window.location.href = searchUrl, 200);
+            setTimeout(() => window.location.href = searchUrl, 250);
         }
     }
 
     // Shortcuts Command
-    function handleShortcutsCommand(args) {
+    function handleShortcutsCommand(args, logEntry) {
         const sub = args[0] ? args[0].toLowerCase() : "ls";
         const shortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
 
         if (sub === "ls" || sub === "list" || args.length === 0) {
             if (shortcuts.length === 0) {
-                printLine("No shortcuts configured. Use 'sc add <name> <url>' to add one.", "term-line-info");
+                appendOutputToLog(logEntry, "No shortcuts configured. Use 'sc add <name> <url>' to create one.", "term-line-info");
                 return;
             }
             let out = `<div class="term-line-header">── SHORTCUTS (${shortcuts.length}) ──────────────────────────────────</div>`;
@@ -381,14 +485,14 @@
                 out += `<div class="term-line-item"><span class="term-key">[${i + 1}]</span> <span class="term-val">${escapeHtml(sc.name)}</span> <span class="term-url">${escapeHtml(sc.url)}</span></div>`;
             });
             out += `<div class="term-line-info" style="margin-top:4px;">Type 'sc open 1' or 'sc open ${shortcuts[0] ? shortcuts[0].name.toLowerCase() : "name"}' to launch.</div>`;
-            printRawHtml(out);
+            appendOutputToLog(logEntry, out);
             return;
         }
 
         if (sub === "open" || !isNaN(parseInt(sub, 10))) {
             const targetParam = sub === "open" ? args.slice(1).join(" ") : sub;
             if (!targetParam) {
-                printLine("Usage: sc open <number|name>", "term-line-warn");
+                appendOutputToLog(logEntry, "Usage: sc open <number|name>", "term-line-warn");
                 return;
             }
 
@@ -403,10 +507,10 @@
 
             if (found) {
                 const targetUrl = found.url.startsWith("http") ? found.url : `https://${found.url}`;
-                printLine(`[LAUNCH] Launching shortcut: ${found.name} (${targetUrl})`, "term-line-success");
-                setTimeout(() => window.location.href = targetUrl, 200);
+                appendOutputToLog(logEntry, `[LAUNCH] Opening shortcut: ${found.name} (${targetUrl})`, "term-line-success");
+                setTimeout(() => window.location.href = targetUrl, 250);
             } else {
-                printLine(`[ERROR] Shortcut not found for: "${targetParam}". Type 'sc ls' to view all.`, "term-line-error");
+                appendOutputToLog(logEntry, `[ERROR] Shortcut not found: "${targetParam}". Type 'sc ls' to view all.`, "term-line-error");
             }
             return;
         }
@@ -415,7 +519,7 @@
             const name = args[1];
             const url = args[2];
             if (!name || !url) {
-                printLine("Usage: sc add <name> <url>", "term-line-warn");
+                appendOutputToLog(logEntry, "Usage: sc add <name> <url>", "term-line-warn");
                 return;
             }
             shortcuts.push({ name, url });
@@ -423,22 +527,22 @@
             if (typeof renderShortcuts === "function") {
                 renderShortcuts();
             }
-            printLine(`[OK] Successfully added shortcut: ${name} -> ${url}`, "term-line-success");
+            appendOutputToLog(logEntry, `[OK] Added shortcut: ${name} -> ${url}`, "term-line-success");
             return;
         }
 
-        printLine(`Unknown shortcuts subcommand: ${sub}. Try: 'sc ls', 'sc open <id|name>', or 'sc add <name> <url>'`, "term-line-warn");
+        appendOutputToLog(logEntry, `Unknown shortcuts subcommand: ${sub}. Try: 'sc ls', 'sc open <id|name>', or 'sc add <name> <url>'`, "term-line-warn");
     }
 
     // Bookmarks Command
-    function handleBookmarksCommand(args) {
+    function handleBookmarksCommand(args, logEntry) {
         const sub = args[0] ? args[0].toLowerCase() : "ls";
 
         if (sub === "toggle") {
             const sb = document.querySelector(".bookmark-sidebar");
             if (sb) {
                 sb.classList.toggle("show");
-                printLine(`[OK] Bookmarks bar toggled.`, "term-line-success");
+                appendOutputToLog(logEntry, `[OK] Bookmarks bar toggled.`, "term-line-success");
             }
             return;
         }
@@ -446,18 +550,17 @@
         if (sub === "show") {
             const sb = document.querySelector(".bookmark-sidebar");
             if (sb) sb.classList.add("show");
-            printLine(`[OK] Bookmarks bar visible.`, "term-line-success");
+            appendOutputToLog(logEntry, `[OK] Bookmarks bar shown.`, "term-line-success");
             return;
         }
 
         if (sub === "hide") {
             const sb = document.querySelector(".bookmark-sidebar");
             if (sb) sb.classList.remove("show");
-            printLine(`[OK] Bookmarks bar hidden.`, "term-line-success");
+            appendOutputToLog(logEntry, `[OK] Bookmarks bar hidden.`, "term-line-success");
             return;
         }
 
-        // Fetch bookmarks
         if (chrome && chrome.bookmarks && chrome.bookmarks.getTree) {
             chrome.bookmarks.getTree((tree) => {
                 const root = tree && tree[0];
@@ -480,25 +583,25 @@
 
                 if (sub === "ls" || sub === "list" || args.length === 0) {
                     if (bookmarks.length === 0) {
-                        printLine("No bookmarks found in Bookmarks Bar.", "term-line-info");
+                        appendOutputToLog(logEntry, "No bookmarks found in Bookmarks Bar.", "term-line-info");
                         return;
                     }
                     let out = `<div class="term-line-header">── BOOKMARKS (${bookmarks.length}) ──────────────────────────────────</div>`;
-                    bookmarks.slice(0, 15).forEach((bm, i) => {
+                    bookmarks.slice(0, 12).forEach((bm, i) => {
                         out += `<div class="term-line-item"><span class="term-key">[${i + 1}]</span> <span class="term-val">${escapeHtml(bm.title)}</span> <span class="term-url">${escapeHtml(bm.url)}</span></div>`;
                     });
-                    if (bookmarks.length > 15) {
-                        out += `<div class="term-line-info">... and ${bookmarks.length - 15} more. Type 'bm toggle' to slide open full bar.</div>`;
+                    if (bookmarks.length > 12) {
+                        out += `<div class="term-line-info">... and ${bookmarks.length - 12} more. Type 'bm toggle' to slide open full shelf.</div>`;
                     }
                     out += `<div class="term-line-info" style="margin-top:4px;">Type 'bm open 1' or 'bm open &lt;name&gt;' to launch.</div>`;
-                    printRawHtml(out);
+                    appendOutputToLog(logEntry, out);
                     return;
                 }
 
                 if (sub === "open" || !isNaN(parseInt(sub, 10))) {
                     const targetParam = sub === "open" ? args.slice(1).join(" ") : sub;
                     if (!targetParam) {
-                        printLine("Usage: bm open <number|name>", "term-line-warn");
+                        appendOutputToLog(logEntry, "Usage: bm open <number|name>", "term-line-warn");
                         return;
                     }
 
@@ -512,30 +615,30 @@
                     }
 
                     if (found) {
-                        printLine(`[LAUNCH] Opening bookmark: ${found.title}`, "term-line-success");
-                        setTimeout(() => window.location.href = found.url, 200);
+                        appendOutputToLog(logEntry, `[LAUNCH] Opening bookmark: ${found.title}`, "term-line-success");
+                        setTimeout(() => window.location.href = found.url, 250);
                     } else {
-                        printLine(`[ERROR] Bookmark not found for: "${targetParam}".`, "term-line-error");
+                        appendOutputToLog(logEntry, `[ERROR] Bookmark not found: "${targetParam}".`, "term-line-error");
                     }
                     return;
                 }
 
-                printLine(`Unknown bookmarks subcommand: ${sub}. Try: 'bm ls', 'bm open <id|name>', or 'bm toggle'`, "term-line-warn");
+                appendOutputToLog(logEntry, `Unknown bookmarks subcommand: ${sub}. Try: 'bm ls', 'bm open <id|name>', or 'bm toggle'`, "term-line-warn");
             });
         } else {
-            printLine("Chrome bookmarks API is currently not accessible from this context.", "term-line-warn");
+            appendOutputToLog(logEntry, "Chrome bookmarks API is currently not accessible from this context.", "term-line-warn");
         }
     }
 
     // Wallpaper Command
-    function handleWallpaperCommand(args) {
-        if (args.length === 0 || args[0] === "picker" || args[0] === "modal") {
+    function handleWallpaperCommand(args, logEntry) {
+        if (args.length === 0 || args[0] === "picker" || args[0] === "modal" || args[0] === "open") {
             const btn = document.getElementById("changeBackgroundBtn");
             if (btn) {
                 btn.click();
-                printLine("[OK] Wallpaper selector modal opened.", "term-line-success");
+                appendOutputToLog(logEntry, "[OK] Wallpaper selection modal opened.", "term-line-success");
             } else {
-                printLine("[ERROR] Wallpaper selector button not found.", "term-line-error");
+                appendOutputToLog(logEntry, "[ERROR] Wallpaper modal button not found.", "term-line-error");
             }
             return;
         }
@@ -550,7 +653,7 @@
                 bgEl.style.backgroundImage = "";
                 bgEl.style.backgroundColor = "";
             }
-            printLine("[OK] Wallpaper reset to theme default.", "term-line-success");
+            appendOutputToLog(logEntry, "[OK] Wallpaper reset to theme default.", "term-line-success");
             return;
         }
 
@@ -563,33 +666,133 @@
                 document.head.appendChild(early);
             }
             early.textContent = `.background { background-image: none !important; background-color: ${colorVal} !important; } body { background-image: none !important; background-color: ${colorVal} !important; }`;
-            printLine(`[OK] Background color updated to ${colorVal}`, "term-line-success");
+            appendOutputToLog(logEntry, `[OK] Solid wallpaper background set to ${colorVal}`, "term-line-success");
             return;
         }
 
-        printLine(`Usage: 'wallpaper' (open picker), 'bg #0f172a' (set color), or 'bg reset'`, "term-line-warn");
+        appendOutputToLog(logEntry, `Usage: 'wallpaper' (open picker), 'bg #0f172a' (set color), or 'bg reset'`, "term-line-warn");
     }
 
-    // Settings Command
-    function handleSettingsCommand() {
-        const btn = document.getElementById("open-right-drawer");
-        if (btn) {
-            btn.click();
-            printLine("[OK] Settings drawer opened.", "term-line-success");
-        } else {
-            printLine("[ERROR] Settings drawer toggle button not found.", "term-line-error");
+    // Settings Command — Full CLI configuration options
+    function handleSettingsCommand(args, logEntry) {
+        const toggleShortcutsInput = document.getElementById("toggle-shortcuts");
+        const toggleStickyNotesInput = document.getElementById("toggle-sticky-notes");
+        const widthSlider = document.getElementById("bookmark-bar-width");
+        const rightDrawer = document.getElementById("right-drawer");
+        const currentTheme = document.documentElement.getAttribute("data-theme") || "terminal";
+
+        if (args.length === 0 || args[0] === "show" || args[0] === "status") {
+            const shortcutsStatus = toggleShortcutsInput && toggleShortcutsInput.checked ? "ON" : "OFF";
+            const notesStatus = toggleStickyNotesInput && toggleStickyNotesInput.checked ? "ON" : "OFF";
+            const currentWidth = widthSlider ? widthSlider.value : "220";
+
+            let out = `<div class="term-line-header">── EXTENSION CONFIGURATION OPTIONS ───────────────────────────────</div>`;
+            out += `<div class="term-line-item"><span class="term-key">1. shortcuts</span>    : <span class="term-val">[${shortcutsStatus}]</span> (Command: 'settings shortcuts on|off')</div>`;
+            out += `<div class="term-line-item"><span class="term-key">2. sticky-notes</span> : <span class="term-val">[${notesStatus}]</span> (Command: 'settings notes on|off')</div>`;
+            out += `<div class="term-line-item"><span class="term-key">3. width</span>        : <span class="term-val">[${currentWidth}px]</span> (Command: 'settings width &lt;60-520&gt;')</div>`;
+            out += `<div class="term-line-item"><span class="term-key">4. theme</span>        : <span class="term-val">[${currentTheme}]</span> (Command: 'theme &lt;name&gt;')</div>`;
+            out += `<div class="term-line-item"><span class="term-key">5. wallpaper</span>    : <span class="term-val">[CUSTOM]</span> (Command: 'wallpaper' to open modal)</div>`;
+            out += `<div class="term-line-item"><span class="term-key">6. drawer-panel</span> : <span class="term-val">[GUI]</span> (Command: 'settings open' to slide open drawer)</div>`;
+            out += `<div class="term-line-info" style="margin-top:6px;">Type 'settings &lt;option&gt; &lt;value&gt;' to change options directly from CLI!</div>`;
+            appendOutputToLog(logEntry, out);
+            return;
         }
+
+        const sub = args[0].toLowerCase();
+        const val = args[1] ? args[1].toLowerCase() : "";
+
+        if (sub === "shortcuts") {
+            if (val === "on" || val === "true" || val === "1") {
+                if (toggleShortcutsInput) {
+                    toggleShortcutsInput.checked = true;
+                    if (typeof toggleShortcutsInput.dispatchEvent === "function") {
+                        toggleShortcutsInput.dispatchEvent(new Event("change"));
+                    }
+                }
+                appendOutputToLog(logEntry, "[OK] Shortcuts drawer enabled (ON).", "term-line-success");
+            } else if (val === "off" || val === "false" || val === "0") {
+                if (toggleShortcutsInput) {
+                    toggleShortcutsInput.checked = false;
+                    if (typeof toggleShortcutsInput.dispatchEvent === "function") {
+                        toggleShortcutsInput.dispatchEvent(new Event("change"));
+                    }
+                }
+                appendOutputToLog(logEntry, "[OK] Shortcuts drawer disabled (OFF).", "term-line-success");
+            } else {
+                appendOutputToLog(logEntry, "Usage: settings shortcuts on | off", "term-line-warn");
+            }
+            return;
+        }
+
+        if (sub === "notes" || sub === "stickynotes") {
+            if (val === "on" || val === "true" || val === "1") {
+                if (toggleStickyNotesInput) {
+                    toggleStickyNotesInput.checked = true;
+                    if (typeof toggleStickyNotesInput.dispatchEvent === "function") {
+                        toggleStickyNotesInput.dispatchEvent(new Event("change"));
+                    }
+                }
+                appendOutputToLog(logEntry, "[OK] Sticky notes enabled (ON).", "term-line-success");
+            } else if (val === "off" || val === "false" || val === "0") {
+                if (toggleStickyNotesInput) {
+                    toggleStickyNotesInput.checked = false;
+                    if (typeof toggleStickyNotesInput.dispatchEvent === "function") {
+                        toggleStickyNotesInput.dispatchEvent(new Event("change"));
+                    }
+                }
+                appendOutputToLog(logEntry, "[OK] Sticky notes disabled (OFF).", "term-line-success");
+            } else {
+                appendOutputToLog(logEntry, "Usage: settings notes on | off", "term-line-warn");
+            }
+            return;
+        }
+
+        if (sub === "width") {
+            const num = parseInt(val, 10);
+            if (!isNaN(num) && num >= 60 && num <= 520) {
+                if (widthSlider) {
+                    widthSlider.value = num;
+                    if (typeof widthSlider.dispatchEvent === "function") {
+                        widthSlider.dispatchEvent(new Event("input"));
+                    }
+                }
+                localStorage.setItem("bookmark-bar-width", num.toString());
+                document.documentElement.style.setProperty("--bookmark-bar-width", `${num}px`);
+                appendOutputToLog(logEntry, `[OK] Bookmark bar width set to ${num}px.`, "term-line-success");
+            } else {
+                appendOutputToLog(logEntry, "Usage: settings width <60-520> (e.g. settings width 260)", "term-line-warn");
+            }
+            return;
+        }
+
+        if (sub === "open" || sub === "gui" || sub === "drawer") {
+            if (rightDrawer) {
+                rightDrawer.classList.add("open");
+                appendOutputToLog(logEntry, "[OK] Graphical Settings drawer opened.", "term-line-success");
+            }
+            return;
+        }
+
+        if (sub === "close") {
+            if (rightDrawer) {
+                rightDrawer.classList.remove("open");
+                appendOutputToLog(logEntry, "[OK] Settings drawer closed.", "term-line-success");
+            }
+            return;
+        }
+
+        appendOutputToLog(logEntry, `Unknown settings option: ${sub}. Type 'settings' to see all available options.`, "term-line-warn");
     }
 
     // Notes Command
-    function handleNotesCommand(args) {
+    function handleNotesCommand(args, logEntry) {
         const sub = args[0] ? args[0].toLowerCase() : "toggle";
 
         if (sub === "toggle" || args.length === 0) {
             const btn = document.getElementById("add-sticky-note-btn");
             if (btn) {
                 btn.click();
-                printLine("[OK] Sticky notes opened.", "term-line-success");
+                appendOutputToLog(logEntry, "[OK] Sticky notes opened.", "term-line-success");
             }
             return;
         }
@@ -597,11 +800,10 @@
         if (sub === "add") {
             const noteText = args.slice(1).join(" ").trim();
             if (!noteText) {
-                printLine("Usage: note add <text of your note>", "term-line-warn");
+                appendOutputToLog(logEntry, "Usage: note add <text of your note>", "term-line-warn");
                 return;
             }
 
-            // Read notes
             const notes = JSON.parse(localStorage.getItem("stickyNotes") || "[]");
             notes.push({
                 id: Date.now().toString(),
@@ -613,31 +815,30 @@
             });
             localStorage.setItem("stickyNotes", JSON.stringify(notes));
 
-            // Reload notes in container if function available
             if (typeof renderStickyNotes === "function") {
                 renderStickyNotes();
             } else {
                 const btn = document.getElementById("add-sticky-note-btn");
                 if (btn) btn.click();
             }
-            printLine(`[OK] Created new sticky note: "${noteText}"`, "term-line-success");
+            appendOutputToLog(logEntry, `[OK] Created new sticky note: "${noteText}"`, "term-line-success");
             return;
         }
 
-        printLine(`Usage: 'notes' (toggle) or 'note add <text>'`, "term-line-warn");
+        appendOutputToLog(logEntry, `Usage: 'notes' (toggle) or 'note add <text>'`, "term-line-warn");
     }
 
     // Theme Command
-    function handleThemeCommand(args) {
+    function handleThemeCommand(args, logEntry) {
         if (args.length === 0 || args[0] === "ls" || args[0] === "list") {
-            const current = document.documentElement.getAttribute("data-theme") || "glassmorphism";
+            const current = document.documentElement.getAttribute("data-theme") || "terminal";
             let out = `<div class="term-line-header">── AVAILABLE THEMES ──────────────────────────────────────────</div>`;
             THEME_OPTIONS.forEach(t => {
                 const isCurrent = t === current ? " [CURRENT]" : "";
                 out += `<div class="term-line-item"><span class="term-key">* ${t}</span> <span class="term-val">${isCurrent}</span></div>`;
             });
             out += `<div class="term-line-info" style="margin-top:4px;">Type 'theme &lt;name&gt;' (e.g. 'theme macos', 'theme brutalist', 'theme terminal') to switch.</div>`;
-            printRawHtml(out);
+            appendOutputToLog(logEntry, out);
             return;
         }
 
@@ -669,44 +870,43 @@
                 document.documentElement.setAttribute("data-theme", targetTheme);
                 localStorage.setItem("app-theme", targetTheme);
             }
-            printLine(`[OK] Switched theme to: ${targetTheme}`, "term-line-success");
+            appendOutputToLog(logEntry, `[OK] Switched theme to: ${targetTheme}`, "term-line-success");
         } else {
-            printLine(`[ERROR] Unknown theme: "${inputTheme}". Type 'theme' to view all available themes.`, "term-line-error");
+            appendOutputToLog(logEntry, `[ERROR] Unknown theme: "${inputTheme}". Type 'theme' to view all themes.`, "term-line-error");
         }
     }
 
     // Math evaluation
-    function evaluateMath(expr) {
+    function evaluateMath(expr, logEntry) {
         if (!expr) {
-            printLine("Usage: calc <expression> (e.g. calc 14 * 8 + 2)", "term-line-warn");
+            appendOutputToLog(logEntry, "Usage: calc <expression> (e.g. calc 14 * 8 + 2)", "term-line-warn");
             return;
         }
 
         try {
-            // Safe math check: only numbers, operators, parens, Math functions
             if (/[^0-9+\-*/().,%^ Math\.EPIsqrtpowsincoatanlg]/.test(expr)) {
-                printLine("[ERROR] Invalid characters in math expression.", "term-line-error");
+                appendOutputToLog(logEntry, "[ERROR] Invalid characters in math expression.", "term-line-error");
                 return;
             }
             const sanitized = expr.replace(/\^/g, "**");
             const result = Function(`"use strict"; return (${sanitized});`)();
-            printLine(`Result: ${result}`, "term-line-success");
+            appendOutputToLog(logEntry, `Result: ${result}`, "term-line-success");
         } catch (e) {
-            printLine(`[ERROR] Calculation failed: ${e.message}`, "term-line-error");
+            appendOutputToLog(logEntry, `[ERROR] Calculation failed: ${e.message}`, "term-line-error");
         }
     }
 
     // History Command
-    function showHistory() {
+    function showHistory(logEntry) {
         if (commandHistory.length === 0) {
-            printLine("No commands in history.", "term-line-info");
+            appendOutputToLog(logEntry, "No commands in history.", "term-line-info");
             return;
         }
         let out = `<div class="term-line-header">── COMMAND HISTORY ───────────────────────────────────────────</div>`;
-        commandHistory.slice(-20).forEach((cmd, i) => {
+        commandHistory.slice(-10).forEach((cmd, i) => {
             out += `<div class="term-line-item"><span class="term-key">${i + 1}</span>  <span class="term-val">${escapeHtml(cmd)}</span></div>`;
         });
-        printRawHtml(out);
+        appendOutputToLog(logEntry, out);
     }
 
     // ==========================================
@@ -726,7 +926,7 @@
         const parts = val.split(" ");
         const firstWord = parts[0].toLowerCase();
 
-        // Case 2: User is typing the root command (only 1 word, no trailing space)
+        // Case 2: User is typing root command
         if (parts.length === 1) {
             const matches = ROOT_COMMANDS.filter(c => c.name.startsWith(firstWord)).map(c => c.name);
             if (matches.length === 0) {
@@ -735,13 +935,11 @@
             }
 
             if (matches.length === 1) {
-                // Exactly 1 match: autocomplete with space
                 termInput.value = matches[0] + " ";
                 hideSuggestions();
                 return;
             }
 
-            // Multiple matches: show suggestions & fill common prefix
             const prefix = findCommonPrefix(matches);
             if (prefix.length > firstWord.length) {
                 termInput.value = prefix;
@@ -750,7 +948,7 @@
             return;
         }
 
-        // Case 3: Command with subarguments (e.g. 'theme ...', 'sc ...', 'bm ...', 'bg ...')
+        // Case 3: Subarguments
         const subArg = parts.slice(1).join(" ").toLowerCase();
 
         if (firstWord === "theme") {
@@ -761,6 +959,18 @@
                 return;
             }
             showSuggestions(matches.length > 0 ? matches : THEME_OPTIONS, "theme ", true);
+            return;
+        }
+
+        if (firstWord === "settings" || firstWord === "config") {
+            const settingSubCmds = ["shortcuts on", "shortcuts off", "notes on", "notes off", "width", "open", "close"];
+            const matching = settingSubCmds.filter(s => s.startsWith(subArg));
+            if (matching.length === 1) {
+                termInput.value = `${firstWord} ${matching[0]}`;
+                hideSuggestions();
+                return;
+            }
+            showSuggestions(matching.length > 0 ? matching : settingSubCmds, `${firstWord} `, true);
             return;
         }
 
@@ -821,10 +1031,9 @@
         }
 
         currentSuggestions = list;
-        activeSuggestionIndex = -1;
         termSuggestions.innerHTML = "";
 
-        list.forEach((item, index) => {
+        list.forEach((item) => {
             const chip = document.createElement("div");
             chip.className = "term-suggestion-chip";
             chip.innerHTML = `<span class="chip-glyph">❯</span><span>${escapeHtml(item)}</span>`;
@@ -846,7 +1055,7 @@
 
         const hint = document.createElement("div");
         hint.className = "term-suggestion-hint";
-        hint.textContent = "[TAB] cycle • [ESC] dismiss";
+        hint.textContent = "[TAB] complete • [ESC] dismiss";
         termSuggestions.appendChild(hint);
 
         termSuggestions.style.display = "flex";
@@ -858,7 +1067,6 @@
             termSuggestions.innerHTML = "";
         }
         currentSuggestions = [];
-        activeSuggestionIndex = -1;
     }
 
     function findCommonPrefix(strings) {
@@ -883,14 +1091,14 @@
         }[m]));
     }
 
-    // Expose global initializer & command executor
+    // Expose global console interface
     window.terminalConsole = {
         execute: executeCommand,
-        print: printLine,
-        clear: clearScreen
+        clear: clearScreen,
+        setMaximized: setTerminalMaximized
     };
 
-    // Auto-init on DOMContentLoaded
+    // Auto-init
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", init);
     } else {

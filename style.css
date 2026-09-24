@@ -1225,3 +1225,15 @@ body:has(.background.has-custom-bg) #open-right-drawer {
     box-shadow: 0 0 16px rgba(0, 255, 102, 0.35) !important;
 }
 
+/* When Terminal Console is in Fullscreen / Maximized Mode, cleanly hide surrounding elements */
+body.terminal-maximized #shortcut-drawer,
+body.terminal-maximized .bookmark-sidebar,
+body.terminal-maximized #bookmarkPeekTab,
+body.terminal-maximized #changeBackgroundBtn,
+body.terminal-maximized #add-sticky-note-btn,
+body.terminal-maximized #open-right-drawer,
+body.terminal-maximized header {
+    display: none !important;
+}
+
+
