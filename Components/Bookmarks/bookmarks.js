@@ -236,12 +236,14 @@ function showBookmarkBar() {
     clearTimeout(previewTimeoutId);
     sidebar.classList.add('show');
 }
+window.showBookmarkBar = showBookmarkBar;
 
 // Hide the sidebar
 function hideBookmarkBar() {
     clearTimeout(previewTimeoutId);
     sidebar.classList.remove('show');
 }
+window.hideBookmarkBar = hideBookmarkBar;
 
 // Reveal the sidebar briefly so width changes can be seen
 function previewBookmarkBar() {

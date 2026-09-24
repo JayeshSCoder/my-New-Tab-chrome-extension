@@ -13,7 +13,10 @@ function applyTheme(theme) {
   themeButtons.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.theme === theme);
   });
+
+  window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
 }
+window.applyTheme = applyTheme;
 
 // Immediately apply saved theme on initial script load
 const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME;

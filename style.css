@@ -1135,3 +1135,93 @@ body:has(.background.has-custom-bg) #open-right-drawer {
     box-shadow: 6px 6px 0px #000000 !important;
     font-family: monospace;
 }
+
+/* ==========================================================================
+   TERMINAL THEME - SHAPE-SHIFTING DEV CONSOLE OVERRIDES
+   ========================================================================== */
+
+/* Universal Monospace Font */
+[data-theme="terminal"],
+[data-theme="terminal"] * {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, monospace;
+}
+
+/* Terminal CRT Ambient Scanline Background */
+[data-theme="terminal"] .background {
+    background: radial-gradient(circle at 50% 30%, #0d151c 0%, #06090d 100%) !important;
+}
+
+[data-theme="terminal"] .background::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.55;
+    z-index: 1;
+}
+
+/* Hide standard search-container in terminal theme — Terminal Window acts as CLI & Search */
+[data-theme="terminal"] .search-container {
+    display: none !important;
+}
+
+/* Clock Widget transforms into ASCII / Dev Server Uptime Banner */
+[data-theme="terminal"] .clock-widget {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-bottom: 4px;
+}
+
+[data-theme="terminal"] .clock-greeting {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #38bdf8 !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+[data-theme="terminal"] .clock-greeting::before {
+    content: '[SYS.STATUS] ';
+    color: #22c55e;
+}
+
+[data-theme="terminal"] .clock-time {
+    font-size: 38px !important;
+    font-weight: 700 !important;
+    color: #00ff66 !important;
+    text-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+    letter-spacing: 2px;
+}
+
+[data-theme="terminal"] .clock-date {
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    letter-spacing: 0.5px;
+}
+
+/* Floating Action Buttons in Terminal Theme */
+[data-theme="terminal"] #changeBackgroundBtn,
+[data-theme="terminal"] #add-sticky-note-btn,
+[data-theme="terminal"] #open-right-drawer {
+    border-radius: 6px !important;
+    border: 1px solid #1e3a29 !important;
+    background: #06090d !important;
+    color: #00ff66 !important;
+    box-shadow: 0 0 12px rgba(0, 255, 102, 0.1), 0 4px 12px rgba(0, 0, 0, 0.7) !important;
+    transition: all 0.15s ease !important;
+}
+
+[data-theme="terminal"] #changeBackgroundBtn:hover,
+[data-theme="terminal"] #add-sticky-note-btn:hover,
+[data-theme="terminal"] #open-right-drawer:hover {
+    border-color: #00ff66 !important;
+    background: rgba(0, 255, 102, 0.12) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.35) !important;
+}
+

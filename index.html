@@ -41,8 +41,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./Components/Terminal/terminal.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
@@ -88,6 +89,38 @@
             <button type="submit" aria-label="Search">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
+        </div>
+
+        <!-- Terminal Theme Interactive CLI Window -->
+        <div id="terminal-window" class="terminal-window" role="region" aria-label="Terminal Console">
+            <div class="terminal-titlebar">
+                <div class="terminal-window-buttons">
+                    <span class="term-btn term-close" id="term-btn-close" title="Clear Buffer"></span>
+                    <span class="term-btn term-min" id="term-btn-min" title="Toggle Minimize"></span>
+                    <span class="term-btn term-max" id="term-btn-max" title="Toggle Maximize"></span>
+                </div>
+                <div class="terminal-title">
+                    <span class="terminal-title-glyph">⚡</span>
+                    <span class="terminal-title-text">guest@newtab:~ (bash / zsh)</span>
+                </div>
+                <div class="terminal-status-badges">
+                    <span class="term-badge term-live">● ONLINE</span>
+                    <span id="term-clock-badge" class="term-badge term-time">--:--:--</span>
+                </div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div class="terminal-screen" id="terminal-screen"></div>
+                <div class="terminal-prompt-row">
+                    <span class="term-prompt">
+                        <span class="term-user">guest</span><span class="term-at">@</span><span class="term-host">newtab</span>:<span class="term-path">~</span><span class="term-sym">$</span>
+                    </span>
+                    <div class="terminal-input-wrap">
+                        <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="Type a command or web search... (Press TAB for autocomplete)">
+                    </div>
+                </div>
+                <!-- Dynamic Bash / Zsh Autocomplete Suggestions Tray -->
+                <div class="terminal-suggestions" id="terminal-suggestions" style="display: none;"></div>
+            </div>
         </div>
     </header>
 
@@ -299,6 +332,10 @@
                     <span class="theme-indicator brutalist-indicator"></span>
                     <span>Brutalist</span>
                 </button>
+                <button type="button" class="theme-pill-btn" data-theme="terminal" title="Developer CLI Terminal">
+                    <span class="theme-indicator terminal-indicator"></span>
+                    <span>Terminal</span>
+                </button>
             </div>
         </div>
 
@@ -363,6 +400,7 @@
     <script src="./Components/ContextMenu/contextMenu.js"></script>
     <script src="./Components/StickyNotes/sticky-notes.js"></script>
     <script src="./Components/WallpaperModal/wallpaper-modal.js"></script>
+    <script src="./Components/Terminal/terminal.js"></script>
 </body>
 
 </html>
