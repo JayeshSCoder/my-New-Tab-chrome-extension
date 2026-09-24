@@ -35,14 +35,23 @@
                 if (bw) {
                     document.documentElement.style.setProperty('--bookmark-bar-width', bw + 'px');
                 }
+
+                // Early terminal window state
+                if (theme === 'terminal') {
+                    const termState = localStorage.getItem('terminal-window-state') || 'restored';
+                    if (termState === 'maximized') {
+                        document.documentElement.classList.add('terminal-is-maximized');
+                    }
+                }
             } catch (e) {}
         })();
     </script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./Components/Terminal/terminal.css">
     <link rel="stylesheet" href="./Components/Bookmarks/bookmarks.css">
     <link rel="stylesheet" href="./Components/AddShortcut/style.css">
     <link rel="stylesheet" href="./Components/SidePanel/style.css">
@@ -67,10 +76,13 @@
                 try {
                     const now = new Date();
                     const hours = now.getHours();
-                    let g = "Good morning";
-                    if (hours >= 12 && hours < 17) g = "Good afternoon";
-                    else if (hours >= 17 && hours < 22) g = "Good evening";
-                    else if (hours >= 22 || hours < 5) g = "Good night";
+                    let g = "Good Morning";
+                    if (hours >= 12 && hours < 17) g = "Good Afternoon";
+                    else if (hours >= 17 && hours < 22) g = "Good Evening";
+                    else if (hours >= 22 || hours < 5) g = "Good Night";
+                    const rawName = localStorage.getItem('user-name') || 'user';
+                    const formattedName = rawName.trim() ? (rawName.trim().charAt(0).toUpperCase() + rawName.trim().slice(1)) : 'User';
+                    g += `, ${formattedName}`;
                     const greetingEl = document.getElementById('clock-greeting');
                     const timeEl = document.getElementById('clock-time');
                     const dateEl = document.getElementById('clock-date');
@@ -90,6 +102,39 @@
             </button>
         </div>
     </header>
+
+    <!-- Terminal Theme Interactive CLI Window -->
+    <div id="terminal-window" class="terminal-window" role="region" aria-label="Terminal Console">
+        <div class="terminal-titlebar">
+            <div class="terminal-window-buttons">
+                <span class="term-btn term-close" id="term-btn-close" title="Clear Buffer (clear / cls)"></span>
+                <span class="term-btn term-min" id="term-btn-min" title="Toggle Minimize"></span>
+                <span class="term-btn term-max" id="term-btn-max" title="Restore / Maximize Size"></span>
+            </div>
+            <div class="terminal-title">
+                <span class="terminal-title-glyph">⚡</span>
+                <span class="terminal-title-text" id="terminal-title-text">user@newtab:~ (bash / zsh)</span>
+            </div>
+            <div class="terminal-status-badges">
+                <span class="term-badge term-mode" id="term-mode-badge">WINDOWED</span>
+                <span class="term-badge term-live">● ONLINE</span>
+                <span id="term-clock-badge" class="term-badge term-time">--:--:--</span>
+            </div>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+            <div class="terminal-screen" id="terminal-screen"></div>
+            <div class="terminal-prompt-row">
+                <span class="term-prompt">
+                    <span class="term-user" id="term-user-name">user</span><span class="term-at">@</span><span class="term-host">newtab</span>:<span class="term-path">~</span><span class="term-sym">$</span>
+                </span>
+                <div class="terminal-input-wrap">
+                    <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="Type command or 'search <text>'... (TAB for autocomplete)">
+                </div>
+            </div>
+            <!-- Dynamic Bash / Zsh Autocomplete Suggestions Tray -->
+            <div class="terminal-suggestions" id="terminal-suggestions" style="display: none;"></div>
+        </div>
+    </div>
 
 
 
@@ -272,6 +317,15 @@
 
         <div class="drawer-option drawer-option-stack">
             <div class="drawer-option-label">
+                <label for="user-name-input">User Name</label>
+            </div>
+            <div class="drawer-input-row">
+                <input type="text" id="user-name-input" class="drawer-text-input" placeholder="Your name (e.g. user)" maxlength="24" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+
+        <div class="drawer-option drawer-option-stack">
+            <div class="drawer-option-label">
                 <label>Theme Style</label>
             </div>
             <div class="theme-switcher" id="theme-switcher">
@@ -298,6 +352,10 @@
                 <button type="button" class="theme-pill-btn" data-theme="neo-brutalist" title="Retro Neo-Brutalist Sharp">
                     <span class="theme-indicator brutalist-indicator"></span>
                     <span>Brutalist</span>
+                </button>
+                <button type="button" class="theme-pill-btn" data-theme="terminal" title="Developer CLI Terminal">
+                    <span class="theme-indicator terminal-indicator"></span>
+                    <span>Terminal</span>
                 </button>
             </div>
         </div>
@@ -363,6 +421,7 @@
     <script src="./Components/ContextMenu/contextMenu.js"></script>
     <script src="./Components/StickyNotes/sticky-notes.js"></script>
     <script src="./Components/WallpaperModal/wallpaper-modal.js"></script>
+    <script src="./Components/Terminal/terminal.js"></script>
 </body>
 
 </html>

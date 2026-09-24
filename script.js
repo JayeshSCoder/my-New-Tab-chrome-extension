@@ -48,14 +48,17 @@ function updateClockWidget() {
     const hours = now.getHours();
 
     if (clockGreeting) {
-        let greeting = "Good morning";
+        let greeting = "Good Morning";
         if (hours >= 12 && hours < 17) {
-            greeting = "Good afternoon";
+            greeting = "Good Afternoon";
         } else if (hours >= 17 && hours < 22) {
-            greeting = "Good evening";
+            greeting = "Good Evening";
         } else if (hours >= 22 || hours < 5) {
-            greeting = "Good night";
+            greeting = "Good Night";
         }
+        const rawName = localStorage.getItem('user-name') || 'user';
+        const formattedName = rawName.trim() ? (rawName.trim().charAt(0).toUpperCase() + rawName.trim().slice(1)) : 'User';
+        greeting += `, ${formattedName}`;
         clockGreeting.textContent = greeting;
     }
 
@@ -71,6 +74,10 @@ function updateClockWidget() {
         day: 'numeric'
     });
 }
+window.updateClockWidget = updateClockWidget;
+
+// Re-render greeting on user name changes
+window.addEventListener('userchange', updateClockWidget);
 
 updateClockWidget();
 setInterval(updateClockWidget, 1000);

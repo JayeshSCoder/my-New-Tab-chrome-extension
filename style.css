@@ -1135,3 +1135,187 @@ body:has(.background.has-custom-bg) #open-right-drawer {
     box-shadow: 6px 6px 0px #000000 !important;
     font-family: monospace;
 }
+
+/* ==========================================================================
+   TERMINAL THEME - SHAPE-SHIFTING DEV CONSOLE OVERRIDES
+   ========================================================================== */
+
+/* Universal Monospace Font */
+[data-theme="terminal"],
+[data-theme="terminal"] * {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, monospace;
+}
+
+/* Terminal CRT Ambient Scanline Background */
+[data-theme="terminal"] .background {
+    background: radial-gradient(circle at 50% 30%, #0d151c 0%, #06090d 100%) !important;
+}
+
+[data-theme="terminal"] .background::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.55;
+    z-index: 1;
+}
+
+/* Hide standard search-container in terminal theme — Terminal Window acts as CLI & Search */
+[data-theme="terminal"] .search-container {
+    display: none !important;
+}
+
+/* Header container positioned cleanly at top in terminal theme */
+[data-theme="terminal"] header {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 960px !important;
+    margin: 28px auto 14px auto !important;
+    padding: 0 16px !important;
+    animation: none !important;
+    z-index: 10;
+}
+
+/* Clock Widget: CLI Workstation Status Card */
+[data-theme="terminal"] .clock-widget {
+    background: rgba(9, 13, 18, 0.88) !important;
+    border: 1px solid #1a3826 !important;
+    border-radius: 12px !important;
+    padding: 16px 32px 14px 32px !important;
+    box-shadow: 0 0 25px rgba(0, 255, 102, 0.08), 0 12px 35px rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    position: relative !important;
+    min-width: 380px !important;
+    max-width: 620px !important;
+    margin: 0 auto !important;
+    transition: all 0.25s ease !important;
+}
+
+[data-theme="terminal"] .clock-widget:hover {
+    border-color: #22c55e !important;
+    box-shadow: 0 0 35px rgba(0, 255, 102, 0.16), 0 16px 40px rgba(0, 0, 0, 0.9) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* CLI Session Top Status Pill */
+[data-theme="terminal"] .clock-widget::before {
+    content: '⚡ CLI.SESSION • HOST: newtab • TTY: pts/0 • ONLINE';
+    display: block;
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+    font-size: 10.5px !important;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: #4ade80 !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+    border: 1px solid rgba(34, 197, 94, 0.25) !important;
+    padding: 3px 12px !important;
+    border-radius: 20px !important;
+    margin-bottom: 10px !important;
+    text-transform: uppercase;
+}
+
+/* Greeting transformed into CLI echo prompt */
+[data-theme="terminal"] .clock-greeting {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #38bdf8 !important; /* cyan terminal highlight */
+    letter-spacing: 0.6px !important;
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+    margin-bottom: 2px !important;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.3) !important;
+    text-transform: none !important;
+}
+
+[data-theme="terminal"] .clock-greeting::before {
+    content: '$ echo "';
+    color: #22c55e;
+    font-weight: 500;
+}
+
+[data-theme="terminal"] .clock-greeting::after {
+    content: '"';
+    color: #22c55e;
+    font-weight: 500;
+}
+
+/* Phosphor green digital clock with glowing CRT feel */
+[data-theme="terminal"] .clock-time {
+    font-size: 46px !important;
+    font-weight: 700 !important;
+    color: #00ff66 !important;
+    text-shadow: 0 0 20px rgba(0, 255, 102, 0.45), 0 0 4px rgba(0, 255, 102, 0.8) !important;
+    letter-spacing: 2px !important;
+    font-variant-numeric: tabular-nums !important;
+    margin: 4px 0 !important;
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+/* System info and uptime status */
+[data-theme="terminal"] .clock-date {
+    font-size: 11.5px !important;
+    color: #94a3b8 !important;
+    letter-spacing: 0.8px !important;
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+[data-theme="terminal"] .clock-date::before {
+    content: '📅 [SYS.DATE] ';
+    color: #64748b;
+    font-weight: 600;
+}
+
+[data-theme="terminal"] .clock-date::after {
+    content: ' • UPTIME: 99.98%';
+    color: #22c55e;
+    font-weight: 600;
+}
+
+/* Floating Action Buttons in Terminal Theme */
+[data-theme="terminal"] #changeBackgroundBtn,
+[data-theme="terminal"] #add-sticky-note-btn,
+[data-theme="terminal"] #open-right-drawer {
+    border-radius: 6px !important;
+    border: 1px solid #1e3a29 !important;
+    background: #06090d !important;
+    color: #00ff66 !important;
+    box-shadow: 0 0 12px rgba(0, 255, 102, 0.1), 0 4px 12px rgba(0, 0, 0, 0.7) !important;
+    transition: all 0.15s ease !important;
+}
+
+[data-theme="terminal"] #changeBackgroundBtn:hover,
+[data-theme="terminal"] #add-sticky-note-btn:hover,
+[data-theme="terminal"] #open-right-drawer:hover {
+    border-color: #00ff66 !important;
+    background: rgba(0, 255, 102, 0.12) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.35) !important;
+}
+
+/* Scroll handling in terminal theme when restored */
+body[data-theme="terminal"]:not(.terminal-maximized) {
+    overflow-y: auto !important;
+}
+
+/* When Terminal Console is in Fullscreen / Maximized Mode, cleanly hide surrounding elements */
+body.terminal-maximized #shortcut-drawer,
+body.terminal-maximized .bookmark-sidebar,
+body.terminal-maximized #bookmarkPeekTab,
+body.terminal-maximized #changeBackgroundBtn,
+body.terminal-maximized #add-sticky-note-btn,
+body.terminal-maximized #open-right-drawer,
+body.terminal-maximized header,
+html.terminal-is-maximized body header {
+    display: none !important;
+}
+
+

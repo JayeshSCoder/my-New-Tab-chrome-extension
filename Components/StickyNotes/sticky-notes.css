@@ -264,3 +264,53 @@
     background: rgba(0, 0, 0, 0.18);
     border-radius: 4px;
 }
+
+/* ==========================================================================
+   THEME: TERMINAL (CLI Hacker Notes Console)
+   ========================================================================== */
+
+[data-theme="terminal"] .sticky-note {
+    border-radius: 6px !important;
+    border: 1px solid #00ff66 !important;
+    background: #090d12 !important;
+    box-shadow: 0 0 25px rgba(0, 255, 102, 0.2), 0 15px 35px rgba(0, 0, 0, 0.9) !important;
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+[data-theme="terminal"] .sticky-note-header {
+    background: #06090d !important;
+    border-bottom: 1px solid #1a3826 !important;
+}
+
+[data-theme="terminal"] .sticky-note-title {
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+    color: #00ff66 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="terminal"] .sticky-note-title::before {
+    content: '[NOTE] ';
+    color: #38bdf8;
+}
+
+[data-theme="terminal"] .sticky-note-btn {
+    color: #94a3b8 !important;
+}
+
+[data-theme="terminal"] .sticky-note-btn:hover {
+    color: #00ff66 !important;
+    background: rgba(0, 255, 102, 0.15) !important;
+}
+
+[data-theme="terminal"] .sticky-note-textarea {
+    color: #00ff66 !important;
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+    font-size: 13px !important;
+    caret-color: #00ff66 !important;
+}
+
+[data-theme="terminal"] .sticky-note-textarea::placeholder {
+    color: rgba(0, 255, 102, 0.35) !important;
+}
+

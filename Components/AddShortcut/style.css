@@ -687,3 +687,80 @@ body:has(.background.has-custom-bg) .shortcut-card div {
   font-family: monospace;
 }
 
+/* ==================== THEME: TERMINAL ==================== */
+[data-theme="terminal"] #shortcut-drawer {
+  bottom: 24px;
+}
+
+[data-theme="terminal"] #shortcuts-container {
+  border-radius: 8px !important;
+  border: 1px solid #1a3826 !important;
+  background: #090d12 !important;
+  box-shadow: 0 0 25px rgba(0, 255, 102, 0.08), 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+  padding: 10px 16px;
+  gap: 12px;
+}
+
+[data-theme="terminal"] .shortcut-card {
+  border-radius: 6px !important;
+  border: 1px solid rgba(0, 255, 102, 0.25) !important;
+  background: #06090d !important;
+  color: #cbd5e1 !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="terminal"] .shortcut-card div {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="terminal"] .shortcut-card:hover {
+  border-color: #00ff66 !important;
+  background: rgba(0, 255, 102, 0.12) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 0 14px rgba(0, 255, 102, 0.35) !important;
+}
+
+[data-theme="terminal"] .shortcut-card:hover div {
+  color: #00ff66 !important;
+}
+
+[data-theme="terminal"] #add-shortcut-btn {
+  border-radius: 6px !important;
+  border: 1px dashed rgba(0, 255, 102, 0.4) !important;
+  background: #06090d !important;
+  color: #00ff66 !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+[data-theme="terminal"] #add-shortcut-btn:hover {
+  border-color: #00ff66 !important;
+  background: rgba(0, 255, 102, 0.15) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.3) !important;
+}
+
+[data-theme="terminal"] .modal-content {
+  border-radius: 8px !important;
+  border: 1px solid #00ff66 !important;
+  background: #090d12 !important;
+  box-shadow: 0 0 35px rgba(0, 255, 102, 0.2) !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+[data-theme="terminal"] .modal-content input {
+  border-radius: 4px !important;
+  border: 1px solid #1a3826 !important;
+  background: #06090d !important;
+  color: #00ff66 !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+[data-theme="terminal"] .modal-buttons button {
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+

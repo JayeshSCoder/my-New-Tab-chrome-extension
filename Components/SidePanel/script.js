@@ -13,7 +13,10 @@ function applyTheme(theme) {
   themeButtons.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.theme === theme);
   });
+
+  window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
 }
+window.applyTheme = applyTheme;
 
 // Immediately apply saved theme on initial script load
 const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME;
@@ -85,6 +88,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     controller.addEventListener("change", syncVisibility);
     syncVisibility();
+  });
+
+  // User name input in drawer
+  const userNameInput = document.getElementById("user-name-input");
+  if (userNameInput) {
+    const savedName = localStorage.getItem("user-name") || "user";
+    userNameInput.value = savedName;
+
+    userNameInput.addEventListener("input", (e) => {
+      const rawVal = e.target.value;
+      const trimmedVal = rawVal.trim();
+      localStorage.setItem("user-name", trimmedVal || "user");
+      window.dispatchEvent(new CustomEvent("userchange", { 
+        detail: { 
+          name: trimmedVal || "user",
+          source: "settings-input"
+        } 
+      }));
+    });
+
+    userNameInput.addEventListener("blur", (e) => {
+      if (!e.target.value.trim()) {
+        e.target.value = "user";
+        localStorage.setItem("user-name", "user");
+        window.dispatchEvent(new CustomEvent("userchange", { detail: { name: "user" } }));
+      }
+    });
+  }
+
+  // Also sync input if username changed via terminal CLI command
+  window.addEventListener("userchange", (e) => {
+    if (e.detail && e.detail.source === "settings-input") return;
+    if (userNameInput && e.detail && e.detail.name) {
+      if (document.activeElement !== userNameInput) {
+        userNameInput.value = e.detail.name;
+      }
+    }
   });
 });
 
