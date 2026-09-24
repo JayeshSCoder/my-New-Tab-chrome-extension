@@ -1324,7 +1324,8 @@
     window.terminalConsole = {
         execute: executeCommand,
         clear: clearScreen,
-        setMaximized: setTerminalMaximized
+        setMaximized: (max) => setTerminalWindowState(max ? "maximized" : "restored"),
+        setWindowState: setTerminalWindowState
     };
 
     // Auto-init
