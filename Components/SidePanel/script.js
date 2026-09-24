@@ -97,16 +97,33 @@ document.addEventListener("DOMContentLoaded", () => {
     userNameInput.value = savedName;
 
     userNameInput.addEventListener("input", (e) => {
-      const newName = e.target.value.trim() || "user";
-      localStorage.setItem("user-name", newName);
-      window.dispatchEvent(new CustomEvent("userchange", { detail: { name: newName } }));
+      const rawVal = e.target.value;
+      const trimmedVal = rawVal.trim();
+      localStorage.setItem("user-name", trimmedVal || "user");
+      window.dispatchEvent(new CustomEvent("userchange", { 
+        detail: { 
+          name: trimmedVal || "user",
+          source: "settings-input"
+        } 
+      }));
+    });
+
+    userNameInput.addEventListener("blur", (e) => {
+      if (!e.target.value.trim()) {
+        e.target.value = "user";
+        localStorage.setItem("user-name", "user");
+        window.dispatchEvent(new CustomEvent("userchange", { detail: { name: "user" } }));
+      }
     });
   }
 
   // Also sync input if username changed via terminal CLI command
   window.addEventListener("userchange", (e) => {
+    if (e.detail && e.detail.source === "settings-input") return;
     if (userNameInput && e.detail && e.detail.name) {
-      userNameInput.value = e.detail.name;
+      if (document.activeElement !== userNameInput) {
+        userNameInput.value = e.detail.name;
+      }
     }
   });
 });
