@@ -465,7 +465,6 @@ class StickyNotes {
             <div class="sticky-note-header">
                 <div class="sticky-note-title">📝 Note</div>
                 <div class="sticky-note-controls">
-                    <button class="sticky-note-btn format-toggle-btn" title="Formatting Tools">Aa</button>
                     <button class="sticky-note-btn color-btn" title="Change Color">🎨</button>
                     <button class="sticky-note-btn delete-btn" title="Delete Note">🗑️</button>
                 </div>
@@ -478,20 +477,6 @@ class StickyNotes {
                         <div class="color-option purple" data-color="purple"></div>
                     </div>
                 </div>
-            </div>
-            <div class="sticky-note-toolbar">
-                <button type="button" class="sn-tb-btn" data-cmd="bold" title="Bold (Ctrl+B)"><b>B</b></button>
-                <button type="button" class="sn-tb-btn" data-cmd="italic" title="Italic (Ctrl+I)"><i>I</i></button>
-                <button type="button" class="sn-tb-btn" data-cmd="underline" title="Underline (Ctrl+U)"><u>U</u></button>
-                <button type="button" class="sn-tb-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
-                <span class="sn-tb-sep"></span>
-                <button type="button" class="sn-tb-btn" data-cmd="fontSize" data-val="5" title="Large Title">H</button>
-                <button type="button" class="sn-tb-btn" data-cmd="fontSize" data-val="3" title="Normal Text">A</button>
-                <span class="sn-tb-sep"></span>
-                <button type="button" class="sn-tb-btn" data-cmd="insertUnorderedList" title="Bullet List">•≡</button>
-                <button type="button" class="sn-tb-btn" data-cmd="insertOrderedList" title="Numbered List">1≡</button>
-                <span class="sn-tb-sep"></span>
-                <button type="button" class="sn-tb-btn" data-cmd="removeFormat" title="Clear Formatting">🧹</button>
             </div>
             <div class="sticky-note-content">
                 <div class="sticky-note-editor" contenteditable="true" spellcheck="false" data-placeholder="Type or paste formatted note...">${this.formatContentForEditor(note.content)}</div>
@@ -506,12 +491,9 @@ class StickyNotes {
         const header = noteElement.querySelector('.sticky-note-header');
         const deleteBtn = noteElement.querySelector('.delete-btn');
         const colorBtn = noteElement.querySelector('.color-btn');
-        const formatBtn = noteElement.querySelector('.format-toggle-btn');
-        const toolbar = noteElement.querySelector('.sticky-note-toolbar');
         const colorPicker = noteElement.querySelector('.color-picker');
         const colorOptions = noteElement.querySelectorAll('.color-option');
         const editor = noteElement.querySelector('.sticky-note-editor');
-        const toolbarBtns = noteElement.querySelectorAll('.sn-tb-btn');
 
         // Dragging functionality
         header.addEventListener('mousedown', (e) => {
@@ -528,31 +510,6 @@ class StickyNotes {
         colorBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             colorPicker.classList.toggle('show');
-        });
-
-        // Formatting toolbar toggle
-        if (formatBtn && toolbar) {
-            formatBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toolbar.classList.toggle('show');
-            });
-        }
-
-        // Toolbar formatting actions
-        toolbarBtns.forEach(btn => {
-            btn.addEventListener('mousedown', (e) => {
-                e.preventDefault(); // Preserve editor selection
-            });
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const cmd = btn.getAttribute('data-cmd');
-                const val = btn.getAttribute('data-val') || null;
-                editor.focus();
-                document.execCommand(cmd, false, val);
-                note.content = editor.innerHTML;
-                this.saveNotesToStorage();
-                this.updateClearButtonState();
-            });
         });
 
         // Color selection

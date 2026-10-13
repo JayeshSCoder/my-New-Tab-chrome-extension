@@ -102,68 +102,6 @@
     transform: scale(1.1);
 }
 
-.sticky-note-btn.format-toggle-btn {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 2px 5px;
-    border-radius: 5px;
-}
-
-/* Rich text formatting toolbar */
-.sticky-note-toolbar {
-    display: none;
-    flex-shrink: 0;
-    padding: 5px 10px;
-    background: rgba(0, 0, 0, 0.04);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    gap: 3px;
-    align-items: center;
-    flex-wrap: wrap;
-    user-select: none;
-}
-
-.sticky-note-toolbar.show {
-    display: flex;
-}
-
-.sn-tb-btn {
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 2px 5px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    color: inherit;
-    opacity: 0.85;
-    transition: all 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 22px;
-}
-
-.sn-tb-btn:hover {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.12);
-    transform: translateY(-1px);
-}
-
-.sn-tb-btn:active {
-    transform: translateY(0);
-}
-
-.sn-tb-sep {
-    width: 1px;
-    height: 14px;
-    background: rgba(0, 0, 0, 0.15);
-    margin: 0 2px;
-}
-
 .sticky-note-content {
     padding: 10px 14px 12px;
     flex: 1;
@@ -422,24 +360,6 @@
     background: rgba(0, 255, 102, 0.15) !important;
 }
 
-[data-theme="terminal"] .sticky-note-toolbar {
-    background: #06090d !important;
-    border-bottom: 1px solid #1a3826 !important;
-}
-
-[data-theme="terminal"] .sn-tb-btn {
-    color: #00ff66 !important;
-}
-
-[data-theme="terminal"] .sn-tb-btn:hover {
-    background: rgba(0, 255, 102, 0.18) !important;
-    border-color: #00ff66 !important;
-}
-
-[data-theme="terminal"] .sn-tb-sep {
-    background: #1a3826 !important;
-}
-
 [data-theme="terminal"] .sticky-note-editor,
 [data-theme="terminal"] .sticky-note-textarea {
     color: #00ff66 !important;
@@ -451,31 +371,6 @@
 [data-theme="terminal"] .sticky-note-editor:empty::before,
 [data-theme="terminal"] .sticky-note-textarea::placeholder {
     color: rgba(0, 255, 102, 0.35) !important;
-}
-
-/* ==========================================================================
-   THEME: NEO-BRUTALIST OVERRIDES
-   ========================================================================== */
-
-[data-theme="neo-brutalist"] .sticky-note-toolbar {
-    background: #ffffff;
-    border-bottom: 2px solid #000000;
-}
-
-[data-theme="neo-brutalist"] .sn-tb-btn {
-    border: 1px solid #000000;
-    border-radius: 0;
-    font-weight: 800;
-    background: #ffffff;
-    color: #000000;
-}
-
-[data-theme="neo-brutalist"] .sn-tb-btn:hover {
-    background: #ffd000;
-}
-
-[data-theme="neo-brutalist"] .sn-tb-sep {
-    background: #000000;
 }
 
 /* ==========================================================================
