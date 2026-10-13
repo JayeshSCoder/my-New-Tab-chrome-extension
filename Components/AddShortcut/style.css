@@ -509,102 +509,121 @@ body:has(.background.has-custom-bg) .shortcut-card div {
   transform: none;
 }
 
-/* ==================== THEME 5: VERTICAL WORKSTATION DOCK ==================== */
-[data-theme="vertical-dock"] #shortcut-drawer {
+/* ==================== THEME 5: MODERN FLAT MINIMALIST ==================== */
+[data-theme="flat-minimalist"] #shortcut-drawer {
   position: fixed;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  bottom: auto;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
   width: auto;
-  max-width: none;
-  z-index: 100;
-}
-
-[data-theme="vertical-dock"] #shortcuts-container {
-  flex-direction: column;
-  width: 62px;
-  max-height: 80vh;
-  overflow-y: auto;
-  overflow-x: visible;
-  padding: 12px 8px;
-  border-radius: 20px;
-  background: rgba(15, 20, 32, 0.9);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  box-shadow: 8px 0 35px rgba(0, 0, 0, 0.45);
-  gap: 10px;
-}
-
-[data-theme="vertical-dock"] .shortcut-card {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 90vw;
   padding: 0;
+  margin: 0;
+  z-index: 100;
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-theme="flat-minimalist"] #shortcuts-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: auto;
+  max-width: 100%;
+  max-height: none;
+  overflow: visible;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #0f141d;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid #1e2638;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-theme="flat-minimalist"] .shortcut-card {
+  width: 76px;
+  height: 72px;
+  border-radius: 6px;
+  background: #141b26;
+  border: 1px solid #1c2534;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
+  box-shadow: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-theme="vertical-dock"] .shortcut-card img {
-  width: 22px;
-  height: 22px;
+[data-theme="flat-minimalist"] .shortcut-card img {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  background: #0c1017;
+  padding: 3px;
+  border: 1px solid #1e2638;
   margin: 0;
 }
 
-[data-theme="vertical-dock"] .shortcut-card div {
-  position: absolute;
-  left: 54px;
-  top: 50%;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  background: #0f172a;
-  color: #ffffff;
-  font-size: 12px;
+[data-theme="flat-minimalist"] .shortcut-card div {
+  font-size: 11px;
   font-weight: 500;
-  padding: 5px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 1000;
-}
-
-[data-theme="vertical-dock"] .shortcut-card:hover div {
+  color: #94a3b8;
+  margin-top: 5px;
+  max-width: 66px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   opacity: 1;
-  transform: translateY(-50%) translateX(4px);
+  position: static;
+  transform: none;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  transition: color 0.15s ease;
 }
 
-[data-theme="vertical-dock"] .shortcut-card:hover {
-  transform: translateX(4px);
-  background: rgba(99, 102, 241, 0.25);
-  border-color: #6366f1;
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+[data-theme="flat-minimalist"] .shortcut-card:hover {
+  transform: translateY(-3px);
+  background: #1a2332;
+  border-color: #38bdf8;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
-[data-theme="vertical-dock"] #add-shortcut-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(99, 102, 241, 0.4);
-  color: #a5b4fc;
+[data-theme="flat-minimalist"] .shortcut-card:hover div {
+  color: #f8fafc;
+}
+
+[data-theme="flat-minimalist"] #add-shortcut-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  background: #141b26;
+  border: 1px dashed #283548;
+  color: #64748b;
   font-size: 18px;
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-[data-theme="vertical-dock"] #add-shortcut-btn:hover {
-  transform: translateX(4px);
-  background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
-  color: #ffffff;
+[data-theme="flat-minimalist"] #add-shortcut-btn:hover {
+  transform: translateY(-3px);
+  background: #1a2332;
+  border-color: #38bdf8;
+  border-style: solid;
+  color: #38bdf8;
 }
 
 /* ==================== THEME 6: NEO-BRUTALIST ==================== */

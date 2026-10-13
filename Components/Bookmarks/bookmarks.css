@@ -601,71 +601,109 @@ body.bookmark-bar-resizing {
 }
 
 /* ==========================================================================
-   THEME 5: VERTICAL WORKSTATION (Right-Side Workstation Panel)
+   THEME 5: MODERN FLAT MINIMALIST (Left-Side Architectural Matte Panel)
    ========================================================================== */
 
-[data-theme="vertical-dock"] .bookmark-sidebar {
-    left: auto;
-    right: 0;
-    top: 76px;
-    height: calc(100vh - 152px);
-    border-radius: 20px 0 0 20px;
-    border-right: none;
-    border-left: 1px solid rgba(99, 102, 241, 0.3);
-    background: rgba(15, 20, 32, 0.94);
-    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.5);
-    transform: translateX(100%);
+[data-theme="flat-minimalist"] .bookmark-sidebar {
+    left: 0;
+    right: auto;
+    top: 0;
+    height: 100vh;
+    border-radius: 0 4px 4px 0 !important;
+    border: none;
+    border-right: 1px solid #1e2636 !important;
+    background: #090c12 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45) !important;
+    transform: translateX(-100%);
 }
 
-[data-theme="vertical-dock"] .bookmark-sidebar.show {
+[data-theme="flat-minimalist"] .bookmark-sidebar.show {
     transform: translateX(0);
 }
 
-[data-theme="vertical-dock"] .bookmark-peek-tab {
-    right: auto;
-    left: -28px;
-    border-radius: 12px 0 0 12px;
-    border-right: none;
-    border-left: 1px solid rgba(99, 102, 241, 0.4);
-    background: rgba(15, 20, 32, 0.92);
+[data-theme="flat-minimalist"] .bookmark-peek-tab {
+    left: auto;
+    right: -28px;
+    border-radius: 0 4px 4px 0 !important;
+    border: 1px solid #1e2636 !important;
+    border-left: none !important;
+    background: #0e121a !important;
+    color: #64748b !important;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-[data-theme="vertical-dock"] .bookmark-peek-tab:hover {
-    left: -32px;
+[data-theme="flat-minimalist"] .bookmark-peek-tab:hover {
+    right: -32px;
     width: 32px;
-    background: rgba(99, 102, 241, 0.35);
-    border-color: #6366f1;
+    background: #141b26 !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
 }
 
-[data-theme="vertical-dock"] .bookmark-resize-handle {
-    right: auto;
-    left: 0;
+[data-theme="flat-minimalist"] .bookmark-header {
+    border-bottom: 1px solid #1e2636;
+    padding: 16px 14px;
 }
 
-[data-theme="vertical-dock"] .bookmark-header-title {
-    color: #a5b4fc;
+[data-theme="flat-minimalist"] .bookmark-header-title {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
-[data-theme="vertical-dock"] .bookmark-list a:hover {
-    background: rgba(99, 102, 241, 0.22);
-    border: 1px solid rgba(99, 102, 241, 0.4);
+[data-theme="flat-minimalist"] .bookmark-list li {
+    border-radius: 3px;
+    margin: 2px 6px;
+}
+
+[data-theme="flat-minimalist"] .bookmark-list a {
+    border-radius: 3px;
+    padding: 6px 10px;
+    color: #cbd5e1;
+    border: 1px solid transparent;
+}
+
+[data-theme="flat-minimalist"] .bookmark-list a:hover {
+    background: #141b26;
+    border-color: #1e2636;
+    color: #38bdf8;
+}
+
+[data-theme="flat-minimalist"] .bookmark-icon {
+    border-radius: 2px;
+}
+
+[data-theme="flat-minimalist"] .bookmark-resize-handle {
+    right: 0;
+    left: auto;
+}
+
+[data-theme="flat-minimalist"] .bookmark-resize-handle::after {
+    background-color: #38bdf8;
+    border-radius: 1px;
+    width: 2px;
 }
 
 /* ==========================================================================
-   THEME 6: NEO-BRUTALIST (Right-Side Heavy Industrial Locker)
+   THEME 6: NEO-BRUTALIST (Left-Side Heavy Industrial Locker)
    ========================================================================== */
 
 [data-theme="neo-brutalist"] .bookmark-sidebar {
-    left: auto;
-    right: 0;
+    left: 0;
+    right: auto;
     top: 76px;
     height: calc(100vh - 152px);
     border-radius: 0px !important;
     border: none;
-    border-left: 3.5px solid #ffffff !important;
+    border-right: 3.5px solid #ffffff !important;
+    border-left: none !important;
     background: #0c0c0c !important;
-    box-shadow: -8px 0px 0px #ffd000 !important;
-    transform: translateX(100%);
+    box-shadow: 8px 0px 0px #ffd000 !important;
+    transform: translateX(-100%);
 }
 
 [data-theme="neo-brutalist"] .bookmark-sidebar.show {
@@ -673,18 +711,18 @@ body.bookmark-bar-resizing {
 }
 
 [data-theme="neo-brutalist"] .bookmark-peek-tab {
-    right: auto;
-    left: -34px;
+    left: auto;
+    right: -34px;
     border-radius: 0px !important;
     border: 2.5px solid #ffffff !important;
-    border-right: none !important;
+    border-left: none !important;
     background: #ffd000 !important;
     color: #000000 !important;
-    box-shadow: -4px 4px 0px #000000 !important;
+    box-shadow: 4px 4px 0px #000000 !important;
 }
 
 [data-theme="neo-brutalist"] .bookmark-peek-tab:hover {
-    left: -38px;
+    right: -38px;
     width: 38px;
     background: #ff007f !important;
     color: #ffffff !important;
@@ -725,8 +763,8 @@ body.bookmark-bar-resizing {
 }
 
 [data-theme="neo-brutalist"] .bookmark-resize-handle {
-    right: auto;
-    left: 0;
+    right: 0;
+    left: auto;
 }
 
 [data-theme="neo-brutalist"] .bookmark-resize-handle::after {

@@ -579,34 +579,39 @@
     border-radius: 4px;
 }
 
-/* Vertical Dock / Workstation Theme */
-[data-theme="vertical-dock"] .wallpaper-modal {
-    background: rgba(15, 20, 32, 0.94);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 18px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+/* Modern Flat Minimalist Theme */
+[data-theme="flat-minimalist"] .wallpaper-modal {
+    background: #0d1118;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid #1e2636;
+    border-radius: 4px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
 }
 
-[data-theme="vertical-dock"] .wm-title-icon {
-    background: linear-gradient(135deg, #6366f1, #06b6d4);
-    border-radius: 10px;
+[data-theme="flat-minimalist"] .wm-title-icon {
+    background: #162030;
+    border: 1px solid #1e2636;
+    color: #38bdf8;
+    border-radius: 4px;
 }
 
-[data-theme="vertical-dock"] .wm-btn-secondary {
-    background: rgba(99, 102, 241, 0.18);
-    border-color: rgba(99, 102, 241, 0.4);
-    color: #a5b4fc;
-    border-radius: 10px;
+[data-theme="flat-minimalist"] .wm-btn-secondary {
+    background: #141b26;
+    border-color: #1e2636;
+    color: #94a3b8;
+    border-radius: 4px;
 }
 
-[data-theme="vertical-dock"] .wm-btn-secondary:hover {
-    background: rgba(99, 102, 241, 0.3);
-    border-color: #6366f1;
+[data-theme="flat-minimalist"] .wm-btn-secondary:hover {
+    background: #1a2332;
+    border-color: #38bdf8;
+    color: #38bdf8;
 }
 
-[data-theme="vertical-dock"] .wm-color-swatch.active {
-    border-color: #6366f1;
-    background: rgba(99, 102, 241, 0.15);
+[data-theme="flat-minimalist"] .wm-color-swatch.active {
+    border-color: #38bdf8;
+    background: #141c2a;
 }
 
 /* Neo-Brutalist Theme */

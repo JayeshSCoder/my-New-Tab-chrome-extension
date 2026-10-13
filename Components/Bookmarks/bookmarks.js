@@ -170,7 +170,6 @@ if (sidebar) {
 function getBookmarkPlacement() {
     const theme = document.documentElement.getAttribute('data-theme') || 'glassmorphism';
     if (theme === 'macos-dock') return 'top';
-    if (theme === 'vertical-dock' || theme === 'neo-brutalist') return 'right';
     return 'left';
 }
 
