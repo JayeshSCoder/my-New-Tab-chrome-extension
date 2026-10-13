@@ -1031,9 +1031,7 @@ body:has(.background.has-custom-bg) #open-right-drawer {
 }
 
 [data-theme="flat-minimalist"] .sticky-note {
-    border-radius: 4px;
-    background: #0f141d;
-    border: 1px solid #1e2636;
+    border-radius: 6px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
