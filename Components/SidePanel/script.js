@@ -19,7 +19,9 @@ function applyTheme(theme) {
 window.applyTheme = applyTheme;
 
 // Immediately apply saved theme on initial script load
-const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME;
+let rawTheme = localStorage.getItem(THEME_STORAGE_KEY) || DEFAULT_THEME;
+if (rawTheme === 'vertical-dock') rawTheme = 'flat-minimalist';
+const savedTheme = rawTheme;
 document.documentElement.setAttribute('data-theme', savedTheme);
 
 // Show drawer & hide button

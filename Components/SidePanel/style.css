@@ -137,8 +137,9 @@
   background: #0078d4;
 }
 
-.vertical-indicator {
-  background: linear-gradient(135deg, #6366f1, #06b6d4);
+.minimalist-indicator {
+  background: #38bdf8;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
 }
 
 .brutalist-indicator {
@@ -440,30 +441,59 @@ input:checked + .slider:before {
   border-radius: 4px;
 }
 
-/* Vertical Dock / Workstation Theme */
-[data-theme="vertical-dock"] #right-drawer {
-  background: rgba(15, 20, 32, 0.94);
-  border-left: 1px solid rgba(99, 102, 241, 0.25);
-  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.5);
+/* Modern Flat Minimalist Theme */
+[data-theme="flat-minimalist"] #right-drawer {
+  background: #0d1118;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-left: 1px solid #1e2636;
+  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.6);
 }
 
-[data-theme="vertical-dock"] .theme-pill-btn.active {
-  background: rgba(99, 102, 241, 0.25);
-  border: 1px solid #6366f1;
-  color: #a5b4fc;
+[data-theme="flat-minimalist"] .theme-pill-btn {
+  border-radius: 4px;
+  background: #111622;
+  border: 1px solid #1e2636;
 }
 
-[data-theme="vertical-dock"] input:checked + .slider {
-  background: linear-gradient(135deg, #6366f1, #06b6d4);
+[data-theme="flat-minimalist"] .theme-pill-btn.active {
+  background: #141c2a;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  box-shadow: none;
 }
 
-[data-theme="vertical-dock"] #bookmark-bar-width::-webkit-slider-thumb {
-  background: #6366f1;
+[data-theme="flat-minimalist"] .slider {
+  border-radius: 4px;
+  background: #141b26;
+  border: 1px solid #1e2636;
 }
 
-[data-theme="vertical-dock"] .drawer-option-value {
-  color: #a5b4fc;
-  background: rgba(99, 102, 241, 0.18);
+[data-theme="flat-minimalist"] .slider:before {
+  border-radius: 2px;
+  background: #64748b;
+}
+
+[data-theme="flat-minimalist"] input:checked + .slider {
+  background: #0284c7;
+  border-color: #38bdf8;
+}
+
+[data-theme="flat-minimalist"] input:checked + .slider:before {
+  background: #ffffff;
+}
+
+[data-theme="flat-minimalist"] #bookmark-bar-width::-webkit-slider-thumb {
+  background: #38bdf8;
+  border-radius: 2px;
+}
+
+[data-theme="flat-minimalist"] .drawer-option-value {
+  color: #38bdf8;
+  background: #141c2a;
+  border: 1px solid #1e2636;
+  border-radius: 3px;
+  font-family: monospace;
 }
 
 /* Neo-Brutalist Theme */

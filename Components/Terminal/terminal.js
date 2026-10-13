@@ -64,7 +64,7 @@
         "legacy",
         "macos-dock",
         "windows-fluent",
-        "vertical-dock",
+        "flat-minimalist",
         "neo-brutalist",
         "terminal"
     ];
@@ -555,7 +555,7 @@
         out += `<div class="term-line-item"><span class="term-key">wallpaper (bg)</span>         <span class="term-val">wallpaper (open picker) | bg #hex | bg reset</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">settings (config)</span>      <span class="term-val">View options | settings shortcuts on|off | settings open</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">notes (note)</span>           <span class="term-val">notes (toggle) | note add &lt;text&gt; (create sticky note)</span></div>`;
-        out += `<div class="term-line-item"><span class="term-key">theme [name]</span>           <span class="term-val">theme &lt;glass|legacy|macos|windows|vertical|brutalist|terminal&gt;</span></div>`;
+        out += `<div class="term-line-item"><span class="term-key">theme [name]</span>           <span class="term-val">theme &lt;glass|legacy|macos|windows|minimalist|brutalist|terminal&gt;</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">fullscreen / restore / min</span> <span class="term-val">Toggle full-screen / window below clock / minimized</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">user &lt;name&gt;</span>              <span class="term-val">Customize terminal username</span></div>`;
         out += `<div class="term-line-item"><span class="term-key">calc &lt;expression&gt;</span>      <span class="term-val">Fast arithmetic (e.g. calc (15 * 8) + 20)</span></div>`;
@@ -970,8 +970,9 @@
             "win": "windows-fluent",
             "windows": "windows-fluent",
             "windows-fluent": "windows-fluent",
-            "vertical": "vertical-dock",
-            "vertical-dock": "vertical-dock",
+            "minimalist": "flat-minimalist",
+            "flat": "flat-minimalist",
+            "flat-minimalist": "flat-minimalist",
             "brutalist": "neo-brutalist",
             "neo": "neo-brutalist",
             "neo-brutalist": "neo-brutalist",

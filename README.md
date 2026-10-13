@@ -30,21 +30,20 @@
 - **Strict Recent 5 History**: Stores only the last 5 set wallpapers and colors in a quick-access shelf for instant 1-click re-application.
 - **Theme Reset**: Instant restore to the active theme's default ambient background gradient.
 
-### 🎭 6 Distinct Themes (Shapes, Layouts & Paradigms)
-Switch instantly between 6 handcrafted design languages under the **Settings (⚙️)** drawer — altering shapes, dock positioning, search bars, and aesthetics:
+### 🎭 Handcrafted Themes (Shapes, Layouts & Paradigms)
+Switch instantly between distinct design languages under the **Settings (⚙️)** drawer — altering shapes, structures, search bars, and aesthetics:
 1. 💎 **Glassmorphism (Default)**: Modern acrylic frosted glass with glowing highlights, floating dock, and ambient cosmic mesh.
 2. 🏛️ **Legacy (Classic)**: Exact replica of the original classic look (solid white search bar, Arial typography, `#007BFF` header, and classic gray shortcut tiles).
 3. 🍎 **macOS Sonoma Dock**: Floating Cupertino squircle dock with zoom-up magnification bounce, Spotlight search bar, and iOS-style Notification Center clock widget.
 4. 🪟 **Windows 11 Fluent**: Grounded centered taskbar dock along the bottom edge with active indicator lines, Windows 11 search box with bottom highlight, and Mica styling.
-5. ⚡ **Vertical Workstation Rail**: Shortcuts relocated to a left-side vertical dock/rail with hover tooltip labels, ultra-wide command palette, and horizontal dashboard clock.
+5. 📐 **Modern Flat Minimalist**: Architectural matte structure with razor-thin 1px borders, zero backdrop blur, tabular-figures clock card, flush command bar, and compact flat shortcut tiles.
 6. 🟨 **Neo-Brutalist**: Radical shape transformation with 0px sharp corners, thick 3px solid borders, hard 3D offset drop-shadows, sticker greeting tags, and high-contrast retro aesthetic.
-
+7. 💻 **Terminal (CLI)**: Developer interactive CLI terminal dashboard with live shell commands, autocomplete, and logs.
 
 ### 📑 Adaptive Multi-Edge Bookmarks Bar
 - **Theme-Adaptive Positioning & Layouts**:
-  - **Left Edge Shelf**: In **Glass**, **Windows 11 Fluent**, and **Legacy** themes.
+  - **Left Edge Shelf**: In **Glass**, **Windows 11 Fluent**, **Legacy**, **Modern Flat Minimalist**, and **Neo-Brutalist** (styled with heavy industrial left locker aesthetic).
   - **Top Dynamic Safari Shelf**: In **macOS** theme, dropping down from top center with traffic light dots and grid favorites layout.
-  - **Right Edge Workstation & Locker Panel**: In **Vertical Rail** and **Neo-Brutalist** themes (eliminating overlap with the left shortcuts rail).
 - **Interactive Edge Peek Tab**: Visible glowing tab (`🔖`) peeking from the edge for 1-click or hover reveal.
 - **Customizable Width Slider**: Adjust width anywhere from `60px` to `520px` in real time with directional drag resizing.
 - Right-click context menu to copy URLs, open in new tab/incognito, or edit/delete bookmarks.
@@ -79,21 +78,29 @@ Switch instantly between 6 handcrafted design languages under the **Settings (�
 
 ## 🛠️ Tech Stack & Architecture
 
+### 🔒 Encrypted Backup & Restore (Import / Export)
+- **Zero Plaintext / Unreadable Files**: Export data to encrypted `.mntbackup` files protected with AES-256-GCM encryption and PBKDF2 key derivation using a secret password chosen at export.
+- **Selective Data Checklist**: Choose what to export — Shortcuts, Sticky Notes, App Settings, and Wallpapers.
+- **Safe Import & Merge**: Unlocks with the secret key, previews all slices and item counts, and non-destructively merges with existing data.
+
 - **Core**: HTML5, Vanilla JavaScript (ES6+), Manifest V3
 - **Styling**: Vanilla CSS (Custom Properties, Flexbox, Grid, Backdrop Filters)
 - **APIs**:
   - [Chrome Extension APIs](https://developer.chrome.com/docs/extensions/reference/): `storage`, `tabs`, `bookmarks`, `favicon`, `clipboardWrite`
+  - [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API): PBKDF2 & AES-256-GCM encryption
   - [Google Fonts](https://fonts.google.com/): *Outfit* & *Plus Jakarta Sans*
 
 ```text
 ├── Components/
 │   ├── AddShortcut/          # Bottom shortcuts dock & add modal
-│   ├── Bookmarks/            # Left sliding resizable bookmarks bar
+│   ├── Bookmarks/            # Sliding resizable bookmarks bar
 │   ├── ContextMenu/          # Right-click context menu
 │   ├── Favicon/              # Favicon fetching helper
+│   ├── ImportExport/         # Encrypted AES-256 backup & restore modal
 │   ├── Platform/             # Platform detection utilities
 │   ├── SidePanel/            # Settings drawer & theme switcher
 │   ├── StickyNotes/          # Draggable sticky notes
+│   ├── Terminal/             # CLI Terminal emulator dashboard
 │   └── WallpaperModal/       # Openverse wallpaper search & upload modal
 ├── pop_up/                   # Extension toolbar companion popup
 │   ├── popup.html

@@ -347,7 +347,7 @@ body:has(.background.has-custom-bg) #open-right-drawer {
     justify-content: center;
     color: var(--text-main);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 999;
+    z-index: 10050;
 }
 
 #changeBackgroundBtn {
@@ -857,124 +857,186 @@ body:has(.background.has-custom-bg) #open-right-drawer {
 }
 
 /* ==========================================================================
-   THEME 5: VERTICAL WORKSTATION (Left Rail Dock & Wide Command Bar)
+   THEME 5: MODERN FLAT MINIMALIST (Clean Architectural Flat Structure)
    ========================================================================== */
 
-[data-theme="vertical-dock"] .background {
+[data-theme="flat-minimalist"] .background {
     background: 
-        radial-gradient(circle at 10% 50%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
-        radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.15) 0%, transparent 45%),
-        linear-gradient(180deg, #090d16 0%, #0e1526 100%);
-    background-color: #090d16;
+        radial-gradient(circle at 50% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #0b0e14 0%, #080a0f 100%);
+    background-color: #080a0f;
 }
 
-[data-theme="vertical-dock"] .clock-widget {
-    border-radius: 16px;
-    padding: 14px 28px;
-    background: rgba(18, 24, 38, 0.82);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+[data-theme="flat-minimalist"] header {
+    position: absolute;
+    top: 25%;
+    transform: translateY(-50%);
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    align-items: baseline;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 22px;
+    z-index: 10;
 }
 
-[data-theme="vertical-dock"] .clock-greeting {
-    font-size: 13px;
+[data-theme="flat-minimalist"] .clock-widget {
+    border-radius: 10px;
+    padding: 24px 44px;
+    background: #0f141d;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid #1e2638;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 360px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+[data-theme="flat-minimalist"] .clock-widget:hover {
+    border-color: #2a374d;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="flat-minimalist"] .clock-greeting {
+    font-size: 11px;
     font-weight: 600;
-    color: #a5b4fc;
-    order: 1;
-}
-
-[data-theme="vertical-dock"] .clock-time {
-    font-size: 48px;
-    font-weight: 700;
-    color: #ffffff;
-    font-family: "JetBrains Mono", monospace;
-    letter-spacing: -1px;
-    order: 2;
-}
-
-[data-theme="vertical-dock"] .clock-date {
-    font-size: 13px;
     color: #38bdf8;
-    order: 3;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: inherit;
+    margin-bottom: 4px;
 }
 
-[data-theme="vertical-dock"] .search-container {
-    max-width: 660px;
+[data-theme="flat-minimalist"] .clock-time {
+    font-size: 60px;
+    font-weight: 300;
+    color: #f8fafc;
+    font-family: inherit;
+    letter-spacing: -2px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+}
+
+[data-theme="flat-minimalist"] .clock-date {
+    font-size: 12px;
+    color: #94a3b8;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    border-top: 1px solid #1c2433;
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    margin-top: 8px;
+}
+
+[data-theme="flat-minimalist"] .search-container {
+    max-width: 580px;
     height: 52px;
-    border-radius: 12px;
-    background: rgba(18, 24, 38, 0.88);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(99, 102, 241, 0.35);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-}
-
-[data-theme="vertical-dock"] .search-container:hover {
-    border-color: rgba(99, 102, 241, 0.6);
-}
-
-[data-theme="vertical-dock"] .search-container:focus-within {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3), 0 20px 45px rgba(0, 0, 0, 0.6);
-}
-
-[data-theme="vertical-dock"] .search-container button {
     border-radius: 8px;
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: #ffffff;
+    background: #0f141d;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid #1e2638;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+    padding: 4px 8px 4px 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="flat-minimalist"] .search-container:hover {
+    border-color: #2a374d;
+}
+
+[data-theme="flat-minimalist"] .search-container:focus-within {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2), 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="flat-minimalist"] .search-container input[type="text"] {
+    font-size: 14.5px;
+    color: #f8fafc;
+    font-family: inherit;
+    font-weight: 400;
+}
+
+[data-theme="flat-minimalist"] .search-container input[type="text"]::placeholder {
+    color: #64748b;
+}
+
+[data-theme="flat-minimalist"] .search-container button {
+    border-radius: 6px;
+    width: 38px;
+    height: 38px;
+    background: #141b26;
+    border: 1px solid #1e2638;
+    color: #94a3b8;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.15s ease;
 }
 
-[data-theme="vertical-dock"] .search-container button:hover {
-    background: linear-gradient(135deg, #4f46e5, #4338ca);
+[data-theme="flat-minimalist"] .search-container button:hover {
+    background: #1a2332;
+    border-color: #38bdf8;
+    color: #38bdf8;
 }
 
-[data-theme="vertical-dock"] .bookmark-sidebar {
-    border-radius: 0 16px 16px 0;
-    background: rgba(15, 20, 32, 0.94);
-    border-right: 1px solid rgba(99, 102, 241, 0.25);
-    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.5);
+[data-theme="flat-minimalist"] .bookmark-sidebar {
+    border-radius: 0 4px 4px 0;
+    background: #090c12;
+    border-right: 1px solid #1e2636;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
-[data-theme="vertical-dock"] .bookmark-list li {
-    border-radius: 8px;
-    margin: 3px 8px;
+[data-theme="flat-minimalist"] .bookmark-list li {
+    border-radius: 3px;
+    margin: 2px 6px;
 }
 
-[data-theme="vertical-dock"] .bookmark-list li:hover {
-    background: rgba(99, 102, 241, 0.2);
+[data-theme="flat-minimalist"] .bookmark-list li:hover {
+    background: #141b26;
+    color: #38bdf8;
 }
 
-[data-theme="vertical-dock"] #changeBackgroundBtn,
-[data-theme="vertical-dock"] #add-sticky-note-btn,
-[data-theme="vertical-dock"] #open-right-drawer {
-    border-radius: 12px;
-    width: 42px;
-    height: 42px;
-    background: rgba(18, 24, 38, 0.88);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    color: #a5b4fc;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+[data-theme="flat-minimalist"] #changeBackgroundBtn,
+[data-theme="flat-minimalist"] #add-sticky-note-btn,
+[data-theme="flat-minimalist"] #open-right-drawer {
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    background: #0d1118;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid #1e2636;
+    color: #94a3b8;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.15s ease;
 }
 
-[data-theme="vertical-dock"] #changeBackgroundBtn:hover,
-[data-theme="vertical-dock"] #add-sticky-note-btn:hover,
-[data-theme="vertical-dock"] #open-right-drawer:hover {
-    background: rgba(99, 102, 241, 0.25);
-    border-color: #6366f1;
-    color: #ffffff;
+[data-theme="flat-minimalist"] #changeBackgroundBtn:hover,
+[data-theme="flat-minimalist"] #add-sticky-note-btn:hover,
+[data-theme="flat-minimalist"] #open-right-drawer:hover {
+    background: #141b26;
+    border-color: #38bdf8;
+    color: #38bdf8;
     transform: translateY(-2px);
+}
+
+[data-theme="flat-minimalist"] .sticky-note {
+    border-radius: 4px;
+    background: #0f141d;
+    border: 1px solid #1e2636;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 /* ==========================================================================
