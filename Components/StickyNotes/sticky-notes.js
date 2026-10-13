@@ -178,7 +178,7 @@ class StickyNotes {
 
         // Delete all empty notes
         emptyNotes.forEach(note => {
-            this.deleteNote(note.id);
+            this.deleteNote(note.id, false);
         });
 
         // Visual feedback
@@ -701,7 +701,7 @@ class StickyNotes {
             element.style.left = `${data.x}px`;
             element.style.top = `${data.y}px`;
             element.style.transform = '';
-            element.style.cursor = 'move';
+            element.style.cursor = '';
             element.classList.remove('dragging');
             
             document.body.style.userSelect = '';
@@ -735,7 +735,12 @@ class StickyNotes {
         this.saveNotesToStorage();
     }
 
-    deleteNote(noteId) {
+    deleteNote(noteId, showUndo = true) {
+        const noteIndex = this.notes.findIndex(note => note.id === noteId);
+        if (noteIndex === -1) return;
+
+        const deletedNote = { ...this.notes[noteIndex] };
+
         const noteElement = document.querySelector(`[data-note-id="${noteId}"]`);
         if (noteElement) {
             noteElement.classList.add('deleting');
@@ -745,8 +750,67 @@ class StickyNotes {
             }, 300);
         }
         
-        this.notes = this.notes.filter(note => note.id !== noteId);
+        this.notes.splice(noteIndex, 1);
         this.saveNotesToStorage();
+        this.updateClearButtonState();
+
+        if (showUndo) {
+            this.showUndoToast(deletedNote);
+        }
+    }
+
+    showUndoToast(deletedNote) {
+        const existingToast = document.querySelector('.sticky-note-undo-toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        if (this.undoTimeout) {
+            clearTimeout(this.undoTimeout);
+            this.undoTimeout = null;
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'sticky-note-undo-toast';
+        toast.innerHTML = `
+            <span class="sn-undo-icon">🗑️</span>
+            <span class="sn-undo-text">Note deleted</span>
+            <button type="button" class="sn-undo-btn">Undo</button>
+            <button type="button" class="sn-undo-close" title="Dismiss">✕</button>
+        `;
+
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        const undoBtn = toast.querySelector('.sn-undo-btn');
+        const closeBtn = toast.querySelector('.sn-undo-close');
+
+        const dismissToast = () => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+            if (this.undoTimeout) {
+                clearTimeout(this.undoTimeout);
+                this.undoTimeout = null;
+            }
+        };
+
+        undoBtn.addEventListener('click', () => {
+            // Restore deleted note
+            this.createNote(deletedNote);
+            dismissToast();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            dismissToast();
+        });
+
+        this.undoTimeout = setTimeout(() => {
+            dismissToast();
+        }, 5500);
     }
 
     saveNotesToStorage() {
