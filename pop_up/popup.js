@@ -11,6 +11,7 @@ const popupToast = document.getElementById('popup-toast');
 const openNewTabBtn = document.getElementById('open-new-tab-btn');
 
 let activeTab = null;
+let currentBookmarkId = null;
 let toastTimeout = null;
 
 function showToast(message) {
@@ -80,24 +81,145 @@ function inspectCurrentTab() {
     });
 }
 
+// Update Bookmark Button UI State
+function setBookmarkBtnState(isBookmarked, bookmarkId = null) {
+    currentBookmarkId = bookmarkId;
+    bookmarkBtn.disabled = false;
+
+    if (isBookmarked) {
+        bookmarkBtn.classList.add('saved');
+        bookmarkBtn.dataset.bookmarked = "true";
+        bookmarkBtnText.textContent = "Bookmarked ✓";
+        bookmarkBtn.title = "Click to remove bookmark";
+    } else {
+        bookmarkBtn.classList.remove('saved');
+        bookmarkBtn.dataset.bookmarked = "false";
+        bookmarkBtnText.textContent = "Bookmark Tab";
+        bookmarkBtn.title = "Add tab to bookmarks";
+    }
+}
+
 // Check if tab is already saved in Chrome Bookmarks
 function checkIfAlreadyBookmarked(targetUrl) {
     if (typeof chrome !== 'undefined' && chrome.bookmarks && chrome.bookmarks.search) {
         chrome.bookmarks.search({ url: targetUrl }, (results) => {
             if (results && results.length > 0) {
-                bookmarkBtn.disabled = true;
-                bookmarkBtn.classList.add('saved');
-                bookmarkBtnText.textContent = "Bookmarked ✓";
+                setBookmarkBtnState(true, results[0].id);
             } else {
-                bookmarkBtn.disabled = false;
-                bookmarkBtn.classList.remove('saved');
-                bookmarkBtnText.textContent = "Bookmark Tab";
+                setBookmarkBtnState(false, null);
             }
         });
     } else {
-        bookmarkBtn.disabled = false;
-        bookmarkBtn.classList.remove('saved');
-        bookmarkBtnText.textContent = "Bookmark Tab";
+        setBookmarkBtnState(false, null);
+    }
+}
+
+// Hover cues for removing bookmark
+if (bookmarkBtn) {
+    bookmarkBtn.addEventListener('mouseenter', () => {
+        if (bookmarkBtn.dataset.bookmarked === "true") {
+            bookmarkBtnText.textContent = "Remove Bookmark ✕";
+        }
+    });
+
+    bookmarkBtn.addEventListener('mouseleave', () => {
+        if (bookmarkBtn.dataset.bookmarked === "true") {
+            bookmarkBtnText.textContent = "Bookmarked ✓";
+        }
+    });
+
+    // Toggle Bookmark: Add or Remove
+    bookmarkBtn.addEventListener('click', () => {
+        if (!activeTab || !activeTab.url) return;
+
+        const isCurrentlyBookmarked = bookmarkBtn.dataset.bookmarked === "true";
+
+        if (isCurrentlyBookmarked) {
+            // Remove Bookmark
+            const removeById = (idToRemove) => {
+                if (typeof chrome !== 'undefined' && chrome.bookmarks && chrome.bookmarks.remove && idToRemove) {
+                    chrome.bookmarks.remove(idToRemove, () => {
+                        setBookmarkBtnState(false, null);
+                        showToast("Bookmark removed");
+                    });
+                } else {
+                    setBookmarkBtnState(false, null);
+                    showToast("Bookmark removed");
+                }
+            };
+
+            if (currentBookmarkId) {
+                removeById(currentBookmarkId);
+            } else if (typeof chrome !== 'undefined' && chrome.bookmarks && chrome.bookmarks.search) {
+                chrome.bookmarks.search({ url: activeTab.url }, (results) => {
+                    if (results && results.length > 0) {
+                        removeById(results[0].id);
+                    } else {
+                        setBookmarkBtnState(false, null);
+                        showToast("Bookmark removed");
+                    }
+                });
+            } else {
+                setBookmarkBtnState(false, null);
+                showToast("Bookmark removed");
+            }
+        } else {
+            // Add Bookmark
+            const title = (activeTab.title || activeTab.url).trim();
+            const url = activeTab.url.trim();
+
+            if (typeof chrome !== 'undefined' && chrome.bookmarks && chrome.bookmarks.create) {
+                chrome.bookmarks.getTree((tree) => {
+                    let parentId = undefined;
+                    try {
+                        const root = tree && tree[0];
+                        const rootChildren = (root && root.children) ? root.children : [];
+                        const bar = rootChildren.find(node =>
+                            node.id === "1" ||
+                            (node.title && node.title.toLowerCase().includes("bar"))
+                        );
+                        if (bar) parentId = bar.id;
+                    } catch (e) {
+                        console.error("Error finding bookmark bar:", e);
+                    }
+
+                    const createData = { title, url };
+                    if (parentId) createData.parentId = parentId;
+
+                    chrome.bookmarks.create(createData, (newEntry) => {
+                        if (chrome.runtime.lastError) {
+                            // Fallback without parentId if specific parent failed
+                            chrome.bookmarks.create({ title, url }, (fallbackEntry) => {
+                                setBookmarkBtnState(true, fallbackEntry ? fallbackEntry.id : null);
+                                showToast("Tab saved to bookmarks!");
+                            });
+                        } else {
+                            setBookmarkBtnState(true, newEntry ? newEntry.id : null);
+                            showToast("Tab saved to bookmarks!");
+                        }
+                    });
+                });
+            } else {
+                setBookmarkBtnState(true, "preview-id");
+                showToast("Tab saved to bookmarks!");
+            }
+        }
+    });
+}
+
+// Update Shortcut Button UI State
+function setShortcutBtnState(isSaved) {
+    addShortcutBtn.disabled = false;
+    if (isSaved) {
+        addShortcutBtn.classList.add('saved');
+        addShortcutBtn.dataset.saved = "true";
+        addBtnText.textContent = "In Shortcuts ✓";
+        addShortcutBtn.title = "Click to remove from shortcuts";
+    } else {
+        addShortcutBtn.classList.remove('saved');
+        addShortcutBtn.dataset.saved = "false";
+        addBtnText.textContent = "Add to Shortcuts";
+        addShortcutBtn.title = "Add tab to dashboard shortcuts";
     }
 }
 
@@ -105,15 +227,7 @@ function checkIfAlreadyBookmarked(targetUrl) {
 function checkIfAlreadyInShortcuts(targetUrl) {
     const checkList = (shortcutsList) => {
         const exists = shortcutsList.some(s => s.url === targetUrl);
-        if (exists) {
-            addShortcutBtn.disabled = true;
-            addShortcutBtn.classList.add('saved');
-            addBtnText.textContent = "In Shortcuts ✓";
-        } else {
-            addShortcutBtn.disabled = false;
-            addShortcutBtn.classList.remove('saved');
-            addBtnText.textContent = "Add to Shortcuts";
-        }
+        setShortcutBtnState(exists);
     };
 
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
@@ -127,85 +241,57 @@ function checkIfAlreadyInShortcuts(targetUrl) {
     }
 }
 
-// Bookmark Button Click Handler
-if (bookmarkBtn) {
-    bookmarkBtn.addEventListener('click', () => {
-        if (!activeTab || !activeTab.url) return;
-
-        const title = (activeTab.title || activeTab.url).trim();
-        const url = activeTab.url.trim();
-
-        if (typeof chrome !== 'undefined' && chrome.bookmarks && chrome.bookmarks.create) {
-            chrome.bookmarks.getTree((tree) => {
-                let parentId = undefined;
-                try {
-                    const root = tree && tree[0];
-                    const rootChildren = (root && root.children) ? root.children : [];
-                    const bar = rootChildren.find(node =>
-                        node.id === "1" ||
-                        (node.title && node.title.toLowerCase().includes("bar"))
-                    );
-                    if (bar) parentId = bar.id;
-                } catch (e) {
-                    console.error("Error finding bookmark bar:", e);
-                }
-
-                const createData = { title, url };
-                if (parentId) createData.parentId = parentId;
-
-                chrome.bookmarks.create(createData, () => {
-                    if (chrome.runtime.lastError) {
-                        // Fallback without parentId if specified parentId failed
-                        chrome.bookmarks.create({ title, url }, onBookmarkSuccess);
-                    } else {
-                        onBookmarkSuccess();
-                    }
-                });
-            });
-        } else {
-            onBookmarkSuccess();
+// Hover cues for removing shortcut
+if (addShortcutBtn) {
+    addShortcutBtn.addEventListener('mouseenter', () => {
+        if (addShortcutBtn.dataset.saved === "true") {
+            addBtnText.textContent = "Remove Shortcut ✕";
         }
     });
-}
 
-function onBookmarkSuccess() {
-    bookmarkBtn.disabled = true;
-    bookmarkBtn.classList.add('saved');
-    bookmarkBtnText.textContent = "Bookmarked ✓";
-    showToast("Tab saved to bookmarks!");
-}
+    addShortcutBtn.addEventListener('mouseleave', () => {
+        if (addShortcutBtn.dataset.saved === "true") {
+            addBtnText.textContent = "In Shortcuts ✓";
+        }
+    });
 
-// Add to Shortcuts Click Handler
-if (addShortcutBtn) {
+    // Toggle Shortcut: Add or Remove
     addShortcutBtn.addEventListener('click', () => {
         if (!activeTab || !activeTab.url) return;
 
-        const name = (activeTab.title || new URL(activeTab.url).hostname).trim();
+        const isCurrentlySaved = addShortcutBtn.dataset.saved === "true";
         const url = activeTab.url.trim();
 
-        const saveShortcut = (existingShortcuts) => {
-            const list = Array.isArray(existingShortcuts) ? existingShortcuts : [];
-            list.push({ name, url });
+        const updateShortcuts = (existingShortcuts) => {
+            let list = Array.isArray(existingShortcuts) ? existingShortcuts : [];
+
+            if (isCurrentlySaved) {
+                // Remove shortcut
+                list = list.filter(item => item.url !== url);
+                setShortcutBtnState(false);
+                showToast("Shortcut removed");
+            } else {
+                // Add shortcut
+                const name = (activeTab.title || new URL(url).hostname).trim();
+                list.push({ name, url });
+                setShortcutBtnState(true);
+                showToast("Added to dashboard shortcuts!");
+            }
 
             localStorage.setItem('shortcuts', JSON.stringify(list));
             if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
                 chrome.storage.local.set({ shortcuts: list });
             }
-
-            addShortcutBtn.disabled = true;
-            addShortcutBtn.classList.add('saved');
-            addBtnText.textContent = "In Shortcuts ✓";
-            showToast("Added to dashboard shortcuts!");
         };
 
         if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
             chrome.storage.local.get('shortcuts', (data) => {
                 const list = (data && data.shortcuts) || JSON.parse(localStorage.getItem('shortcuts')) || [];
-                saveShortcut(list);
+                updateShortcuts(list);
             });
         } else {
             const list = JSON.parse(localStorage.getItem('shortcuts')) || [];
-            saveShortcut(list);
+            updateShortcuts(list);
         }
     });
 }

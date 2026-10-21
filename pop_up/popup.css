@@ -192,15 +192,27 @@ body {
 
 .action-btn.saved {
     opacity: 1 !important;
-    cursor: default;
+    cursor: pointer;
     background: rgba(16, 185, 129, 0.12) !important;
-    border-color: rgba(16, 185, 129, 0.35) !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
     color: #34d399 !important;
     box-shadow: none !important;
 }
 
 .action-btn.saved svg {
     color: #34d399;
+    transition: color 0.18s ease;
+}
+
+.action-btn.saved:hover {
+    background: rgba(239, 68, 68, 0.14) !important;
+    border-color: rgba(239, 68, 68, 0.38) !important;
+    color: #f87171 !important;
+    transform: translateY(-1px);
+}
+
+.action-btn.saved:hover svg {
+    color: #f87171 !important;
 }
 
 /* Status Toast */
