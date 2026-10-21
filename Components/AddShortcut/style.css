@@ -48,7 +48,7 @@
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
+  cursor: grab;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
 }
@@ -61,7 +61,33 @@
 }
 
 .shortcut-card:active {
+  cursor: grabbing;
   transform: translateY(0) scale(0.97);
+}
+
+/* Drag-and-Drop States */
+.shortcut-card.dragging {
+  opacity: 0.35 !important;
+  transform: scale(0.92) !important;
+  border: 1.5px dashed rgba(255, 255, 255, 0.5) !important;
+  cursor: grabbing !important;
+  box-shadow: none !important;
+}
+
+.shortcut-card.drag-over {
+  transform: translateY(-8px) scale(1.08) !important;
+  border-color: #6366f1 !important;
+  background: rgba(99, 102, 241, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.6), 0 12px 28px rgba(0, 0, 0, 0.4) !important;
+}
+
+#add-shortcut-btn.drag-over {
+  transform: scale(1.12) !important;
+  border-color: #6366f1 !important;
+  border-style: solid !important;
+  background: rgba(99, 102, 241, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.6) !important;
+  color: #ffffff !important;
 }
 
 /* Enhanced Visibility on Custom Wallpapers (Dark Glassmorphism) */
@@ -100,6 +126,9 @@ body:has(.background.has-custom-bg) .shortcut-card div {
   margin-bottom: 6px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .shortcut-card div {
@@ -111,6 +140,8 @@ body:has(.background.has-custom-bg) .shortcut-card div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Add Shortcut Button */
@@ -781,5 +812,75 @@ body:has(.background.has-custom-bg) .shortcut-card div {
   border-radius: 4px !important;
   font-family: 'JetBrains Mono', Consolas, monospace !important;
 }
+
+/* ==================== THEME-SPECIFIC DRAG STYLES ==================== */
+[data-theme="macos-dock"] .shortcut-card.drag-over {
+  border-color: rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-14px) scale(1.24) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="macos-dock"] #add-shortcut-btn.drag-over {
+  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-10px) scale(1.18) !important;
+  box-shadow: 0 0 0 2px #ffffff !important;
+}
+
+[data-theme="windows-fluent"] .shortcut-card.drag-over {
+  background: rgba(255, 255, 255, 0.16) !important;
+  transform: scale(1.06) !important;
+  box-shadow: inset 0 -2px 0 0 #60cdff, 0 0 16px rgba(96, 205, 255, 0.45) !important;
+}
+
+[data-theme="windows-fluent"] #add-shortcut-btn.drag-over {
+  background: rgba(0, 120, 212, 0.35) !important;
+  border-color: #60cdff !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 14px rgba(96, 205, 255, 0.5) !important;
+}
+
+[data-theme="flat-minimalist"] .shortcut-card.drag-over {
+  transform: translateY(-5px) !important;
+  border-color: #38bdf8 !important;
+  background: #1e293b !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5), 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="flat-minimalist"] #add-shortcut-btn.drag-over {
+  transform: translateY(-5px) !important;
+  border-color: #38bdf8 !important;
+  border-style: solid !important;
+  background: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="neo-brutalist"] .shortcut-card.drag-over {
+  transform: translate(-5px, -5px) !important;
+  border-color: #ffd000 !important;
+  box-shadow: 8px 8px 0px #ffd000 !important;
+  background: #282828 !important;
+}
+
+[data-theme="neo-brutalist"] #add-shortcut-btn.drag-over {
+  transform: translate(-4px, -4px) !important;
+  border-color: #ff007f !important;
+  box-shadow: 8px 8px 0px #ff007f !important;
+  color: #ff007f !important;
+}
+
+[data-theme="terminal"] .shortcut-card.drag-over {
+  border-color: #00ff66 !important;
+  background: rgba(0, 255, 102, 0.22) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.7) !important;
+}
+
+[data-theme="terminal"] #add-shortcut-btn.drag-over {
+  border-color: #00ff66 !important;
+  background: rgba(0, 255, 102, 0.22) !important;
+  box-shadow: 0 0 16px rgba(0, 255, 102, 0.5) !important;
+}
+
 
 

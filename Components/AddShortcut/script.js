@@ -14,6 +14,15 @@ document.body.appendChild(contextMenu);
 
 let shortcuts = JSON.parse(localStorage.getItem("shortcuts")) || [];
 let editingIndex = null;
+let draggedIndex = null;
+let hasDragged = false;
+let dragResetTimeout = null;
+
+if (shortcutsContainer) {
+    shortcutsContainer.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
+}
 
 // Immediate render during parsing so cards are present on first frame
 if (shortcutsContainer && shortcuts.length > 0) {
@@ -49,17 +58,78 @@ function renderShortcuts() {
         const card = document.createElement("div");
         card.className = "shortcut-card";
         card.title = `${name} (${url})`;
+        card.draggable = true;
+        card.dataset.index = index;
 
         const formattedURL = url.startsWith("http") ? url : `https://${url}`;
         card.innerHTML = `
-            <img alt="favicon" width="28" height="28" />
+            <img alt="favicon" width="28" height="28" draggable="false" />
             <div>${name}</div>
         `;
 
         // Browser favicon first, then the icon of the site itself
         applyFaviconWithFallback(card.querySelector('img'), formattedURL, { size: 32 });
 
+        // Drag & Drop events for reordering
+        card.addEventListener("dragstart", (e) => {
+            draggedIndex = index;
+            hasDragged = true;
+            if (dragResetTimeout) clearTimeout(dragResetTimeout);
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", index.toString());
+            setTimeout(() => {
+                if (draggedIndex !== null) {
+                    card.classList.add("dragging");
+                }
+            }, 0);
+        });
+
+        card.addEventListener("dragend", () => {
+            card.classList.remove("dragging");
+            document.querySelectorAll(".shortcut-card, #add-shortcut-btn").forEach(el => el.classList.remove("drag-over"));
+            draggedIndex = null;
+            if (dragResetTimeout) clearTimeout(dragResetTimeout);
+            dragResetTimeout = setTimeout(() => {
+                hasDragged = false;
+            }, 120);
+        });
+
+        card.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+        });
+
+        card.addEventListener("dragenter", (e) => {
+            e.preventDefault();
+            if (draggedIndex !== null && draggedIndex !== index) {
+                card.classList.add("drag-over");
+            }
+        });
+
+        card.addEventListener("dragleave", (e) => {
+            if (!card.contains(e.relatedTarget)) {
+                card.classList.remove("drag-over");
+            }
+        });
+
+        card.addEventListener("drop", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            card.classList.remove("drag-over");
+
+            const rawData = e.dataTransfer.getData("text/plain");
+            const fromIndex = rawData !== "" ? parseInt(rawData, 10) : draggedIndex;
+
+            if (fromIndex !== null && !isNaN(fromIndex) && fromIndex !== index) {
+                const [movedItem] = shortcuts.splice(fromIndex, 1);
+                shortcuts.splice(index, 0, movedItem);
+                saveAndSyncShortcuts();
+                renderShortcuts();
+            }
+        });
+
         card.onclick = () => {
+            if (hasDragged) return;
             window.location.href = formattedURL;
         };
 
@@ -80,6 +150,41 @@ function renderShortcuts() {
     addShortcutBtn.onclick = () => {
         openShortcutModal(false);
     };
+
+    // Dropping on "+" moves the dragged shortcut to the end of the list
+    addShortcutBtn.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+    });
+
+    addShortcutBtn.addEventListener("dragenter", (e) => {
+        e.preventDefault();
+        if (draggedIndex !== null && draggedIndex !== shortcuts.length - 1) {
+            addShortcutBtn.classList.add("drag-over");
+        }
+    });
+
+    addShortcutBtn.addEventListener("dragleave", (e) => {
+        if (!addShortcutBtn.contains(e.relatedTarget)) {
+            addShortcutBtn.classList.remove("drag-over");
+        }
+    });
+
+    addShortcutBtn.addEventListener("drop", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addShortcutBtn.classList.remove("drag-over");
+
+        const rawData = e.dataTransfer.getData("text/plain");
+        const fromIndex = rawData !== "" ? parseInt(rawData, 10) : draggedIndex;
+
+        if (fromIndex !== null && !isNaN(fromIndex) && fromIndex < shortcuts.length - 1) {
+            const [movedItem] = shortcuts.splice(fromIndex, 1);
+            shortcuts.push(movedItem);
+            saveAndSyncShortcuts();
+            renderShortcuts();
+        }
+    });
 
     shortcutsContainer.appendChild(addShortcutBtn);
 }
