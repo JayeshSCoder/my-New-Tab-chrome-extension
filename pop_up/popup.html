@@ -1,66 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My New Tab Dashboard</title>
-    <!-- Google Fonts -->
+    <title>My New Tab</title>
+    <!-- Modern clean typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
 </head>
-
 <body>
-    <div class="popup-card">
-        <!-- Header -->
-        <div class="popup-header">
-            <div class="popup-icon">⚡</div>
-            <div class="popup-title-group">
-                <h2>My New Tab</h2>
-                <span class="version-badge">Dashboard Companion</span>
+    <div class="popup-container">
+        <!-- Top Navigation -->
+        <header class="popup-header">
+            <div class="header-brand">
+                <svg class="brand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span class="brand-name">My New Tab</span>
             </div>
-        </div>
-
-        <!-- Section 1: Add Current Tab to Shortcuts -->
-        <div class="section-card">
-            <div class="section-title">
-                <span class="section-icon">🔗</span>
-                <span>Quick Shortcut Capture</span>
-            </div>
-            
-            <div id="tab-preview-box" class="tab-preview-box">
-                <div class="tab-favicon-wrapper">
-                    <img id="current-tab-favicon" class="tab-favicon" src="" alt="icon" style="display: none;">
-                    <span id="tab-fallback-icon" class="tab-fallback-icon">🌐</span>
-                </div>
-                <div class="tab-info">
-                    <div id="current-tab-title" class="tab-title">Loading current tab...</div>
-                    <div id="current-tab-url" class="tab-url">...</div>
-                </div>
-            </div>
-
-            <button id="add-tab-shortcut-btn" class="action-btn" disabled>
-                <span class="btn-icon">➕</span>
-                <span id="add-btn-text">Add Tab to Shortcuts</span>
+            <button id="open-new-tab-btn" class="header-action-btn" title="Open Dashboard">
+                <span>Dashboard</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
             </button>
-            <div id="shortcut-toast" class="toast-message"></div>
-        </div>
+        </header>
 
-        <!-- Section 2: Open New Tab -->
-        <div class="popup-footer">
-            <button id="open-new-tab-btn" class="primary-btn">
-                <span>Open New Tab</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
-            <div class="popup-credits">
-                <span>By <a href="https://github.com/JayeshSCoder" target="_blank" rel="noopener noreferrer">Jayesh</a> • <a href="https://github.com/JayeshSCoder/my-New-Tab-chrome-extension" target="_blank" rel="noopener noreferrer">GitHub</a></span>
+        <!-- Current Tab Preview Box -->
+        <div class="tab-preview">
+            <div class="tab-favicon-wrap">
+                <img id="current-tab-favicon" class="tab-favicon" src="" alt="" style="display: none;">
+                <svg id="tab-fallback-icon" class="tab-fallback" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+            </div>
+            <div class="tab-info">
+                <div id="current-tab-title" class="tab-title">Loading current tab...</div>
+                <div id="current-tab-url" class="tab-url">...</div>
             </div>
         </div>
+
+        <!-- Action Buttons -->
+        <div class="actions-group">
+            <button id="bookmark-tab-btn" class="action-btn secondary-btn" disabled>
+                <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span id="bookmark-btn-text">Bookmark Tab</span>
+            </button>
+
+            <button id="add-tab-shortcut-btn" class="action-btn primary-btn" disabled>
+                <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span id="add-btn-text">Add to Shortcuts</span>
+            </button>
+        </div>
+
+        <!-- Status Toast -->
+        <div id="popup-toast" class="popup-toast"></div>
     </div>
 
     <script src="popup.js"></script>
 </body>
-
 </html>
